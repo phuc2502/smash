@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+
+  --color-mint-50: #D4F0F0;
+  --color-mint-100: #E6F7F7;
+  --color-mint-200: #8FCACA;
+  --color-mint-300: #CCE2CB;
+  --color-mint-400: #B6CFB6;
+  --color-mint-500: #97C1A9;
+  --color-mint-600: #7DA68E;
+  --color-mint-700: #638A73;
+  --color-mint-800: #496E58;
+  --color-mint-900: #2F523D;
+
+  --color-primary: var(--color-mint-500);
+  --color-primary-light: var(--color-mint-300);
+  --color-primary-dark: var(--color-mint-700);
+}
+
+@layer base {
+
+  *,
+  ::before,
+  ::after {
+    font-family: var(--font-sans) !important;
+  }
+
+  body {
+    @apply font-sans text-slate-900 antialiased selection:bg-mint-100 selection:text-mint-900 bg-slate-50;
+  }
+}
+
+@layer utilities {
+  .animate-gradient-x {
+    background-size: 200% 200%;
+    animation: gradient-x 15s ease infinite;
+  }
+}
+
+@keyframes gradient-x {
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
