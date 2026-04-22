@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import {
   Search,
@@ -124,6 +125,7 @@ export default function TopNavbar() {
   if (!currentAccount) return null;
 
   return (
+    <>
     <motion.header
       initial={false}
       animate={{
@@ -225,7 +227,9 @@ export default function TopNavbar() {
           </AnimatePresence>
         </div>
       </div>
+    </motion.header>
 
+    {createPortal(
       <AnimatePresence>
         {activeModal && (
           <div className="fixed inset-0 z-[100] flex justify-end">
@@ -387,7 +391,9 @@ export default function TopNavbar() {
             </motion.div>
           </div>
         )}
-      </AnimatePresence>
-    </motion.header>
+      </AnimatePresence>,
+      document.body
+    )}
+    </>
   );
 }
