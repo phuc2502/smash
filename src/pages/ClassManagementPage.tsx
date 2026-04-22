@@ -44,25 +44,16 @@ export default function ClassManagementPage() {
   });
 
   const stats = [
-    { label: "Tổng số lớp học", value: classes.length.toString(), icon: School, color: "mint" },
-    { label: "Đang diễn ra", value: classes.filter(c => c.status === 'Đang diễn ra').length.toString(), icon: PlayCircle, color: "mint" },
-    { label: "Sắp bắt đầu", value: classes.filter(c => c.status === 'Sắp bắt đầu').length.toString(), icon: Clock, color: "mint" },
-    { label: "Đã hoàn thành", value: classes.filter(c => c.status === 'Đã kết thúc').length.toString(), icon: CheckCircle2, color: "slate" },
+    { label: "Tổng số lớp học", value: classes.length.toString(), icon: School, color: "mint" as const },
+    { label: "Đang diễn ra", value: classes.filter(c => c.status === 'Đang diễn ra').length.toString(), icon: PlayCircle, color: "mint" as const },
+    { label: "Sắp bắt đầu", value: classes.filter(c => c.status === 'Sắp bắt đầu').length.toString(), icon: Clock, color: "mint" as const },
+    { label: "Đã hoàn thành", value: classes.filter(c => c.status === 'Đã kết thúc').length.toString(), icon: CheckCircle2, color: "slate" as const },
   ];
 
   const statuses = ["Tất cả", "Đang diễn ra", "Sắp bắt đầu", "Đã kết thúc"];
 
   const getColorClasses = (color: string) => {
     switch (color) {
-      case 'mint': return {
-        bg: 'bg-mint-500',
-        bgLight: 'bg-mint-50',
-        text: 'text-mint-600',
-        border: 'border-mint-100',
-        hoverBg: 'hover:bg-mint-500',
-        shadow: 'shadow-mint-100',
-        ring: 'ring-mint-500'
-      };
       case 'mint': return {
         bg: 'bg-mint-500',
         bgLight: 'bg-mint-50',
@@ -80,15 +71,6 @@ export default function ClassManagementPage() {
         hoverBg: 'hover:bg-rose-500',
         shadow: 'shadow-rose-100',
         ring: 'ring-rose-500'
-      };
-      case 'mint': return {
-        bg: 'bg-mint-500',
-        bgLight: 'bg-mint-50',
-        text: 'text-mint-600',
-        border: 'border-mint-100',
-        hoverBg: 'hover:bg-mint-500',
-        shadow: 'shadow-mint-100',
-        ring: 'ring-mint-500'
       };
       default: return {
         bg: 'bg-slate-500',

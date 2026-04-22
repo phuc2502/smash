@@ -21,12 +21,12 @@ export default function CreateClassModal({ isOpen, onClose, onSubmit }: CreateCl
   });
 
   const colors = [
-    { name: 'Sky', value: 'mint' },
-    { name: 'Indigo', value: 'mint' },
-    { name: 'Emerald', value: 'mint' },
-    { name: 'Amber', value: 'mint' },
-    { name: 'Rose', value: 'rose' },
-    { name: 'Slate', value: 'slate' },
+    { name: 'Sky', value: 'mint', bgClass: 'bg-mint-500' },
+    { name: 'Indigo', value: 'mint', bgClass: 'bg-mint-500' },
+    { name: 'Emerald', value: 'mint', bgClass: 'bg-mint-500' },
+    { name: 'Amber', value: 'mint', bgClass: 'bg-mint-500' },
+    { name: 'Rose', value: 'rose', bgClass: 'bg-rose-500' },
+    { name: 'Slate', value: 'slate', bgClass: 'bg-slate-500' },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -179,7 +179,7 @@ export default function CreateClassModal({ isOpen, onClose, onSubmit }: CreateCl
                         type="button"
                         onClick={() => setFormData({ ...formData, color: color.value })}
                         className={`w-10 h-10 rounded-xl transition-all relative ${formData.color === color.value ? 'ring-4 ring-mint-500/20 scale-110 shadow-lg' : 'hover:scale-105'
-                          } bg-${color.value}-500`}
+                          } ${color.bgClass}`}
                       >
                         {formData.color === color.value && <CheckCircle2 className="w-4 h-4 text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />}
                       </button>

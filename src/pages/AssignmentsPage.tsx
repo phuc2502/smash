@@ -52,10 +52,16 @@ export default function AssignmentsPage() {
   };
 
   const stats = [
-    { label: "Tổng số bài tập", value: assignments.length.toString(), icon: LibraryBig, color: "mint", trend: "+12% so với tháng trước" },
-    { label: "Bài tập đang mở", value: assignments.filter(a => a.status === 'Đang mở').length.toString(), icon: LockOpen, color: "mint", sub: "Tiến độ đạt 65%", progress: true },
-    { label: "Cần chấm điểm", value: assignments.filter(a => a.status === 'Chờ chấm điểm').length.toString(), icon: FileEdit, color: "mint", sub: "Ưu tiên cao", alert: true }
+    { label: "Tổng số bài tập", value: assignments.length.toString(), icon: LibraryBig, color: "mint" as const, trend: "+12% so với tháng trước" },
+    { label: "Bài tập đang mở", value: assignments.filter(a => a.status === 'Đang mở').length.toString(), icon: LockOpen, color: "mint" as const, sub: "Tiến độ đạt 65%", progress: true },
+    { label: "Cần chấm điểm", value: assignments.filter(a => a.status === 'Chờ chấm điểm').length.toString(), icon: FileEdit, color: "mint" as const, sub: "Ưu tiên cao", alert: true }
   ];
+
+  const colorMap = {
+    mint: { bgLight: 'bg-mint-50', text: 'text-mint-500' },
+    rose: { bgLight: 'bg-rose-50', text: 'text-rose-500' },
+    slate: { bgLight: 'bg-slate-50', text: 'text-slate-500' },
+  } as const;
 
   return (
     <div className="space-y-10 pb-20">
@@ -251,7 +257,7 @@ export default function AssignmentsPage() {
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{stat.label}</p>
                 <h3 className={`text-4xl font-black ${stat.alert ? 'text-mint-500' : 'text-slate-900'} leading-none`}>{stat.value}</h3>
               </div>
-              <div className={`w-11 h-11 rounded-2xl bg-${stat.color}-50 text-${stat.color}-500 flex items-center justify-center`}>
+              <div className={`w-11 h-11 rounded-2xl ${colorMap[stat.color].bgLight} ${colorMap[stat.color].text} flex items-center justify-center`}>
                 <stat.icon className="w-6 h-6" />
               </div>
             </div>
@@ -294,7 +300,7 @@ export default function AssignmentsPage() {
               className="bg-white/80 backdrop-blur-xl rounded-[32px] p-7 shadow-sm border border-slate-100 hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500 flex flex-col group min-h-[360px]"
             >
               <div className="flex justify-between items-start mb-6">
-                <div className={`px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 group-hover:bg-${asgn.typeColor}-50 group-hover:text-${asgn.typeColor}-600 transition-colors`}>
+                <div className={`px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 group-hover:bg-mint-50 group-hover:text-mint-600 transition-colors`}>
                   {asgn.type === "Trắc nghiệm" ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Zap className="w-3.5 h-3.5" />}
                   {asgn.type}
                 </div>

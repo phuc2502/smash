@@ -145,13 +145,13 @@ export default function MaterialsPage() {
                 whileHover={{ y: -5 }}
                 onClick={() => setSelectedGrade(grade)}
                 className={`relative p-6 rounded-[32px] border transition-all duration-300 cursor-pointer overflow-hidden group ${isActive
-                    ? `bg-${color}-50 border-${color}-200 shadow-lg shadow-${color}-100`
+                    ? 'bg-mint-50 border-mint-200 shadow-lg shadow-mint-100'
                     : 'bg-white border-slate-100 hover:border-mint-200 shadow-sm hover:shadow-xl'
                   }`}
               >
-                <div className={`absolute -right-4 -top-4 w-20 h-20 rounded-full blur-2xl opacity-10 group-hover:opacity-20 bg-${color}-500 transition-opacity`}></div>
+                <div className="absolute -right-4 -top-4 w-20 h-20 rounded-full blur-2xl opacity-10 group-hover:opacity-20 bg-mint-500 transition-opacity"></div>
                 <div className="flex flex-col gap-4 relative z-10">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-${color}-600 ${isActive ? 'bg-white shadow-sm' : `bg-${color}-50`}`}>
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-mint-600 ${isActive ? 'bg-white shadow-sm' : 'bg-mint-50'}`}>
                     <FolderOpen className="w-6 h-6" />
                   </div>
                   <div>
@@ -223,13 +223,13 @@ export default function MaterialsPage() {
                 className="flex flex-col sm:flex-row sm:items-center justify-between p-5 hover:bg-slate-50 rounded-[28px] transition-all duration-300 group cursor-pointer mb-2 last:mb-0 border border-transparent hover:border-slate-100"
               >
                 <div className="flex items-center gap-6">
-                  <div className={`w-14 h-14 rounded-2xl bg-${file.color}-50 flex items-center justify-center text-${file.color}-500 group-hover:scale-110 transition-transform duration-300 shadow-sm shadow-${file.color}-100`}>
+                  <div className="w-14 h-14 rounded-2xl bg-mint-50 flex items-center justify-center text-mint-500 group-hover:scale-110 transition-transform duration-300 shadow-sm shadow-mint-100">
                     {getFileIcon(file.type)}
                   </div>
                   <div>
                     <div className="flex items-center gap-3 flex-wrap">
                       <h4 className="font-black text-slate-900 text-base group-hover:text-mint-600 transition-colors">{file.name}</h4>
-                      <span className={`px-2 py-0.5 rounded-md bg-${file.color}-100/50 text-${file.color}-700 text-[9px] font-black uppercase tracking-widest`}>
+                      <span className="px-2 py-0.5 rounded-md bg-mint-100/50 text-mint-700 text-[9px] font-black uppercase tracking-widest">
                         Lớp {file.grade}
                       </span>
                       <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-500 text-[9px] font-black uppercase tracking-widest">

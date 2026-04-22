@@ -28,11 +28,17 @@ export default function GradingPage() {
   const [expandedStudentId, setExpandedStudentId] = useState<string | null>(null);
 
   const stats = [
-    { label: "Điểm trung bình hệ thống", value: "8.4", detail: "Tăng 0.2% so với kỳ trước", color: "mint", icon: GraduationCap },
-    { label: "Đã hoàn thành chấm điểm", value: "92%", color: "mint", icon: CheckCircle2 },
-    { label: "Bài tập Chờ chấm", value: globalStats.pendingGrading.toString(), color: "rose", icon: Clock },
-    { label: "Học sinh xuất sắc", value: "128", color: "mint", icon: Star },
+    { label: "Điểm trung bình hệ thống", value: "8.4", detail: "Tăng 0.2% so với kỳ trước", color: "mint" as const, icon: GraduationCap },
+    { label: "Đã hoàn thành chấm điểm", value: "92%", color: "mint" as const, icon: CheckCircle2 },
+    { label: "Bài tập Chờ chấm", value: globalStats.pendingGrading.toString(), color: "rose" as const, icon: Clock },
+    { label: "Học sinh xuất sắc", value: "128", color: "mint" as const, icon: Star },
   ];
+
+  const colorMap = {
+    mint: { bg20: 'bg-mint-500/20', bgLight: 'bg-mint-50', text: 'text-mint-500' },
+    rose: { bg20: 'bg-rose-500/20', bgLight: 'bg-rose-50', text: 'text-rose-500' },
+    slate: { bg20: 'bg-slate-500/20', bgLight: 'bg-slate-50', text: 'text-slate-500' },
+  } as const;
 
   const students = [
     {
@@ -134,9 +140,9 @@ export default function GradingPage() {
             transition={{ delay: i * 0.1 }}
             className="bg-white/80 backdrop-blur-xl p-7 rounded-[32px] border border-slate-100 shadow-sm group hover:shadow-xl hover:-translate-y-1 transition-all duration-500 overflow-hidden relative"
           >
-            <div className={`absolute top-0 left-0 w-2 h-full bg-${stat.color}-500/20`}></div>
+            <div className={`absolute top-0 left-0 w-2 h-full ${colorMap[stat.color].bg20}`}></div>
             <div className="flex justify-between items-start mb-4">
-              <div className={`w-11 h-11 rounded-[14px] bg-${stat.color}-50 text-${stat.color}-500 flex items-center justify-center transition-transform group-hover:scale-110`}>
+              <div className={`w-11 h-11 rounded-[14px] ${colorMap[stat.color].bgLight} ${colorMap[stat.color].text} flex items-center justify-center transition-transform group-hover:scale-110`}>
                 <stat.icon className="w-6 h-6" />
               </div>
               <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{stat.label}</span>
@@ -212,7 +218,7 @@ export default function GradingPage() {
                       </div>
                     </td>
                     <td className="px-8 py-6">
-                      <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-${student.color}-50 text-${student.color}-600 border border-${student.color}-100`}>
+                      <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${student.color === 'rose' ? 'bg-rose-50 text-rose-600 border border-rose-100' : 'bg-mint-50 text-mint-600 border border-mint-100'}`}>
                         {student.status}
                       </span>
                     </td>

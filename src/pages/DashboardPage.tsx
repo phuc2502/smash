@@ -32,11 +32,17 @@ export default function DashboardPage() {
   const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
 
   const stats = [
-    { label: "Tổng số Học viên", value: globalStats.totalUsers.toLocaleString(), trend: "+12%", up: true, subtitle: "so với tháng trước", color: "mint", icon: Users },
-    { label: "Tổng số Giáo viên", value: globalStats.totalTeachers.toLocaleString(), trend: "+3", up: true, subtitle: "giáo viên mới", color: "mint", icon: GraduationCap },
-    { label: "Lớp học Đang diễn ra", value: globalStats.activeClasses.toLocaleString(), trend: "", up: null, subtitle: "Phân bổ trên các khối", color: "mint", icon: CalendarDays },
-    { label: "Bài tập Chờ chấm", value: globalStats.pendingGrading.toLocaleString(), trend: "-0.5%", up: false, subtitle: "cần xử lý ngay", color: "rose", icon: CheckCircle2 },
+    { label: "Tổng số Học viên", value: globalStats.totalUsers.toLocaleString(), trend: "+12%", up: true, subtitle: "so với tháng trước", color: "mint" as const, icon: Users },
+    { label: "Tổng số Giáo viên", value: globalStats.totalTeachers.toLocaleString(), trend: "+3", up: true, subtitle: "giáo viên mới", color: "mint" as const, icon: GraduationCap },
+    { label: "Lớp học Đang diễn ra", value: globalStats.activeClasses.toLocaleString(), trend: "", up: null, subtitle: "Phân bổ trên các khối", color: "mint" as const, icon: CalendarDays },
+    { label: "Bài tập Chờ chấm", value: globalStats.pendingGrading.toLocaleString(), trend: "-0.5%", up: false, subtitle: "cần xử lý ngay", color: "rose" as const, icon: CheckCircle2 },
   ];
+
+  const colorMap = {
+    mint: { bg: 'bg-mint-500', bgLight: 'bg-mint-50', text: 'text-mint-600', textDark: 'text-mint-600' },
+    rose: { bg: 'bg-rose-500', bgLight: 'bg-rose-50', text: 'text-rose-600', textDark: 'text-rose-600' },
+    slate: { bg: 'bg-slate-500', bgLight: 'bg-slate-50', text: 'text-slate-600', textDark: 'text-slate-600' },
+  } as const;
 
   // Derive recent activities from context
   const recentActivities = [
@@ -112,10 +118,10 @@ export default function DashboardPage() {
             transition={{ delay: i * 0.1 }}
             className="bg-white/80 backdrop-blur-xl p-6 rounded-[24px] border border-slate-100 shadow-sm relative overflow-hidden group hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500"
           >
-            <div className={`absolute top-0 right-0 w-24 h-24 rounded-full -translate-y-8 translate-x-8 opacity-10 group-hover:scale-125 transition-transform duration-700 bg-${stat.color}-500`}></div>
+            <div className={`absolute top-0 right-0 w-24 h-24 rounded-full -translate-y-8 translate-x-8 opacity-10 group-hover:scale-125 transition-transform duration-700 ${colorMap[stat.color].bg}`}></div>
 
             <div className="flex items-center gap-3 mb-4">
-              <div className={`p-2 rounded-xl bg-${stat.color}-50 text-${stat.color}-600`}>
+              <div className={`p-2 rounded-xl ${colorMap[stat.color].bgLight} ${colorMap[stat.color].text}`}>
                 <stat.icon className="w-5 h-5" />
               </div>
               <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">{stat.label}</span>
@@ -183,7 +189,7 @@ export default function DashboardPage() {
           <div className="flex-1 space-y-8">
             {recentActivities.length > 0 ? recentActivities.map((activity, i) => (
               <div key={i} className="flex gap-4 group">
-                <div className={`shrink-0 w-9 h-9 rounded-full bg-${activity.color}-50 flex items-center justify-center text-${activity.color}-500 transition-transform group-hover:scale-110`}>
+                <div className={`shrink-0 w-9 h-9 rounded-full bg-mint-50 flex items-center justify-center text-mint-500 transition-transform group-hover:scale-110`}>
                   {activity.type === 'user' && <Users className="w-5 h-5" />}
                   {activity.type === 'score' && <CheckCircle2 className="w-5 h-5" />}
                   {activity.type === 'alert' && <AlertTriangle className="w-5 h-5" />}

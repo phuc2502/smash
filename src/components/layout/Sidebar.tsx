@@ -8,14 +8,15 @@ import {
   School,
   LogOut,
   Zap,
-  Divide
+  Divide,
+  Settings
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useAppContext } from "../../context/AppContext";
 
 export default function Sidebar() {
   const navigate = useNavigate();
-  const { stats } = useAppContext();
+  const { stats, logout } = useAppContext();
 
   const menuItems = [
     { icon: LayoutDashboard, label: "Bảng điều khiển", path: "/dashboard" },
@@ -24,6 +25,7 @@ export default function Sidebar() {
     { icon: FileText, label: "Tài liệu", path: "/materials" },
     { icon: GraduationCap, label: "Bài tập", path: "/assignments", count: stats.pendingGrading },
     { icon: School, label: "Chấm điểm", path: "/grading" },
+    { icon: Settings, label: "Cài đặt", path: "/settings" },
   ];
 
   return (
@@ -64,7 +66,10 @@ export default function Sidebar() {
 
       <div className="px-4 mt-auto">
         <button
-          onClick={() => navigate("/login")}
+          onClick={() => {
+            logout();
+            navigate("/login", { replace: true });
+          }}
           className="w-full flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-red-50 hover:text-red-500 rounded-xl transition-all duration-300 group"
         >
           <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />

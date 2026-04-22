@@ -52,9 +52,9 @@ export default function ManageScheduleModal({ isOpen, onClose, targetClass, onUp
             className="relative bg-white w-full max-w-md rounded-[40px] shadow-2xl overflow-hidden border border-slate-100 flex flex-col"
           >
             {/* Header */}
-            <div className={`p-8 border-b border-slate-50 flex justify-between items-center bg-${targetClass.color}-50/30`}>
+            <div className={`p-8 border-b border-slate-50 flex justify-between items-center bg-mint-50/30`}>
               <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-[20px] bg-${targetClass.color}-500 text-white flex items-center justify-center shadow-lg shadow-${targetClass.color}-100`}>
+                <div className={`w-12 h-12 rounded-[20px] bg-mint-500 text-white flex items-center justify-center shadow-lg shadow-mint-100`}>
                   <Calendar className="w-6 h-6" />
                 </div>
                 <div>

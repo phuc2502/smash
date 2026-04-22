@@ -35,11 +35,17 @@ export default function UserManagementPage() {
   const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
 
   const stats = [
-    { label: "Tổng số", value: users.length.toLocaleString(), detail: "Toán học", color: "mint", icon: Users },
-    { label: "Giáo viên", value: users.filter(u => u.role === 'Giáo viên').length.toLocaleString(), color: "slate", icon: BadgeCheck },
-    { label: "Học sinh", value: users.filter(u => u.role === 'Học sinh').length.toLocaleString(), color: "mint", icon: School },
-    { label: "Bị khóa", value: users.filter(u => u.status === 'Khóa').length.toLocaleString(), color: "rose", icon: Heart },
+    { label: "Tổng số", value: users.length.toLocaleString(), detail: "Toán học", color: "mint" as const, icon: Users },
+    { label: "Giáo viên", value: users.filter(u => u.role === 'Giáo viên').length.toLocaleString(), color: "slate" as const, icon: BadgeCheck },
+    { label: "Học sinh", value: users.filter(u => u.role === 'Học sinh').length.toLocaleString(), color: "mint" as const, icon: School },
+    { label: "Bị khóa", value: users.filter(u => u.status === 'Khóa').length.toLocaleString(), color: "rose" as const, icon: Heart },
   ];
+
+  const colorMap = {
+    mint: { bg: 'bg-mint-500', bgLight: 'bg-mint-50', text: 'text-mint-600' },
+    rose: { bg: 'bg-rose-500', bgLight: 'bg-rose-50', text: 'text-rose-600' },
+    slate: { bg: 'bg-slate-500', bgLight: 'bg-slate-50', text: 'text-slate-600' },
+  } as const;
 
   const handleAddRandomUser = () => {
     const id = `ST-${Math.floor(Math.random() * 10000)}`;
@@ -140,9 +146,9 @@ export default function UserManagementPage() {
             transition={{ delay: i * 0.1 }}
             className="bg-white/80 backdrop-blur-xl p-8 rounded-[32px] border border-slate-100 shadow-sm relative overflow-hidden group hover:shadow-xl transition-all duration-500"
           >
-            <div className={`absolute -right-4 -top-4 w-28 h-28 rounded-full blur-2xl opacity-10 group-hover:opacity-20 bg-${stat.color}-500 transition-opacity`}></div>
+            <div className={`absolute -right-4 -top-4 w-28 h-28 rounded-full blur-2xl opacity-10 group-hover:opacity-20 ${colorMap[stat.color].bg} transition-opacity`}></div>
             <div className="flex items-center gap-4 mb-6 relative z-10">
-              <div className={`w-12 h-12 rounded-2xl bg-${stat.color}-50 flex items-center justify-center text-${stat.color}-600`}>
+              <div className={`w-12 h-12 rounded-2xl ${colorMap[stat.color].bgLight} flex items-center justify-center ${colorMap[stat.color].text}`}>
                 <stat.icon className="w-6 h-6" />
               </div>
               <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{stat.label}</span>
@@ -219,7 +225,7 @@ export default function UserManagementPage() {
                 </div>
 
                 <div className="lg:block hidden">
-                  <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-${user.roleColor}-50 text-${user.roleColor}-600`}>{user.role}</span>
+                  <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${user.roleColor === 'slate' ? 'bg-slate-50 text-slate-600' : 'bg-mint-50 text-mint-600'}`}>{user.role}</span>
                 </div>
 
                 <div className="text-[13px] font-medium text-slate-600 group-hover:text-slate-900 transition-colors">
@@ -280,7 +286,7 @@ export default function UserManagementPage() {
                         <div className="space-y-4">
                           {getActivityLogs(user).map((log, idx) => (
                             <div key={idx} className="flex items-start gap-4 group/log">
-                              <div className={`mt-1 p-2 rounded-lg bg-${log.color}-50 text-${log.color}-600`}>
+                              <div className={`mt-1 p-2 rounded-lg ${log.color === 'rose' ? 'bg-rose-50 text-rose-600' : 'bg-mint-50 text-mint-600'}`}>
                                 <log.icon className="w-4 h-4" />
                               </div>
                               <div>

@@ -166,7 +166,7 @@ export default function CreateUserModal({ isOpen, onClose, onSubmit }: CreateUse
                           setFormData({ ...formData, role: role.value, status });
                         }}
                         className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all gap-2 ${formData.role === role.value
-                            ? `bg-${role.color}-50 border-${role.color}-500 text-${role.color}-600 scale-105 shadow-lg shadow-${role.color}-100`
+                            ? `${role.color === 'rose' ? 'bg-rose-50 border-rose-500 text-rose-600' : 'bg-mint-50 border-mint-500 text-mint-600'} scale-105 shadow-lg ${role.color === 'rose' ? 'shadow-rose-100' : 'shadow-mint-100'}`
                             : 'bg-slate-50 border-transparent text-slate-400 hover:bg-slate-100'
                           }`}
                       >
