@@ -55,11 +55,7 @@ export default function Sidebar() {
           >
             <item.icon className={`w-5 h-5 transition-transform group-hover:scale-110 duration-300`} />
             <span className="text-sm font-medium">{item.label}</span>
-            {item.count !== undefined && item.count > 0 && (
-              <span className="absolute right-4 bg-mint-100 text-mint-600 text-[10px] font-black px-2 py-0.5 rounded-full">
-                {item.count}
-              </span>
-            )}
+
           </NavLink>
         ))}
       </nav>
