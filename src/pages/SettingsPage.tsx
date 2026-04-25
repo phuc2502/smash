@@ -2,17 +2,13 @@ import React, { useState } from "react";
 import { motion } from "motion/react";
 import {
   Settings,
-  Moon,
-  Sun,
   Bell,
   BellOff,
-  Globe,
   Mail,
   Shield,
   KeyRound,
   User,
   Palette,
-  Monitor,
   Save,
   CheckCircle2,
   AlertTriangle,
@@ -86,21 +82,6 @@ export default function SettingsPage() {
 
   const settingsSections = [
     {
-      id: "display",
-      title: "Giao diện hiển thị",
-      subtitle: "Tùy chỉnh giao diện hệ thống",
-      icon: Monitor,
-      items: [
-        {
-          label: "Chế độ tối",
-          detail: "Giao diện Dark mode cho mắt",
-          icon: accountPreferences.darkMode ? Moon : Sun,
-          value: accountPreferences.darkMode,
-          onChange: () => updateAccountPreferences({ darkMode: !accountPreferences.darkMode }),
-        },
-      ],
-    },
-    {
       id: "notifications",
       title: "Thông báo",
       subtitle: "Quản lý cách nhận thông báo",
@@ -134,7 +115,6 @@ export default function SettingsPage() {
           </div>
           <div>
             <h1 className="text-3xl font-black text-slate-900 tracking-tight">Cài đặt hệ thống</h1>
-            <p className="text-sm text-slate-500 font-medium mt-1">Quản lý tài khoản, bảo mật và tùy chọn hiển thị</p>
           </div>
         </div>
       </motion.div>
@@ -365,48 +345,6 @@ export default function SettingsPage() {
             </motion.div>
           ))}
 
-          {/* Language Selection */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-            className="bg-white/80 backdrop-blur-xl rounded-[32px] border border-slate-100 shadow-sm overflow-hidden"
-          >
-            <div className="p-6 border-b border-slate-50 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-mint-50 text-mint-500 flex items-center justify-center">
-                <Globe className="w-4 h-4" />
-              </div>
-              <div>
-                <h3 className="text-sm font-black text-slate-900">Ngôn ngữ</h3>
-                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Chọn ngôn ngữ hệ thống</p>
-              </div>
-            </div>
-
-            <div className="p-6">
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => updateAccountPreferences({ language: "vi" })}
-                  className={`py-4 rounded-2xl text-xs font-black tracking-widest uppercase border-2 transition-all ${
-                    accountPreferences.language === "vi"
-                      ? "bg-mint-50 border-mint-600 text-mint-600 shadow-lg shadow-mint-100"
-                      : "bg-slate-50 border-slate-100 text-slate-400 hover:border-slate-200"
-                  }`}
-                >
-                  🇻🇳 Tiếng Việt
-                </button>
-                <button
-                  onClick={() => updateAccountPreferences({ language: "en" })}
-                  className={`py-4 rounded-2xl text-xs font-black tracking-widest uppercase border-2 transition-all ${
-                    accountPreferences.language === "en"
-                      ? "bg-mint-50 border-mint-600 text-mint-600 shadow-lg shadow-mint-100"
-                      : "bg-slate-50 border-slate-100 text-slate-400 hover:border-slate-200"
-                  }`}
-                >
-                  🇺🇸 English
-                </button>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </div>
     </div>
