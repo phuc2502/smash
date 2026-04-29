@@ -58,7 +58,7 @@ export default function LoginPage() {
             transition={{ delay: 0.1 }}
             className="text-5xl lg:text-7xl font-black text-slate-900 leading-[1.1] tracking-tight"
           >
-            Dot pha <span className="text-mint-600 italic">Tu duy</span> <br /> Chinh phuc Toan hoc.
+            Đột phá <span className="text-mint-600 italic">Tư duy</span> <br /> Chinh phục Toán học.
           </motion.h1>
 
           <motion.p
@@ -67,29 +67,10 @@ export default function LoginPage() {
             transition={{ delay: 0.2 }}
             className="text-lg text-slate-600 max-w-xl leading-relaxed"
           >
-            Chao mung den voi SMASH Math Center. Nen tang quan ly chuyen sau giup toi uu hoa viec day va hoc Toan hoc voi phuong phap hien dai va truc quan.
+            Chào mừng đến với SMASH Math Center. Nền tảng quản lý chuyên sâu giúp tối ưu hóa việc dạy và học Toán học với phương pháp hiện đại và trực quan.
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 }}
-            className="flex items-center gap-6 pt-4"
-          >
-            <div className="flex -space-x-3">
-              {[1, 2, 3].map((i) => (
-                <img
-                  key={i}
-                  src={`https://picsum.photos/seed/user${i}/64/64`}
-                  className="w-12 h-12 rounded-full border-4 border-white shadow-sm"
-                  alt="Avatar"
-                />
-              ))}
-            </div>
-            <p className="text-sm font-semibold text-slate-500">
-              Hon <span className="text-slate-900">10,000</span> hoc gia <br /> dang su dung
-            </p>
-          </motion.div>
+          {/* Removed user stats/avatars block for cleaner layout */}
         </div>
 
         <motion.div
@@ -98,17 +79,16 @@ export default function LoginPage() {
           transition={{ duration: 0.5 }}
           className="w-full lg:w-[480px]"
         >
-          <div className="bg-white/80 backdrop-blur-2xl rounded-[32px] p-10 lg:p-12 shadow-[0_40px_80px_rgba(47,82,61,0.08)] border border-white/50 relative overflow-hidden group">
+          <div className="bg-white/80 backdrop-blur-2xl rounded-[32px] p-10 lg:p-12 shadow-[0_50px_120px_rgba(151,193,169,0.22)] border border-white/50 relative overflow-hidden group">
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-mint-400 via-mint-500 to-mint-400 animate-gradient-x"></div>
 
             <div className="mb-10 text-center lg:text-left">
-              <h2 className="text-3xl font-black text-slate-900 tracking-tight">Dang nhap</h2>
-              <p className="text-slate-500 mt-2 font-medium">Truy cap vao he thong cua ban</p>
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight">Đăng nhập</h2>
             </div>
 
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Email hoc thuat</label>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Email</label>
                 <div className="relative group">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-mint-500 transition-colors" />
                   <input
@@ -123,7 +103,7 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Mat khau</label>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Mật khẩu</label>
                 <div className="relative group">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-mint-500 transition-colors" />
                   <input
@@ -158,28 +138,28 @@ export default function LoginPage() {
                     onChange={(event) => setRemember(event.target.checked)}
                     className="w-4 h-4 rounded border-slate-300 text-mint-500 focus:ring-mint-500/20"
                   />
-                  <span className="text-sm font-semibold text-slate-600 group-hover:text-slate-900">Ghi nho</span>
+                  <span className="text-sm font-semibold text-slate-600 group-hover:text-slate-900">Ghi nhớ</span>
                 </label>
-                <Link to="/forgot-password" className="text-sm font-bold text-mint-600 hover:text-mint-700 transition-colors">Quen mat khau?</Link>
+                <Link to="/forgot-password" className="text-sm font-bold text-mint-600 hover:text-mint-700 transition-colors">Quên mật khẩu?</Link>
               </div>
 
               <button
                 type="submit"
                 className="w-full bg-gradient-to-r from-mint-600 to-mint-400 text-white rounded-2xl py-4 font-bold text-lg shadow-xl shadow-mint-200 hover:shadow-2xl hover:shadow-mint-300 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3 group"
               >
-                Tiep tuc
+                Tiếp tục
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
             </form>
 
             <div className="mt-6 p-4 bg-mint-50 border border-mint-100 rounded-2xl text-xs text-mint-700 font-semibold leading-relaxed">
-              Tai khoan demo: <span className="font-black">admin@smashmath.edu.vn</span> hoac <span className="font-black">teacher@smashmath.edu.vn</span>.<br />
-              Mat khau: <span className="font-black">Smash@123</span>
+              Tài khoản demo: <span className="font-black">admin@smashmath.edu.vn</span> hoặc <span className="font-black">teacher@smashmath.edu.vn</span>.<br />
+              Mật khẩu: <span className="font-black">Smash@123</span>
             </div>
 
             <div className="mt-10 pt-8 border-t border-slate-100 text-center">
               <p className="text-sm font-bold text-slate-500">
-                Gap kho khan? <Link to="#" className="text-mint-600 border-b-2 border-mint-600/20 hover:border-mint-600 pb-0.5 transition-all">Lien he Quan tri vien</Link>
+                Gặp khó khăn? <Link to="#" className="text-mint-600 border-b-2 border-mint-600/20 hover:border-mint-600 pb-0.5 transition-all">Liên hệ Quản trị viên</Link>
               </p>
             </div>
           </div>

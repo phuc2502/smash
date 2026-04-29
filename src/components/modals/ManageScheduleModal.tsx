@@ -12,23 +12,41 @@ interface ManageScheduleModalProps {
 
 export default function ManageScheduleModal({ isOpen, onClose, targetClass, onUpdate }: ManageScheduleModalProps) {
   const [formData, setFormData] = useState({
-    schedule: "",
     location: ""
   });
+  const [presetDays, setPresetDays] = useState("Thứ 2, 4");
+  const [startTime, setStartTime] = useState("18:00");
+  const [endTime, setEndTime] = useState("20:00");
+
+  const dayOptions = [
+    "Thứ 2, 4",
+    "Thứ 3, 5",
+    "Thứ 4, 6",
+    "Thứ 7, CN",
+    "Thứ 2, 4, 6",
+    "Thứ 3, 5, 7",
+  ];
 
   useEffect(() => {
     if (targetClass) {
       setFormData({
-        schedule: targetClass.schedule || "",
         location: targetClass.location || ""
       });
+      setPresetDays("Thứ 2, 4");
+      setStartTime("18:00");
+      setEndTime("20:00");
     }
   }, [targetClass]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (targetClass) {
-      onUpdate(targetClass.id, formData);
+      const normalizedSchedule = `${presetDays} (${startTime} - ${endTime})`;
+
+      onUpdate(targetClass.id, {
+        ...formData,
+        schedule: normalizedSchedule,
+      });
       onClose();
     }
   };
@@ -78,14 +96,34 @@ export default function ManageScheduleModal({ isOpen, onClose, targetClass, onUp
                     <Clock className="w-3 h-3 text-mint-500" />
                     Thời gian & Ngày học
                   </label>
-                  <input
-                    required
-                    type="text"
-                    placeholder="VD: Thứ 2, 4 (18:00 - 20:00)"
-                    value={formData.schedule}
-                    onChange={e => setFormData({ ...formData, schedule: e.target.value })}
-                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold focus:ring-4 focus:ring-mint-500/10 focus:border-mint-500/50 outline-none transition-all"
-                  />
+                  <div className="space-y-3">
+                    <select
+                      value={presetDays}
+                      onChange={e => setPresetDays(e.target.value)}
+                      className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold focus:ring-4 focus:ring-mint-500/10 focus:border-mint-500/50 outline-none transition-all"
+                    >
+                      {dayOptions.map((option) => (
+                        <option key={option} value={option}>{option}</option>
+                      ))}
+                    </select>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <input
+                        required
+                        type="time"
+                        value={startTime}
+                        onChange={e => setStartTime(e.target.value)}
+                        className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold focus:ring-4 focus:ring-mint-500/10 focus:border-mint-500/50 outline-none transition-all"
+                      />
+                      <input
+                        required
+                        type="time"
+                        value={endTime}
+                        onChange={e => setEndTime(e.target.value)}
+                        className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-4 px-6 text-sm font-bold focus:ring-4 focus:ring-mint-500/10 focus:border-mint-500/50 outline-none transition-all"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="space-y-2">
