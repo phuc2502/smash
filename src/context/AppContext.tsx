@@ -72,6 +72,8 @@ export interface AccountPreferences {
   darkMode: boolean;
   emailReports: boolean;
   soundNotifications: boolean;
+  browserNotifications: boolean;
+  autoLockSession: boolean;
   language: 'vi' | 'en';
 }
 
@@ -152,6 +154,8 @@ const defaultPreferences: AccountPreferences = {
   darkMode: false,
   emailReports: true,
   soundNotifications: false,
+  browserNotifications: true,
+  autoLockSession: true,
   language: 'vi',
 };
 
@@ -238,7 +242,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!loadStoredJson<boolean>(LS_KEYS.auth, false)) return null;
     return loadStoredJson<AccountProfile>(LS_KEYS.account, defaultAccount);
   });
-  const [accountPreferences, setAccountPreferences] = useState<AccountPreferences>(() => loadStoredJson<AccountPreferences>(LS_KEYS.prefs, defaultPreferences));
+  const [accountPreferences, setAccountPreferences] = useState<AccountPreferences>(() => ({
+    ...defaultPreferences,
+    ...loadStoredJson<Partial<AccountPreferences>>(LS_KEYS.prefs, defaultPreferences),
+  }));
   const [accountActivities, setAccountActivities] = useState<AccountActivity[]>(defaultActivities);
   const [rememberedEmail, setRememberedEmail] = useState<string>(() => {
     if (typeof window === 'undefined') return '';

@@ -8,8 +8,7 @@ import {
   School,
   LogOut,
   Zap,
-  Divide,
-  Settings
+  Divide
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useAppContext } from "../../context/AppContext";
@@ -25,7 +24,6 @@ export default function Sidebar() {
     { icon: FileText, label: "Tài liệu", path: "/materials" },
     { icon: GraduationCap, label: "Bài tập", path: "/assignments", count: stats.pendingGrading },
     { icon: School, label: "Chấm điểm", path: "/grading" },
-    { icon: Settings, label: "Cài đặt", path: "/settings" },
   ];
 
   return (

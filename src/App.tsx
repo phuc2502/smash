@@ -9,7 +9,6 @@ import UserManagementPage from "./pages/UserManagementPage";
 import MaterialsPage from "./pages/MaterialsPage";
 import AssignmentsPage from "./pages/AssignmentsPage";
 import GradingPage from "./pages/GradingPage";
-import SettingsPage from "./pages/SettingsPage";
 import { AppProvider, useAppContext } from "./context/AppContext";
 
 function ProtectedAppRoute({ children }: { children: ReactElement }) {
@@ -37,7 +36,6 @@ export default function App() {
             <Route path="/materials" element={<MaterialsPage />} />
             <Route path="/assignments" element={<AssignmentsPage />} />
             <Route path="/grading" element={<GradingPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </Route>
 

@@ -41,7 +41,7 @@ export default function TopNavbar() {
     email: currentAccount?.email ?? "",
     phone: currentAccount?.phone ?? "",
   });
-  const [passwordForm, setPasswordForm] = useState({ currentPassword: "", nextPassword: "" });
+  const [passwordForm, setPasswordForm] = useState({ currentPassword: "", nextPassword: "", confirmNextPassword: "" });
   const [feedback, setFeedback] = useState<{ tone: "success" | "error"; message: string } | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -70,7 +70,7 @@ export default function TopNavbar() {
     }
 
     if (activeModal === "password") {
-      setPasswordForm({ currentPassword: "", nextPassword: "" });
+      setPasswordForm({ currentPassword: "", nextPassword: "", confirmNextPassword: "" });
     }
   }, [activeModal, currentAccount]);
 
@@ -114,12 +114,21 @@ export default function TopNavbar() {
     });
 
     setFeedback({ tone: "success", message: "Đã cập nhật hồ sơ thành công." });
+    setActiveModal(null);
   };
 
   const handleSavePassword = () => {
+    if (passwordForm.nextPassword !== passwordForm.confirmNextPassword) {
+      setFeedback({ tone: "error", message: "Xác nhận mật khẩu mới chưa khớp." });
+      return;
+    }
+
     const result = changePassword(passwordForm.currentPassword, passwordForm.nextPassword);
     setFeedback({ tone: result.success ? "success" : "error", message: result.message });
-    if (result.success) setPasswordForm({ currentPassword: "", nextPassword: "" });
+    if (result.success) {
+      setPasswordForm({ currentPassword: "", nextPassword: "", confirmNextPassword: "" });
+      setActiveModal(null);
+    }
   };
 
   if (!currentAccount) return null;
@@ -233,15 +242,15 @@ export default function TopNavbar() {
     {createPortal(
       <AnimatePresence>
         {activeModal && (
-          <div className="fixed inset-0 z-[100] flex justify-end">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.5 }} onClick={() => setActiveModal(null)} className="absolute inset-0 bg-slate-900/20 backdrop-blur-sm"></motion.div>
 
             <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.4 }}
-              className="relative bg-white w-full max-w-lg h-full shadow-[0_0_40px_rgba(0,0,0,0.08)] flex flex-col border-l border-slate-900/5"
+              initial={{ opacity: 0, y: 20, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.98 }}
+              transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.35 }}
+              className="relative bg-white w-full max-w-2xl max-h-[85vh] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] flex flex-col border border-slate-900/5 overflow-hidden"
             >
               <div className="p-8 border-b border-slate-900/5 flex justify-between items-center bg-white">
                 <div className="flex items-center gap-4">
@@ -319,6 +328,10 @@ export default function TopNavbar() {
                         <label className="text-xs font-medium text-slate-600 ml-1">Mật khẩu mới</label>
                         <input type="password" value={passwordForm.nextPassword} onChange={(event) => setPasswordForm(prev => ({ ...prev, nextPassword: event.target.value }))} placeholder="********" className="w-full bg-white border border-slate-900/10 rounded-2xl py-3 px-5 text-sm font-medium focus:ring-1 focus:ring-mint-500/30 focus:border-mint-500/30 focus:shadow-[0_0_0_2px_rgba(20,184,166,0.1)] outline-none transition-all shadow-sm" />
                       </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium text-slate-600 ml-1">Xác nhận mật khẩu mới</label>
+                        <input type="password" value={passwordForm.confirmNextPassword} onChange={(event) => setPasswordForm(prev => ({ ...prev, confirmNextPassword: event.target.value }))} placeholder="********" className="w-full bg-white border border-slate-900/10 rounded-2xl py-3 px-5 text-sm font-medium focus:ring-1 focus:ring-mint-500/30 focus:border-mint-500/30 focus:shadow-[0_0_0_2px_rgba(20,184,166,0.1)] outline-none transition-all shadow-sm" />
+                      </div>
                     </div>
                   </div>
                 )}
@@ -326,15 +339,6 @@ export default function TopNavbar() {
                 {activeModal === "settings" && (
                   <div className="space-y-10">
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between p-5 rounded-2xl bg-white border border-slate-900/5 shadow-sm hover:shadow-md transition-all">
-                        <div>
-                          <p className="text-sm font-medium text-slate-900">Dark mode</p>
-                          <p className="text-xs text-slate-500">Chế độ tối</p>
-                        </div>
-                        <button onClick={() => updateAccountPreferences({ darkMode: !accountPreferences.darkMode })} className={`w-12 h-6 rounded-full relative transition-all shadow-inner ${accountPreferences.darkMode ? "bg-mint-600" : "bg-slate-200"}`}>
-                          <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow-sm ${accountPreferences.darkMode ? "translate-x-6" : ""}`}></div>
-                        </button>
-                      </div>
                       <div className="flex items-center justify-between p-5 rounded-2xl bg-white border border-slate-900/5 shadow-sm hover:shadow-md transition-all">
                         <div>
                           <p className="text-sm font-medium text-slate-900">Email report</p>
@@ -353,16 +357,26 @@ export default function TopNavbar() {
                           <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow-sm ${accountPreferences.soundNotifications ? "translate-x-6" : ""}`}></div>
                         </button>
                       </div>
+                      <div className="flex items-center justify-between p-5 rounded-2xl bg-white border border-slate-900/5 shadow-sm hover:shadow-md transition-all">
+                        <div>
+                          <p className="text-sm font-medium text-slate-900">Thông báo trình duyệt</p>
+                          <p className="text-xs text-slate-500">Nhận thông báo trực tiếp khi có cập nhật mới</p>
+                        </div>
+                        <button onClick={() => updateAccountPreferences({ browserNotifications: !accountPreferences.browserNotifications })} className={`w-12 h-6 rounded-full relative transition-all shadow-inner ${accountPreferences.browserNotifications ? "bg-mint-600" : "bg-slate-200"}`}>
+                          <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow-sm ${accountPreferences.browserNotifications ? "translate-x-6" : ""}`}></div>
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-between p-5 rounded-2xl bg-white border border-slate-900/5 shadow-sm hover:shadow-md transition-all">
+                        <div>
+                          <p className="text-sm font-medium text-slate-900">Khóa phiên tự động</p>
+                          <p className="text-xs text-slate-500">Tự đăng xuất khi không hoạt động trong thời gian dài</p>
+                        </div>
+                        <button onClick={() => updateAccountPreferences({ autoLockSession: !accountPreferences.autoLockSession })} className={`w-12 h-6 rounded-full relative transition-all shadow-inner ${accountPreferences.autoLockSession ? "bg-mint-600" : "bg-slate-200"}`}>
+                          <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow-sm ${accountPreferences.autoLockSession ? "translate-x-6" : ""}`}></div>
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <button onClick={() => updateAccountPreferences({ language: "vi" })} className={`py-3 rounded-xl text-sm font-medium border ${accountPreferences.language === "vi" ? "bg-mint-50/50 border-mint-500/30 text-mint-700" : "bg-white border-slate-900/10 text-slate-600 hover:bg-slate-50"}`}>
-                        Tiếng Việt
-                      </button>
-                      <button onClick={() => updateAccountPreferences({ language: "en" })} className={`py-3 rounded-xl text-sm font-medium border ${accountPreferences.language === "en" ? "bg-mint-50/50 border-mint-500/30 text-mint-700" : "bg-white border-slate-900/10 text-slate-600 hover:bg-slate-50"}`}>
-                        English
-                      </button>
-                    </div>
                   </div>
                 )}
               </div>
