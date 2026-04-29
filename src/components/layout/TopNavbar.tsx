@@ -262,7 +262,6 @@ export default function TopNavbar() {
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold text-slate-900 tracking-tight">{panelTitle}</h3>
-                    <p className="text-xs font-medium text-slate-500 mt-0.5">Tài khoản SMASH</p>
                   </div>
                 </div>
                 <button onClick={() => setActiveModal(null)} className="p-3 text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-2xl transition-all">
