@@ -1,0 +1,210 @@
+# Kế hoạch Triển khai: Missing Features & RBAC
+
+## Tổng quan
+
+Triển khai ba nhóm tính năng: (A) RBAC toàn hệ thống, (B) Làm bài trực tuyến, (C) Xuất/In bảng điểm.
+
+---
+
+## Tác vụ
+
+- [x] 1. Mở rộng AppContext — PermissionKey, interfaces, demo data
+  - [x] 1.1 Mở rộng kiểu `PermissionKey` trong `AppContext.tsx`
+    - Thêm các permission mới: `submit_assignment`, `view_own_grades`, `export_grades`, `view_materials`, `view_assignments`, `manage_attendance`, `view_attendance`
+    - _Yêu cầu: 1.1_
+  - [x] 1.2 Cập nhật `defaultRolePermissions` theo bảng phân quyền
+    - `student`: thêm `submit_assignment`, `view_own_grades`, `view_materials`, `view_assignments`, `view_attendance`
+    - `parent`: thêm `view_own_grades`, `view_materials`, `view_assignments`, `view_attendance`
+    - `teacher`: thêm `view_materials`, `view_assignments`, `view_own_grades`, `export_grades`, `manage_attendance`, `view_attendance`
+    - `admin_staff`: thêm `view_materials`, `view_assignments`, `manage_attendance`, `view_attendance`
+    - `admin`, `manager`, `owner`: thêm tất cả permission mới bao gồm `export_grades`
+    - _Yêu cầu: 1.2, 1.3, 1.4, 1.5, 1.6, 1.7_
+  - [x] 1.3 Thêm interfaces `QuizQuestion` và `QuizSubmission` vào `AppContext.tsx`
+    - `QuizQuestion`: `id`, `text`, `type: 'multiple_choice' | 'essay'`, `options?`, `correctAnswer?`
+    - `QuizSubmission`: `id`, `assignmentId`, `studentId`, `answers`, `submittedAt`, `score?`, `maxScore?`
+    - _Yêu cầu: 7.1, 7.2_
+  - [x] 1.4 Mở rộng interface `Assignment` với `questions?: QuizQuestion[]`, `timeLimit?: number`, `deadlineAt?: string`
+    - _Yêu cầu: 7.3_
+  - [x] 1.5 Thêm state `quizSubmissions: QuizSubmission[]` và actions `submitQuiz()`, `getSubmission()` vào AppContext
+    - _Yêu cầu: 7.4, 7.5_
+  - [x] 1.6 Thêm action `switchDemoAccount(email: string): void` vào AppContext (dùng cho DemoRoleSwitcher)
+    - _Yêu cầu: 2.3_
+  - [x] 1.7 Thêm dữ liệu demo bài tập có câu hỏi
+    - 1 bài trắc nghiệm: 5 câu, `timeLimit: 15`, `status: 'Đang mở'`, lớp `MATH-06-01`
+    - 1 bài tự luận: 2 câu, `timeLimit: 0`, `status: 'Đang mở'`, lớp `MATH-09-EX`
+    - 1 bài `status: 'Đã đóng'` để test trạng thái
+    - _Yêu cầu: 7.6_
+  - [x] 1.8 Thêm dữ liệu demo điểm số cho ít nhất 5 học viên (Xuất sắc/Giỏi/Khá/Trung bình/Yếu)
+    - _Yêu cầu: 7.7_
+  - [x] 1.9 Thêm dữ liệu demo điểm danh (`AttendanceSession`, `AttendanceRecord`) cho `STU-001`
+    - _Yêu cầu: 7.8_
+
+- [x] 2. Tạo PermissionRoute component
+  - [x] 2.1 Tạo file `src/components/auth/PermissionRoute.tsx`
+    - Nhận props: `permission: PermissionKey`, `redirectTo?: string` (mặc định `/dashboard`), `children: ReactElement`
+    - Gọi `canAccess(permission)` từ AppContext
+    - Render `children` nếu có quyền, `<Navigate to={redirectTo} replace />` nếu không
+    - _Yêu cầu: 3.1_
+  - [x] 2.2 Cập nhật `App.tsx` — bọc các route cần bảo vệ bằng `PermissionRoute`
+    - `/users` → `manage_users`
+    - `/grading` → `grade_assignments`
+    - `/class-report` → `grade_assignments`
+    - `/classes/attendance` → `view_attendance`
+    - `/assignments/take/:assignmentId` → `submit_assignment`, redirectTo `/assignments`
+    - _Yêu cầu: 3.1, 3.2, 3.3, 3.7, 6.1_
+  - [x]* 2.3 Viết property test cho PermissionRoute dispatcher
+    - **Property 1: PermissionRoute luôn chặn đúng**
+    - **Validates: Yêu cầu 3.1**
+    - Generate ngẫu nhiên `RoleKey` và `PermissionKey`, kiểm tra render đúng
+    - `// Feature: missing-features-rbac, Property 1: PermissionRoute chặn đúng`
+
+- [x] 3. Tạo DemoRoleSwitcher component
+  - [x] 3.1 Tạo file `src/components/demo/DemoRoleSwitcher.tsx`
+    - Widget cố định `fixed bottom-4 right-4 z-50`
+    - Chỉ render khi `import.meta.env.VITE_DEMO_MODE === 'true'`
+    - Dropdown 4 tùy chọn: Admin, Giáo viên, Học viên, Phụ huynh
+    - Gọi `switchDemoAccount(email)` khi chọn
+    - Hiển thị role hiện tại với màu phân biệt
+    - _Yêu cầu: 2.1, 2.2, 2.3, 2.4, 2.5_
+  - [x] 3.2 Thêm `DemoRoleSwitcher` vào `AppLayout.tsx`
+    - _Yêu cầu: 2.1_
+  - [x] 3.3 Thêm `VITE_DEMO_MODE=true` vào `.env.example`
+    - _Yêu cầu: 2.1_
+
+- [x] 4. Cập nhật Sidebar — lọc menu theo RBAC
+  - [x] 4.1 Cập nhật `Sidebar.tsx` — thêm trường `requiredPermission` vào nav link config
+    - `/users` → `manage_users`
+    - Nhóm Quản lý lớp học → `manage_classes` (ẩn cả nhóm nếu không có quyền)
+    - `/classes/attendance` → `view_attendance`
+    - `/class-report` → `grade_assignments`
+    - `/materials` → `view_materials`
+    - `/assignments` → `view_assignments`
+    - `/grading` → `grade_assignments`
+    - _Yêu cầu: 2.2, 2.3, 2.4, 2.5, 2.6, 2.7_
+  - [x] 4.2 Implement logic lọc: gọi `canAccess(link.requiredPermission)` trước khi render mỗi mục
+    - Ẩn cả nhóm nếu tất cả children bị ẩn
+    - _Yêu cầu: 2.2, 2.7_
+
+- [x] 5. Phân quyền trang — ẩn/hiện nút hành động
+  - [x] 5.1 Cập nhật `AssignmentsPage.tsx`
+    - Ẩn nút "Tạo bài tập mới" nếu `!canAccess('manage_assignments')`
+    - Hiển thị nút "Làm bài" chỉ khi `canAccess('submit_assignment')` và `assignment.status === 'Đang mở'`
+    - Ẩn nút "Làm bài" với role `parent`
+    - _Yêu cầu: 3.4, 3.5, 5.2, 5.3, 5.4_
+  - [x] 5.2 Cập nhật `MaterialsPage.tsx`
+    - Ẩn nút "Tải lên tài liệu mới" và "Xóa" nếu `!canAccess('manage_materials')`
+    - _Yêu cầu: 3.6_
+  - [x] 5.3 Cập nhật `UserManagementPage.tsx`
+    - Ẩn nút "Thêm người dùng", "Xóa", "Khóa tài khoản" nếu `!canAccess('manage_users')`
+    - _Yêu cầu: 3.8_
+  - [x] 5.4 Cập nhật `ClassManagementPage.tsx`
+    - Ẩn nút "Tạo lớp mới", "Sửa", "Xóa lớp" nếu `!canAccess('manage_classes')`
+    - _Yêu cầu: 3.9_
+  - [x] 5.5 Cập nhật `AttendancePage.tsx`
+    - Hiển thị đầy đủ chức năng nếu `canAccess('manage_attendance')`
+    - Chỉ xem nếu `canAccess('view_attendance')` nhưng không có `manage_attendance`
+    - Lọc dữ liệu theo `studentId` nếu role là `student`
+    - Lọc dữ liệu theo `PARENT_CHILD_MAP` nếu role là `parent`
+    - _Yêu cầu: 4.1, 4.2, 4.3, 4.4, 4.5_
+
+- [x] 6. Tạo OnlineQuizPage
+  - [x] 6.1 Tạo file `src/pages/OnlineQuizPage.tsx`
+    - Đọc `assignmentId` từ `useParams()`
+    - Tải bài tập từ AppContext, hiển thị error state nếu không tìm thấy
+    - Kiểm tra `getSubmission(assignmentId, currentAccount.id)` — nếu đã nộp thì hiển thị kết quả
+    - _Yêu cầu: 6.2, 6.12, 6.13_
+  - [x] 6.2 Implement layout 3 vùng
+    - Header cố định: tiêu đề bài tập + đồng hồ đếm ngược
+    - Vùng nội dung cuộn: danh sách câu hỏi
+    - Footer cố định: thanh tiến độ + nút "Nộp bài"
+    - _Yêu cầu: 6.3_
+  - [x] 6.3 Implement render câu hỏi trắc nghiệm
+    - 4 lựa chọn A/B/C/D dạng radio button
+    - Đánh số thứ tự câu hỏi
+    - _Yêu cầu: 6.4_
+  - [x] 6.4 Implement render câu hỏi tự luận
+    - Textarea tự do cho mỗi câu
+    - Đánh số thứ tự câu hỏi
+    - _Yêu cầu: 6.5_
+  - [x] 6.5 Implement countdown timer
+    - Đếm ngược từ `timeLimit * 60` giây
+    - Hiển thị định dạng `MM:SS`
+    - Màu đỏ khi còn dưới 5 phút
+    - Tự động nộp bài khi hết giờ
+    - _Yêu cầu: 6.6, 6.7_
+  - [x] 6.6 Implement hộp thoại xác nhận nộp bài
+    - Hiển thị số câu chưa trả lời
+    - Nút "Xác nhận nộp" và "Tiếp tục làm"
+    - _Yêu cầu: 6.8_
+  - [x] 6.7 Implement logic nộp bài và tính điểm
+    - Tính điểm tự động với trắc nghiệm
+    - Gọi `submitQuiz()` lưu vào AppContext
+    - Hiển thị kết quả ngay với trắc nghiệm (số câu đúng, điểm, đáp án đúng)
+    - Hiển thị "Chờ giáo viên chấm" với tự luận
+    - _Yêu cầu: 6.9, 6.10, 6.11_
+  - [x] 6.8 Thêm route `/assignments/take/:assignmentId` vào `App.tsx`
+    - _Yêu cầu: 6.1_
+  - [ ]* 6.9 Viết property test cho hàm tính điểm trắc nghiệm
+    - **Property 4: Tính điểm trắc nghiệm nhất quán**
+    - **Validates: Yêu cầu 6.9**
+    - Generate ngẫu nhiên câu hỏi và đáp án, kiểm tra điểm trong [0, 10]
+    - `// Feature: missing-features-rbac, Property 4: điểm trắc nghiệm trong [0,10]`
+
+- [x] 7. Tạo PrintableGradeReport và tính năng xuất bảng điểm
+  - [x] 7.1 Tạo hàm `classifyGrade(average: number | null): GradeClassification`
+    - ≥9.0 → Xuất sắc, ≥8.0 → Giỏi, ≥6.5 → Khá, ≥5.0 → Trung bình, <5.0 → Yếu, null → Chưa có điểm
+    - _Yêu cầu: 9.1, 9.3_
+  - [x] 7.2 Tạo hàm `calcAverage(scores: number[]): number | null`
+    - Trả về `null` nếu mảng rỗng
+    - Làm tròn 1 chữ số thập phân
+    - _Yêu cầu: 9.2_
+  - [x] 7.3 Tạo file `src/components/grading/PrintableGradeReport.tsx`
+    - Render bảng điểm: tên trung tâm, tên lớp, giáo viên, danh sách học viên
+    - Cột: STT, Họ tên, điểm từng bài, điểm TB, xếp loại
+    - Màu xếp loại: Xuất sắc/Giỏi → xanh, Khá → xanh dương, Trung bình → vàng, Yếu → đỏ
+    - Hiển thị ngày xuất báo cáo ở cuối
+    - Bọc trong `<div id="printable-area">`
+    - _Yêu cầu: 8.5, 8.7, 8.9, 9.4_
+  - [x] 7.4 Thêm CSS `@media print` vào `src/index.css`
+    - `body * { visibility: hidden }`
+    - `#printable-area, #printable-area * { visibility: visible }`
+    - _Yêu cầu: 8.6, 8.7, 8.8_
+  - [x] 7.5 Cập nhật `GradingPage.tsx`
+    - Thêm nút "Xuất PDF / In bảng điểm" nếu `canAccess('export_grades')`
+    - Gọi `window.print()` khi nhấn nút
+    - Với student/parent: chỉ hiển thị điểm cá nhân, ẩn nút xuất
+    - _Yêu cầu: 8.1, 8.2, 8.4, 8.10_
+  - [x] 7.6 Cập nhật `ClassReportPage.tsx`
+    - Thêm nút "Xuất báo cáo" nếu `canAccess('export_grades')`
+    - Gọi `window.print()` khi nhấn nút
+    - _Yêu cầu: 8.3_
+  - [ ]* 7.7 Viết property test cho classifyGrade
+    - **Property 2: Phân loại học lực bao phủ toàn bộ [0, 10]**
+    - **Validates: Yêu cầu 9.1**
+    - Generate ngẫu nhiên `average` trong [0.0, 10.0], kiểm tra không bao giờ throw
+    - `// Feature: missing-features-rbac, Property 2: classifyGrade bao phủ [0,10]`
+  - [ ]* 7.8 Viết property test cho calcAverage
+    - **Property 3: Điểm trung bình nằm trong [0, 10]**
+    - **Validates: Yêu cầu 9.2**
+    - Generate ngẫu nhiên mảng điểm hợp lệ, kiểm tra kết quả trong [0, 10]
+    - `// Feature: missing-features-rbac, Property 3: calcAverage trong [0,10]`
+  - [ ]* 7.9 Viết property test cho canAccess với submit_assignment và export_grades
+    - **Property 5 & 6: submit_assignment chỉ student, export_grades không thuộc student/parent**
+    - **Validates: Yêu cầu 1.3, 1.4**
+    - Generate ngẫu nhiên RoleKey, kiểm tra kết quả canAccess đúng với bảng phân quyền
+    - `// Feature: missing-features-rbac, Property 5&6: permission đúng theo role`
+
+- [x] 8. Checkpoint — Kiểm tra toàn bộ
+  - Đăng nhập Admin: kiểm tra thấy đủ menu, có nút xuất bảng điểm, không thấy nút "Làm bài"
+  - Đăng nhập Giáo viên: kiểm tra ẩn menu Người dùng, thấy Chấm điểm, có nút xuất
+  - Đăng nhập Học viên: kiểm tra thấy nút "Làm bài", ẩn menu Chấm điểm và Người dùng
+  - Đăng nhập Phụ huynh: kiểm tra không thấy nút "Làm bài", chỉ xem bài tập
+  - Kiểm tra truy cập trực tiếp URL bị chặn đúng (ví dụ: student vào `/users` → redirect)
+  - Kiểm tra DemoRoleSwitcher chuyển đổi role không cần đăng xuất
+
+## Ghi chú
+
+- Tác vụ đánh dấu `*` là tùy chọn (property-based tests)
+- Thứ tự quan trọng: Tác vụ 1 (AppContext) phải hoàn thành trước tất cả tác vụ còn lại
+- Tác vụ 2 (PermissionRoute) phải xong trước tác vụ 5 (phân quyền trang)
+- Tác vụ 6 (OnlineQuizPage) và 7 (PrintableGradeReport) có thể làm song song sau khi tác vụ 1 xong
