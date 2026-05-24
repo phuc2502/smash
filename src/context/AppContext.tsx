@@ -1775,33 +1775,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           };
           return updated;
         } else {
-          const newRecord: AttendanceRecord = {
-            id: `ATR-${Date.now()}`,
-            classId: classId,
-            studentId: request.studentId,
-            studentName: request.studentName,
-            date: dateStr,
-            status: 'excused',
-            note: `Vắng có phép: ${request.reason}`,
-            markedBy: resolvedBy,
-            markedAt: new Date().toISOString(),
-          };
-
-          const newSession: AttendanceSession = {
-            id: `ATT-${Date.now()}`,
-            classId: classId,
-            className: request.className,
-            date: dateStr,
-            totalStudents: 1,
-            presentCount: 0,
-            absentCount: 0,
-            lateCount: 0,
-            excusedCount: 1,
-            records: [newRecord],
-            isFinalized: false,
-          };
-
-          return [newSession, ...prev];
+          return prev;
         }
       });
     }
