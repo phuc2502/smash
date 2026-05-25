@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   Megaphone,
   Settings,
+  Clock,
 } from "lucide-react";
 import type { PermissionKey } from "../../context/AppContext";
 
@@ -56,7 +57,7 @@ export function isClassNavPath(pathname: string): boolean {
 }
 
 /** Các path con thuộc nhóm Điểm danh */
-export const ATTENDANCE_NAV_PATHS = ["/attendance", "/attendance/leave-requests"] as const;
+export const ATTENDANCE_NAV_PATHS = ["/attendance", "/attendance/leave-requests", "/attendance/late-requests"] as const;
 
 export function isAttendanceNavPath(pathname: string): boolean {
   return ATTENDANCE_NAV_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
@@ -87,6 +88,7 @@ export const APP_NAV_LINKS: AppNavEntry[] = [
     children: [
       { path: "/attendance", label: "Quản lý điểm danh", icon: ClipboardCheck },
       { path: "/attendance/leave-requests", label: "Yêu cầu nghỉ phép", icon: CalendarDays },
+      { path: "/attendance/late-requests", label: "Yêu cầu đi muộn", icon: Clock },
     ],
   },
   { path: "/materials", label: "Tài liệu", icon: FileText, requiredPermission: "view_materials" },
