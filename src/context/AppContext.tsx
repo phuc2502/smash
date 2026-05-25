@@ -292,6 +292,20 @@ export interface LeaveRequest {
   resolvedAt?: string;
 }
 
+export interface LateRequest {
+  id: string;
+  studentId: string;
+  studentName: string;
+  classId: string;
+  className: string;
+  date: string;
+  reason: string;
+  status: 'pending' | 'approved' | 'rejected';
+  submittedAt: string;
+  resolvedBy?: string;
+  resolvedAt?: string;
+}
+
 export type RoleKey = 'owner' | 'manager' | 'admin_staff' | 'admin' | 'teacher' | 'student' | 'parent';
 export type AccountStatus = 'active' | 'inactive' | 'locked';
 export type PermissionKey =
@@ -368,6 +382,7 @@ interface AppState {
   gradeEntries: GradeEntry[];
   studentComments: StudentComment[];
   leaveRequests: LeaveRequest[];
+  lateRequests: LateRequest[];
   forgotPasswordRequests: ForgotPasswordRequest[];
 }
 
@@ -433,6 +448,11 @@ interface AppContextType extends AppState, SystemImprovementsState, SystemImprov
   // Leave Requests
   submitLeaveRequest: (request: Omit<LeaveRequest, 'id' | 'status' | 'submittedAt'>) => void;
   resolveLeaveRequest: (id: string, status: 'approved' | 'rejected', resolvedBy: string) => void;
+
+  // Late Requests
+  lateRequests: LateRequest[];
+  submitLateRequest: (request: Omit<LateRequest, 'id' | 'status' | 'submittedAt'>) => void;
+  resolveLateRequest: (id: string, status: 'approved' | 'rejected', resolvedBy: string) => void;
 
   // Quiz
   quizSubmissions: QuizSubmission[];
@@ -1305,6 +1325,33 @@ const initialLeaveRequests: LeaveRequest[] = [
   }
 ];
 
+const initialLateRequests: LateRequest[] = [
+  {
+    id: 'LRT-001',
+    studentId: 'STU-001',
+    studentName: 'Nguyễn Minh Khoa',
+    classId: 'MATH-06-01',
+    className: 'Toán 6 - Nâng cao',
+    date: new Date().toISOString().split('T')[0],
+    reason: 'Em bị hỏng xe đạp điện giữa đường nên xin phép đi học muộn khoảng 30 phút.',
+    status: 'pending',
+    submittedAt: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
+  },
+  {
+    id: 'LRT-002',
+    studentId: 'ST-2023-202',
+    studentName: 'Lê Thị Mai',
+    classId: 'MATH-06-01',
+    className: 'Toán 6 - Nâng cao',
+    date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
+    reason: 'Em có lịch thi tuyển chọn học sinh giỏi tại trường nên xin phép vào muộn.',
+    status: 'approved',
+    submittedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+    resolvedBy: 'Trần Văn A',
+    resolvedAt: new Date(Date.now() - 86400000).toISOString(),
+  }
+];
+
 const initialGradeEntries: GradeEntry[] = [
   // ── Lớp MATH-06-01 (Thầy Trần Văn Cường) ───────────────────
   { id: 'GE-001', studentId: 'ST-2023-084', classId: 'MATH-06-01', title: 'Kiểm tra miệng', scoreType: 'oral', score: 8, maxScore: 10, gradedBy: 'TCH-109', gradedAt: '2025-03-01T08:00:00.000Z' },
@@ -1367,6 +1414,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [materials, setMaterials] = useState<Material[]>(() => loadStoredJson<Material[]>('smash.materials', initialMaterials));
   const [attendanceSessions, setAttendanceSessions] = useState<AttendanceSession[]>(() => loadStoredJson<AttendanceSession[]>('smash.attendanceSessions', initialAttendanceSessions));
   const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>(() => loadStoredJson<LeaveRequest[]>('smash.leaveRequests', initialLeaveRequests));
+  const [lateRequests, setLateRequests] = useState<LateRequest[]>(() => loadStoredJson<LateRequest[]>('smash.lateRequests', initialLateRequests));
   const [quizSubmissions, setQuizSubmissions] = useState<QuizSubmission[]>(() => loadStoredJson<QuizSubmission[]>('smash.quizSubmissions', []));
   const [gradeEntries, setGradeEntries] = useState<GradeEntry[]>(() => loadStoredJson<GradeEntry[]>('smash.gradeEntries', initialGradeEntries));
   const [studentComments, setStudentComments] = useState<StudentComment[]>(() => loadStoredJson<StudentComment[]>('smash.studentComments', []));
@@ -1441,6 +1489,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => { saveJson('smash.parentChildMap.v2', parentChildMap); }, [parentChildMap]);
   useEffect(() => { saveJson('smash.materials', materials); }, [materials]);
   useEffect(() => { saveJson('smash.leaveRequests', leaveRequests); }, [leaveRequests]);
+  useEffect(() => { saveJson('smash.lateRequests', lateRequests); }, [lateRequests]);
   useEffect(() => { saveJson('smash.forgotPasswordRequests', forgotPasswordRequests); }, [forgotPasswordRequests]);
   useEffect(() => { saveJson('smash.quizSubmissions', quizSubmissions); }, [quizSubmissions]);
   useEffect(() => { saveJson('smash.studentComments', studentComments); }, [studentComments]);
@@ -1782,6 +1831,90 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     appendActivity(
       status === 'approved' ? 'Phê duyệt nghỉ phép' : 'Từ chối nghỉ phép',
+      `Đơn: ${id}, Người duyệt: ${resolvedBy}`,
+      status === 'approved' ? 'mint' : 'slate'
+    );
+  };
+
+  const submitLateRequest = (request: Omit<LateRequest, 'id' | 'status' | 'submittedAt'>) => {
+    const newRequest: LateRequest = {
+      ...request,
+      id: `LRT-${Date.now()}`,
+      status: 'pending',
+      submittedAt: new Date().toISOString(),
+    };
+    setLateRequests(prev => [newRequest, ...prev]);
+    appendActivity('Nộp đơn đi muộn', `Học sinh: ${request.studentName}, Lớp: ${request.className}`, 'mint');
+  };
+
+  const resolveLateRequest = (id: string, status: 'approved' | 'rejected', resolvedBy: string) => {
+    let resolvedReq: LateRequest | undefined;
+    setLateRequests(prev => prev.map(req => {
+      if (req.id !== id) return req;
+      resolvedReq = {
+        ...req,
+        status,
+        resolvedBy,
+        resolvedAt: new Date().toISOString(),
+      };
+      return resolvedReq;
+    }));
+
+    if (status === 'approved') {
+      setAttendanceSessions(prev => {
+        const request = resolvedReq;
+        if (!request) return prev;
+
+        const dateStr = request.date;
+        const classId = request.classId;
+
+        const sessionIdx = prev.findIndex(s => s.classId === classId && s.date === dateStr);
+        if (sessionIdx >= 0) {
+          const updated = [...prev];
+          const session = updated[sessionIdx];
+          const recordIdx = session.records.findIndex(r => r.studentId === request.studentId);
+          let updatedRecords = [...session.records];
+
+          if (recordIdx >= 0) {
+            updatedRecords[recordIdx] = {
+              ...updatedRecords[recordIdx],
+              status: 'late',
+              note: `Đi muộn có phép: ${request.reason}`,
+              markedBy: resolvedBy,
+              markedAt: new Date().toISOString(),
+            };
+          } else {
+            updatedRecords.push({
+              id: `ATR-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+              classId: classId,
+              studentId: request.studentId,
+              studentName: request.studentName,
+              date: dateStr,
+              status: 'late',
+              note: `Đi muộn có phép: ${request.reason}`,
+              markedBy: resolvedBy,
+              markedAt: new Date().toISOString(),
+            });
+          }
+
+          updated[sessionIdx] = {
+            ...session,
+            records: updatedRecords,
+            totalStudents: updatedRecords.length,
+            presentCount: updatedRecords.filter(r => r.status === 'present').length,
+            absentCount: updatedRecords.filter(r => r.status === 'absent').length,
+            lateCount: updatedRecords.filter(r => r.status === 'late').length,
+            excusedCount: updatedRecords.filter(r => r.status === 'excused').length,
+          };
+          return updated;
+        } else {
+          return prev;
+        }
+      });
+    }
+
+    appendActivity(
+      status === 'approved' ? 'Phê duyệt đi muộn' : 'Từ chối đi muộn',
       `Đơn: ${id}, Người duyệt: ${resolvedBy}`,
       status === 'approved' ? 'mint' : 'slate'
     );
@@ -2338,6 +2471,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
         leaveRequests,
         submitLeaveRequest,
         resolveLeaveRequest,
+        lateRequests,
+        submitLateRequest,
+        resolveLateRequest,
         markAttendance,
         updateAttendanceRecord,
         finalizeAttendanceSession,
