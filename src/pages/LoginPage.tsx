@@ -176,11 +176,6 @@ export default function LoginPage() {
               </button>
             </form>
 
-            <div className="mt-6 p-4 bg-mint-50 border border-mint-100 rounded-2xl text-xs text-mint-700 font-semibold leading-relaxed">
-              Tài khoản demo: <span className="font-black">admin</span>, <span className="font-black">teacher</span>, <span className="font-black">student</span> hoặc <span className="font-black">parent</span> @smashmath.edu.vn<br />
-              Mật khẩu: <span className="font-black">Smash@123</span>
-            </div>
-
             <div className="mt-10 pt-8 border-t border-slate-100 text-center">
               <p className="text-sm font-bold text-slate-500">
                 Gặp khó khăn?{" "}
