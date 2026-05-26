@@ -13,7 +13,6 @@ import {
   BarChart3,
   MessageSquare,
   Lock,
-  ClipboardList,
   Users,
 } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -21,19 +20,18 @@ import {
   useAppContext,
 } from '../context/AppContext';
 import PrintableGradeReport, { type GradeRow } from '../components/grading/PrintableGradeReport';
-import EssayGradingTab from '../components/grading/EssayGradingTab';
+
 import GradeTableTab from '../components/grading/GradeTableTab';
 import CommentTab from '../components/grading/CommentTab';
 import { calcAverage, classifyGrade } from '../utils/gradeUtils';
 
-type TabKey = 'essay' | 'grades' | 'comments';
+type TabKey = 'grades' | 'comments';
 
 export default function GradingPage() {
   const {
     classes,
     users,
     assignments,
-    quizSubmissions,
     gradeEntries,
     studentComments,
     canAccess,
@@ -42,7 +40,6 @@ export default function GradingPage() {
     updateGradeEntry,
     deleteGradeEntry,
     saveStudentComment,
-    gradeEssaySubmission,
     classStudentMap,
     parentChildMap,
     appendActivity,
@@ -219,26 +216,8 @@ export default function GradingPage() {
     [studentComments, selectedClassId, visibleStudentIds]
   );
 
-  // Filter quizSubmissions for selected class (via assignments)
-  const classAssignmentIds = useMemo(
-    () => assignments.filter(a => a.classId === selectedClassId).map(a => a.id),
-    [assignments, selectedClassId]
-  );
-
-  // Essay submissions: has essay question + no score + visible student
-  const pendingEssaySubmissions = useMemo(() => {
-    return quizSubmissions.filter(s => {
-      if (!classAssignmentIds.includes(s.assignmentId)) return false;
-      if (s.score !== undefined) return false;
-      if (!visibleStudentIds.includes(s.studentId)) return false;
-      const assignment = assignments.find(a => a.id === s.assignmentId);
-      if (!assignment?.questions) return false;
-      return assignment.questions.some(q => q.type === 'essay');
-    });
-  }, [quizSubmissions, classAssignmentIds, visibleStudentIds, assignments]);
 
   // ── Tab visibility ───────────────────────────────────────────
-  const showEssayTab = canGrade && !isAdmin;
   // Grades tab always visible (read-only for students/parents)
 
   // ── PrintableGradeReport data ────────────────────────────────
@@ -264,9 +243,6 @@ export default function GradingPage() {
 
   // ── Tab config ───────────────────────────────────────────────
   const tabs: { key: TabKey; label: string; icon: React.ElementType; badge?: number }[] = [
-    ...(showEssayTab
-      ? [{ key: 'essay' as TabKey, label: 'Chấm bài nộp', icon: ClipboardList, badge: pendingEssaySubmissions.length }]
-      : []),
     { key: 'grades' as TabKey, label: 'Bảng điểm', icon: BarChart3 },
     ...((isStudent || isParent || isAdmin)
       ? [{ key: 'comments' as TabKey, label: 'Nhận xét', icon: MessageSquare }]
@@ -558,15 +534,6 @@ export default function GradingPage() {
 
           {/* Tab content */}
           <div className="p-6">
-            {activeTab === 'essay' && showEssayTab && (
-              <EssayGradingTab
-                classId={selectedClassId}
-                submissions={pendingEssaySubmissions}
-                assignments={assignments}
-                users={users}
-                onGrade={gradeEssaySubmission}
-              />
-            )}
 
             {activeTab === 'grades' && (
               <GradeTableTab
