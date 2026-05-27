@@ -457,7 +457,11 @@ export default function UserManagementPage() {
                                   </div>
                                   {canManageUsers && (
                                     <button
-                                      onClick={() => unlinkParentFromStudent(user.id, childId)}
+                                      onClick={() => {
+                                        unlinkParentFromStudent(user.id, childId);
+                                        const child = users.find(u => u.id === childId);
+                                        triggerToast(`Đã hủy liên kết với học sinh ${child?.name ?? childId}.`);
+                                      }}
                                       className="p-1 rounded-lg text-slate-300 hover:text-rose-500 hover:bg-rose-50 opacity-0 group-hover/child:opacity-100 transition-all"
                                     >
                                       <Link2Off className="w-3.5 h-3.5" />
@@ -494,6 +498,7 @@ export default function UserManagementPage() {
                                     `${user.name} đã được liên kết với ${child?.name ?? childId}`,
                                     'mint'
                                   );
+                                  triggerToast(`Liên kết với học sinh ${child?.name ?? childId} thành công!`);
                                   setSelectedChildId(prev => ({ ...prev, [user.id]: '' }));
                                 }}
                                 disabled={!selectedChildId[user.id]}

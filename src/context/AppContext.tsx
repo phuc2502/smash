@@ -806,6 +806,8 @@ const initialClasses: Class[] = [
   { id: 'MATH-08-01', title: 'Toán 8 - Nâng cao', status: 'Đang diễn ra', instructor: 'Cô Lê Thị Thu', role: 'Giáo viên chính', schedule: 'Thứ 6, 7 (18:00 - 20:00)', location: 'Phòng A103', studentsCount: 16, maxStudents: 20, color: 'mint' },
   { id: 'MATH-08-02', title: 'Toán 8 - Cơ bản', status: 'Sắp bắt đầu', instructor: 'Thầy Trần Văn Cường', instructorId: 'TCH-109', role: 'Giáo viên', schedule: 'Thứ 3, 5 (18:00 - 20:00)', location: 'Phòng B203', studentsCount: 10, maxStudents: 20, color: 'mint' },
   { id: 'MATH-09-01', title: 'Toán 9 - Cơ bản', status: 'Đang diễn ra', instructor: 'Cô Lê Thị Thu', role: 'Giáo viên', schedule: 'Thứ 2, 4 (08:00 - 10:00)', location: 'Phòng A104', studentsCount: 20, maxStudents: 25, color: 'mint' },
+  { id: 'MATH-06-COMP', title: 'Toán 6 - Học kỳ II (2024)', status: 'Đã kết thúc', instructor: 'Thầy Trần Văn Cường', instructorId: 'TCH-109', role: 'Giáo viên chính', schedule: 'Thứ 7, CN (14:00 - 16:00)', location: 'Phòng A101', studentsCount: 18, maxStudents: 20, color: 'mint' },
+  { id: 'MATH-08-COMP', title: 'Toán 8 - Ôn thi HSG (2024)', status: 'Đã kết thúc', instructor: 'Cô Lê Thị Thu', role: 'Giáo viên chính', schedule: 'Thứ 3, 5 (19:30 - 21:30)', location: 'Phòng B201', studentsCount: 8, maxStudents: 15, color: 'rose' },
 ];
 
 const initialAssignments: Assignment[] = [
