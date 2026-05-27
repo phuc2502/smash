@@ -32,17 +32,20 @@ import { useAppContext, User } from "../context/AppContext";
 import CreateUserModal from "../components/modals/CreateUserModal";
 import ApproveUsersModal from "../components/modals/ApproveUsersModal";
 import ForgotPasswordRequestsModal from "../components/modals/ForgotPasswordRequestsModal";
+import EditUserModal from "../components/modals/EditUserModal";
 import ActionColumn from "../components/common/ActionColumn";
 import PaginatedList from "../components/common/PaginatedList";
 
 export default function UserManagementPage() {
-  const { users, userRequests, forgotPasswordRequests, deleteUser, addUser, approveRequest, resetUserPassword, stats: globalStats, canAccess, parentChildMap, linkParentToStudent, unlinkParentFromStudent, appendActivity } = useAppContext();
+  const { users, userRequests, forgotPasswordRequests, deleteUser, addUser, updateUser, approveRequest, resetUserPassword, stats: globalStats, canAccess, parentChildMap, linkParentToStudent, unlinkParentFromStudent, appendActivity } = useAppContext();
   const canManageUsers = canAccess('manage_users');
   const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
   const [resetPasswords, setResetPasswords] = useState<Record<string, string>>({});
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedUserToEdit, setSelectedUserToEdit] = useState<User | null>(null);
 
   const handleResetPassword = (userId: string, userName: string) => {
     if (window.confirm(`Bạn có chắc chắn muốn khôi phục mật khẩu cho người dùng ${userName}?`)) {
@@ -187,6 +190,16 @@ export default function UserManagementPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={addUser}
+      />
+
+      <EditUserModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setSelectedUserToEdit(null);
+        }}
+        user={selectedUserToEdit}
+        onSubmit={updateUser}
       />
 
       <ApproveUsersModal
@@ -336,9 +349,12 @@ export default function UserManagementPage() {
                       if (type === 'view') {
                         toggleExpand(id);
                       } else if (type === 'edit') {
-                        alert(`Chỉnh sửa người dùng ${user.name}`);
+                        setSelectedUserToEdit(user);
+                        setIsEditModalOpen(true);
                       } else if (type === 'delete') {
-                        deleteUser(id);
+                        if (window.confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn tài khoản người dùng ${user.name}? Hành động này không thể hoàn tác.`)) {
+                          deleteUser(id);
+                        }
                       }
                     }}
                   />

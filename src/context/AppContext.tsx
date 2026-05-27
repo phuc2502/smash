@@ -418,8 +418,8 @@ interface RegisterPayload {
 }
 
 interface AppContextType extends AppState, SystemImprovementsState, SystemImprovementsActions {
-  addUser: (user: User) => void;
-  updateUser: (id: string, user: Partial<User>) => void;
+  addUser: (user: User) => { success: boolean; message: string };
+  updateUser: (id: string, user: Partial<User>) => { success: boolean; message: string };
   deleteUser: (id: string) => void;
 
   approveRequest: (requestId: string) => void;
@@ -1600,6 +1600,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const addUser = (user: User) => {
+    // Kiểm tra trùng Email trong danh sách
+    const emailExisted = users.some(u => u.email.toLowerCase() === user.email.toLowerCase());
+    if (emailExisted) {
+      return { success: false, message: "Email này đã được sử dụng bởi một tài khoản khác trong hệ thống." };
+    }
+
+    // Kiểm tra trùng SĐT trong danh sách (ngoại trừ giá trị trống hoặc chưa cập nhật)
+    const phoneExisted = users.some(u => u.phone === user.phone && user.phone !== 'Chưa cập nhật' && user.phone !== '');
+    if (phoneExisted) {
+      return { success: false, message: "Số điện thoại này đã được sử dụng bởi một tài khoản khác trong hệ thống." };
+    }
+
     setUsers(prev => [user, ...prev]);
     setManagedAccounts(prev => {
       if (prev.some(item => item.profile.id === user.id || item.email === user.email.toLowerCase())) return prev;
@@ -1627,9 +1639,26 @@ export function AppProvider({ children }: { children: ReactNode }) {
         ...prev,
       ];
     });
+
+    return { success: true, message: "Khởi tạo tài khoản thành công." };
   };
   const updateUser = (id: string, updatedUser: Partial<User>) => {
+    if (updatedUser.email) {
+      const emailExisted = users.some(u => u.id !== id && u.email.toLowerCase() === updatedUser.email!.toLowerCase());
+      if (emailExisted) {
+        return { success: false, message: "Email này đã được sử dụng bởi một tài khoản khác trong hệ thống." };
+      }
+    }
+
+    if (updatedUser.phone) {
+      const phoneExisted = users.some(u => u.id !== id && u.phone === updatedUser.phone && updatedUser.phone !== 'Chưa cập nhật' && updatedUser.phone !== '');
+      if (phoneExisted) {
+        return { success: false, message: "Số điện thoại này đã được sử dụng bởi một tài khoản khác trong hệ thống." };
+      }
+    }
+
     setUsers(prev => prev.map(u => (u.id === id ? { ...u, ...updatedUser } : u)));
+    return { success: true, message: "Cập nhật tài khoản thành công." };
   };
   const deleteUser = (id: string) => setUsers(prev => prev.filter(u => u.id !== id));
 

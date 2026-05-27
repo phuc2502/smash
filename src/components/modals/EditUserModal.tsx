@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { X, UserPlus, Mail, Phone, ShieldCheck, UserCircle, Briefcase, CheckCircle2 } from "lucide-react";
+import { X, Edit3, Mail, Phone, ShieldCheck, UserCircle, Briefcase, CheckCircle2 } from "lucide-react";
 import { User } from "../../context/AppContext";
 
-interface CreateUserModalProps {
+interface EditUserModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (user: User) => { success: boolean; message: string } | any;
+  user: User | null;
+  onSubmit: (id: string, updatedFields: Partial<User>) => { success: boolean; message: string } | any;
 }
 
-export default function CreateUserModal({ isOpen, onClose, onSubmit }: CreateUserModalProps) {
+export default function EditUserModal({ isOpen, onClose, user, onSubmit }: EditUserModalProps) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,6 +19,20 @@ export default function CreateUserModal({ isOpen, onClose, onSubmit }: CreateUse
     status: "Đang học" as User['status']
   });
   const [error, setError] = useState<string | null>(null);
+
+  // Pre-fill data when user changes
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        status: user.status
+      });
+    }
+    setError(null);
+  }, [user, isOpen]);
 
   const handleClose = () => {
     setError(null);
@@ -31,13 +46,12 @@ export default function CreateUserModal({ isOpen, onClose, onSubmit }: CreateUse
     { value: "Quản trị", color: "rose", icon: CheckCircle2 },
   ];
 
+  const statuses: User['status'][] = ["Đang học", "Đang làm việc", "Khóa", "Nghỉ học"];
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) return;
     setError(null);
-
-    // Auto-generate ID based on role
-    const prefix = formData.role === 'Học sinh' ? 'ST' : formData.role === 'Giáo viên' ? 'TCH' : formData.role === 'Phụ huynh' ? 'PR' : 'ADM';
-    const id = `${prefix}-${new Date().getFullYear()}-${Math.floor(Math.random() * 999).toString().padStart(3, '0')}`;
 
     // Map colors
     const roleColors: Record<User['role'], string> = {
@@ -54,12 +68,11 @@ export default function CreateUserModal({ isOpen, onClose, onSubmit }: CreateUse
       "Nghỉ học": "slate"
     };
 
-    const result = onSubmit({
+    const result = onSubmit(user.id, {
       ...formData,
-      id,
       roleColor: roleColors[formData.role],
       statusColor: statusColors[formData.status],
-      activity: "Vừa khởi tạo"
+      activity: "Vừa cập nhật thông tin"
     });
 
     if (result && !result.success) {
@@ -69,18 +82,11 @@ export default function CreateUserModal({ isOpen, onClose, onSubmit }: CreateUse
 
     onClose();
     setError(null);
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      role: "Học sinh",
-      status: "Đang học"
-    });
   };
 
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isOpen && user && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -100,11 +106,11 @@ export default function CreateUserModal({ isOpen, onClose, onSubmit }: CreateUse
             <div className="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-[20px] bg-mint-500 text-white flex items-center justify-center shadow-lg shadow-mint-100">
-                  <UserPlus className="w-6 h-6" />
+                  <Edit3 className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-black text-slate-900 tracking-tight">Thêm Thành viên mới</h3>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Mở rộng cộng đồng SMASH Math</p>
+                  <h3 className="text-xl font-black text-slate-900 tracking-tight">Chỉnh sửa Thành viên</h3>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Cập nhật thông tin ID: {user.id}</p>
                 </div>
               </div>
               <button
@@ -172,6 +178,20 @@ export default function CreateUserModal({ isOpen, onClose, onSubmit }: CreateUse
                   </div>
                 </div>
 
+                {/* Status Selection */}
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Trạng thái tài khoản</label>
+                  <select
+                    value={formData.status}
+                    onChange={e => setFormData({ ...formData, status: e.target.value as User['status'] })}
+                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-4 px-4 text-sm font-bold focus:ring-4 focus:ring-mint-500/10 focus:border-mint-500/50 outline-none transition-all"
+                  >
+                    {statuses.map(status => (
+                      <option key={status} value={status}>{status}</option>
+                    ))}
+                  </select>
+                </div>
+
                 {/* Role Selection */}
                 <div className="space-y-3 pt-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Vai trò hệ thống</label>
@@ -202,8 +222,8 @@ export default function CreateUserModal({ isOpen, onClose, onSubmit }: CreateUse
                   type="submit"
                   className="w-full py-5 bg-gradient-to-r from-mint-600 to-mint-400 text-white rounded-3xl font-black text-sm uppercase tracking-[0.2em] shadow-xl shadow-mint-100 hover:shadow-2xl hover:shadow-mint-200 transition-all flex items-center justify-center gap-3"
                 >
-                  <UserPlus className="w-5 h-5 text-mint-200" />
-                  Khởi tạo Tài khoản
+                  <Edit3 className="w-5 h-5 text-mint-200" />
+                  Cập nhật Thông tin
                 </button>
               </div>
             </form>
