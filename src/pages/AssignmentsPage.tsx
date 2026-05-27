@@ -25,6 +25,7 @@ import {
   Image,
   File,
   Trash2,
+  ChevronDown,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useNavigate } from "react-router-dom";
@@ -34,6 +35,7 @@ import type { Assignment, Class, QuizQuestion } from "../context/AppContext";
 import ActionColumn from "../components/common/ActionColumn";
 import StatusBadge from "../components/common/StatusBadge";
 import PaginatedList from "../components/common/PaginatedList";
+import EssayGradingTab from "../components/grading/EssayGradingTab";
 
 function assignmentIsOverdue(a: Assignment, nowMs: number): boolean {
   if (!a.deadlineAt || a.progress >= a.total) return false;
@@ -150,11 +152,35 @@ function formatFileSize(bytes: number): string {
 
 export default function AssignmentsPage() {
   const navigate = useNavigate();
-  const { assignments, addAssignment, deleteAssignment, classes, canAccess, currentAccount, classStudentMap, parentChildMap } = useAppContext();
+  const { assignments, addAssignment, deleteAssignment, classes, canAccess, currentAccount, classStudentMap, parentChildMap, quizSubmissions, gradeEssaySubmission, users } = useAppContext();
   const isAdminView = canAccess("manage_users");
   const canManageAssignments = canAccess("manage_assignments") && currentAccount?.role !== "Admin";
   const canSubmitAssignment = canAccess("submit_assignment");
   const nowMs = Date.now();
+
+  // ── Teacher: pending essay submissions ──────────────────────────────────
+  const teacherAssignmentIds = useMemo(() => {
+    if (!currentAccount || currentAccount.role !== 'Giáo viên') return [];
+    return assignments
+      .filter(a => {
+        const cls = classes.find(c => c.id === a.classId);
+        return cls?.instructorId === currentAccount.id || cls?.instructor.includes(currentAccount.name);
+      })
+      .map(a => a.id);
+  }, [assignments, classes, currentAccount]);
+
+  const pendingEssaySubmissions = useMemo(() => {
+    if (!currentAccount || currentAccount.role !== 'Giáo viên') return [];
+    return quizSubmissions.filter(s => {
+      if (!teacherAssignmentIds.includes(s.assignmentId)) return false;
+      if (s.score !== undefined) return false;
+      const assignment = assignments.find(a => a.id === s.assignmentId);
+      if (!assignment?.questions) return false;
+      return assignment.questions.some(q => q.type === 'essay');
+    });
+  }, [quizSubmissions, teacherAssignmentIds, assignments, currentAccount]);
+
+  const [showEssaySection, setShowEssaySection] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const defaultClassId = classes[0]?.id ?? "";
@@ -223,6 +249,7 @@ export default function AssignmentsPage() {
   const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
   const [fileError, setFileError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const essaySectionRef = useRef<HTMLDivElement>(null);
 
   const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([
     {
@@ -1249,6 +1276,46 @@ export default function AssignmentsPage() {
             ))}
           </div>
 
+          {/* ── Chấm tự luận section (teacher only) ── */}
+          {canManageAssignments && (
+            <div ref={essaySectionRef} className="bg-white/80 backdrop-blur-xl rounded-[32px] border border-slate-100 shadow-sm overflow-hidden">
+              <button
+                type="button"
+                onClick={() => setShowEssaySection(v => !v)}
+                className="w-full flex items-center justify-between px-8 py-5 hover:bg-slate-50/60 transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-violet-50 text-violet-500 flex items-center justify-center">
+                    <ClipboardList className="w-5 h-5" />
+                  </div>
+                  <div className="text-left">
+                    <h2 className="text-lg font-black text-slate-900 tracking-tight">Chấm tự luận</h2>
+                    <p className="text-xs text-slate-400 font-semibold">Bài tự luận chờ chấm từ tất cả lớp của bạn</p>
+                  </div>
+                  {pendingEssaySubmissions.length > 0 && (
+                    <span className="ml-2 px-2.5 py-1 bg-rose-500 text-white text-xs font-black rounded-full">
+                      {pendingEssaySubmissions.length}
+                    </span>
+                  )}
+                </div>
+                <ChevronDown
+                  className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${showEssaySection ? 'rotate-180' : ''}`}
+                />
+              </button>
+              {showEssaySection && (
+                <div className="px-8 pb-8 pt-2 border-t border-slate-100">
+                  <EssayGradingTab
+                    classId=""
+                    submissions={pendingEssaySubmissions}
+                    assignments={assignments}
+                    users={users}
+                    onGrade={gradeEssaySubmission}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="space-y-6">
             <div className="flex justify-between items-end">
               <h2 className="text-2xl font-black text-slate-900 tracking-tight">Danh sách Bài tập</h2>
@@ -1366,7 +1433,10 @@ export default function AssignmentsPage() {
                         onClick={() => {
                           if (asgn.status === "Chờ chấm điểm") {
                             if (!canSubmitAssignment) {
-                              navigate("/grading");
+                              setShowEssaySection(true);
+                              setTimeout(() => {
+                                essaySectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              }, 50);
                             }
                           } else {
                             navigate(`/assignments/take/${asgn.id}`);

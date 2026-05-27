@@ -72,12 +72,7 @@ export default function NavMenu({ onNavigate, className = "" }: NavMenuProps) {
     return canAccess(entry.requiredPermission);
   }).map(entry => {
     if (!isNavGroup(entry) && entry.path === "/grading") {
-      const isStudent = currentAccount?.role === "Học viên";
-      const isParent = currentAccount?.role === "Phụ huynh";
-      const isAdmin = currentAccount?.role === "Admin";
-      if (isStudent || isParent || isAdmin) {
-        return { ...entry, label: "Bảng điểm" };
-      }
+      return { ...entry, label: "Bảng điểm" };
     }
     return entry;
   });
