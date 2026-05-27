@@ -61,6 +61,7 @@ export default function UserManagementPage() {
       const res = resetUserPassword(userId);
       if (res.success && res.tempPassword) {
         setResetPasswords(prev => ({ ...prev, [userId]: res.tempPassword! }));
+        triggerToast(`Đã reset mật khẩu cho ${userName} thành công!`);
       } else {
         alert(res.message);
       }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   Settings,
   Bell,
@@ -16,6 +16,7 @@ import {
   EyeOff,
   ShieldCheck,
   ChevronDown,
+  Check,
 } from "lucide-react";
 import { useAppContext } from "../context/AppContext";
 import type { PermissionKey } from "../context/AppContext";
@@ -82,6 +83,14 @@ export default function SettingsPage() {
     section: string;
   } | null>(null);
 
+  // Success Toast state
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const triggerToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
   const handleSaveProfile = () => {
     if (!profileForm.name.trim() || !profileForm.email.trim()) {
       setFeedback({ tone: "error", message: "Vui lòng nhập đầy đủ họ tên và email.", section: "profile" });
@@ -93,6 +102,7 @@ export default function SettingsPage() {
       phone: profileForm.phone.trim(),
     });
     setFeedback({ tone: "success", message: "Đã cập nhật hồ sơ thành công.", section: "profile" });
+    triggerToast("Đã cập nhật hồ sơ cá nhân thành công!");
     setTimeout(() => setFeedback(null), 3000);
   };
 
@@ -128,6 +138,7 @@ export default function SettingsPage() {
     setFeedback({ tone: result.success ? "success" : "error", message: result.message, section: "password" });
     if (result.success) {
       setPasswordForm({ currentPassword: "", nextPassword: "", confirmPassword: "" });
+      triggerToast("Cập nhật mật khẩu mới thành công!");
       setTimeout(() => setFeedback(null), 3000);
     }
   };
@@ -160,7 +171,23 @@ export default function SettingsPage() {
   ];
 
   return (
-    <div className="space-y-10 pb-20">
+    <div className="space-y-10 pb-20 relative">
+      {/* Toast Alert */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            className="fixed top-8 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md text-white border border-mint-500/30 px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 z-[9999]"
+          >
+            <div className="w-5 h-5 rounded-full bg-mint-500 text-white flex items-center justify-center">
+              <Check className="w-3.5 h-3.5" />
+            </div>
+            <span className="text-sm font-semibold">{toastMessage}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Page Header */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <div className="flex items-center gap-4 mb-2">
