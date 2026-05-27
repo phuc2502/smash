@@ -72,7 +72,7 @@ export default function NavMenu({ onNavigate, className = "" }: NavMenuProps) {
     return canAccess(entry.requiredPermission);
   }).map(entry => {
     if (!isNavGroup(entry) && entry.path === "/grading") {
-      return { ...entry, label: "Bảng điểm" };
+      return { ...entry, label: "Điểm số" };
     }
     return entry;
   });

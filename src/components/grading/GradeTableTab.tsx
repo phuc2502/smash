@@ -352,7 +352,7 @@ export default function GradeTableTab({
             score: finalScore,
             is_na: val.is_na,
             feedback: feedbackText,
-            ...(isAdmin ? { adminNote: noteText } : { note: noteText }),
+            ...(!isAdmin ? { note: noteText } : {}),
           });
         } else {
           onAdd({
@@ -366,7 +366,7 @@ export default function GradeTableTab({
             gradedAt: new Date().toISOString(),
             is_na: val.is_na,
             feedback: feedbackText,
-            ...(isAdmin ? { adminNote: noteText } : { note: noteText }),
+            ...(!isAdmin ? { note: noteText } : {}),
           });
         }
       }
@@ -497,7 +497,7 @@ export default function GradeTableTab({
                   >
                     {(!readOnly || isAdmin) && (
                       <td className="w-4 pl-3 pr-0 py-4 text-right">
-                        {studentHasNote(student.id) && (
+                        {!isAdmin && studentHasNote(student.id) && (
                           <span className="inline-block w-2 h-2 bg-rose-500 rounded-full" title="Có ghi chú nội bộ" />
                         )}
                       </td>
@@ -930,18 +930,20 @@ export default function GradeTableTab({
 
                 {/* Notes and Comments */}
                 <div className="flex flex-col gap-4">
-                  <div>
-                    <label className="block text-xs font-black text-slate-500 uppercase tracking-wider mb-2">
-                      Ghi chú
-                    </label>
-                    <textarea
-                      rows={2}
-                      placeholder="Nhập ghi chú...."
-                      value={noteText}
-                      onChange={e => setNoteText(e.target.value)}
-                      className="w-full border-2 border-slate-200 focus:border-mint-400 bg-white rounded-xl px-4 py-3 text-sm font-medium outline-none transition-all resize-none"
-                    />
-                  </div>
+                  {!isAdmin && (
+                    <div>
+                      <label className="block text-xs font-black text-slate-500 uppercase tracking-wider mb-2">
+                        Ghi chú
+                      </label>
+                      <textarea
+                        rows={2}
+                        placeholder="Nhập ghi chú...."
+                        value={noteText}
+                        onChange={e => setNoteText(e.target.value)}
+                        className="w-full border-2 border-slate-200 focus:border-mint-400 bg-white rounded-xl px-4 py-3 text-sm font-medium outline-none transition-all resize-none"
+                      />
+                    </div>
+                  )}
                   <div>
                     <label className="block text-xs font-black text-slate-500 uppercase tracking-wider mb-2">
                       Nhận xét

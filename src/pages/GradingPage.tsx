@@ -399,7 +399,7 @@ export default function GradingPage() {
           <div className="bg-white rounded-[24px] border border-slate-200 shadow-sm p-4 flex gap-2">
             {[
               { key: 'classes', label: 'Thống kê theo Lớp học', icon: GraduationCap },
-              { key: 'exams', label: 'Thống kê theo Đợt kiểm tra', icon: BookOpen },
+              { key: 'exams', label: 'Thống kê theo Bài tập', icon: BookOpen },
               { key: 'types', label: 'Thống kê theo Loại kiểm tra', icon: BarChart3 },
             ].map(tab => {
               const Icon = tab.icon;

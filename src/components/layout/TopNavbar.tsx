@@ -192,18 +192,20 @@ export default function TopNavbar() {
           <Menu className="w-6 h-6" strokeWidth={2.25} />
         </button>
         <div className="flex-1 max-w-xl min-w-0">
-        <motion.div animate={{ scale: isScrolled ? 0.98 : 1 }} className="relative group w-full">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400 group-focus-within:text-mint-600 transition-colors z-10" />
-          <input
-            type="text"
-            placeholder="Tìm kiếm tài liệu, học viên, Toán lớp 6,7,8,9..."
-            className="w-full bg-white border border-slate-900/10 rounded-2xl py-2.5 pl-12 pr-4 text-sm placeholder:text-slate-400 font-medium text-slate-800 focus:ring-1 focus:ring-mint-500/30 focus:border-mint-500/30 focus:shadow-[0_0_0_2px_rgba(20,184,166,0.1)] focus:bg-white transition-all outline-none shadow-sm group-hover:border-slate-900/20"
-          />
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden md:flex items-center gap-1.5 px-2 py-1 bg-slate-50 rounded-lg border border-slate-100 group-focus-within:opacity-0 transition-opacity">
-            <span className="text-[10px] font-medium text-slate-400">Ctrl</span>
-            <span className="text-[10px] font-medium text-slate-400">K</span>
-          </div>
-        </motion.div>
+          {location.pathname !== "/grading" && (
+            <motion.div animate={{ scale: isScrolled ? 0.98 : 1 }} className="relative group w-full">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400 group-focus-within:text-mint-600 transition-colors z-10" />
+              <input
+                type="text"
+                placeholder="Tìm kiếm tài liệu, học viên, Toán lớp 6,7,8,9..."
+                className="w-full bg-white border border-slate-900/10 rounded-2xl py-2.5 pl-12 pr-4 text-sm placeholder:text-slate-400 font-medium text-slate-800 focus:ring-1 focus:ring-mint-500/30 focus:border-mint-500/30 focus:shadow-[0_0_0_2px_rgba(20,184,166,0.1)] focus:bg-white transition-all outline-none shadow-sm group-hover:border-slate-900/20"
+              />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden md:flex items-center gap-1.5 px-2 py-1 bg-slate-50 rounded-lg border border-slate-100 group-focus-within:opacity-0 transition-opacity">
+                <span className="text-[10px] font-medium text-slate-400">Ctrl</span>
+                <span className="text-[10px] font-medium text-slate-400">K</span>
+              </div>
+            </motion.div>
+          )}
         </div>
       </div>
 
