@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Plus,
   Grid2X2,
@@ -122,6 +122,7 @@ type FormState = {
   classId: string;
   type: string;
   deadlineAt: string;
+  timeLimit: string;
   total: string;
   isUrgent: boolean;
 };
@@ -150,11 +151,30 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+function isoToDatetimeLocal(iso?: string): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function createEmptyQuizQuestion(): QuizQuestion {
+  return {
+    id: `Q-${Date.now()}-0`,
+    text: "",
+    type: "multiple_choice",
+    options: ["", "", "", ""],
+    correctAnswer: "A",
+  };
+}
+
 export default function AssignmentsPage() {
   const navigate = useNavigate();
-  const { assignments, addAssignment, deleteAssignment, classes, canAccess, currentAccount, classStudentMap, parentChildMap, quizSubmissions, gradeEssaySubmission, users } = useAppContext();
+  const { assignments, addAssignment, updateAssignment, deleteAssignment, classes, canAccess, currentAccount, classStudentMap, parentChildMap, quizSubmissions, gradeEssaySubmission, users } = useAppContext();
   const isAdminView = canAccess("manage_users");
-  const canManageAssignments = canAccess("manage_assignments") && currentAccount?.role !== "Admin";
+  const canManageAssignments = canAccess("manage_assignments");
+  const canEditAssignment = canAccess("manage_assignments");
   const canSubmitAssignment = canAccess("submit_assignment");
   const nowMs = Date.now();
 
@@ -183,7 +203,22 @@ export default function AssignmentsPage() {
   const [showEssaySection, setShowEssaySection] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingAssignmentId, setEditingAssignmentId] = useState<string | null>(null);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const isEditMode = editingAssignmentId !== null;
   const defaultClassId = classes[0]?.id ?? "";
+
+  useEffect(() => {
+    if (!openMenuId) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpenMenuId(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [openMenuId]);
 
   const [studentClassFilter, setStudentClassFilter] = useState("all");
   const [studentStatusFilter, setStudentStatusFilter] = useState("all");
@@ -243,6 +278,7 @@ export default function AssignmentsPage() {
     classId: defaultClassId,
     type: "Trắc nghiệm",
     deadlineAt: "",
+    timeLimit: "45",
     total: "30",
     isUrgent: false,
   });
@@ -439,11 +475,54 @@ export default function AssignmentsPage() {
     setAttachedFiles(prev => prev.filter(f => f.id !== id));
   };
 
-  const handleCreate = (e: React.FormEvent) => {
+  const resetAssignmentForm = () => {
+    setFormData({
+      title: "",
+      description: "",
+      classId: defaultClassId,
+      type: "Trắc nghiệm",
+      deadlineAt: "",
+      timeLimit: "45",
+      total: "30",
+      isUrgent: false,
+    });
+    setQuizQuestions([createEmptyQuizQuestion()]);
+    setAttachedFiles([]);
+    setFileError("");
+    setEditingAssignmentId(null);
+  };
+
+  const openCreateModal = () => {
+    resetAssignmentForm();
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (asgn: Assignment) => {
+    setEditingAssignmentId(asgn.id);
+    setFormData({
+      title: asgn.title,
+      description: asgn.description ?? "",
+      classId: asgn.classId,
+      type: asgn.type,
+      deadlineAt: isoToDatetimeLocal(asgn.deadlineAt),
+      timeLimit: String(asgn.timeLimit ?? 0),
+      total: String(asgn.total),
+      isUrgent: !!asgn.isUrgent,
+    });
+    if (asgn.type === "Trắc nghiệm" && asgn.questions && asgn.questions.length > 0) {
+      setQuizQuestions(asgn.questions.map((q) => ({ ...q })));
+    } else {
+      setQuizQuestions([createEmptyQuizQuestion()]);
+    }
+    setAttachedFiles([]);
+    setFileError("");
+    setIsModalOpen(true);
+  };
+
+  const handleSaveAssignment = (e: React.FormEvent) => {
     e.preventDefault();
     const cls = classes.find((c) => c.id === formData.classId);
-    const id = `ASG-${Math.floor(Math.random() * 9000 + 1000)}`;
-    let deadline = formData.deadlineAt
+    const deadline = formData.deadlineAt
       ? new Date(formData.deadlineAt).toLocaleString("vi-VN", {
           day: "2-digit",
           month: "2-digit",
@@ -457,7 +536,7 @@ export default function AssignmentsPage() {
     const asgQuestions: QuizQuestion[] = formData.type === "Trắc nghiệm"
       ? quizQuestions.map((q, idx) => ({
           ...q,
-          id: `Q-${Date.now()}-${idx}`,
+          id: q.id || `Q-${Date.now()}-${idx}`,
         }))
       : [
           {
@@ -467,59 +546,64 @@ export default function AssignmentsPage() {
           },
         ];
 
-    addAssignment({
-      id,
-      title: formData.title || "Bài tập mới",
-      description: formData.description.trim() || undefined,
-      type: formData.type,
-      typeColor: "mint",
-      status: "Đang mở",
-      classId: formData.classId,
-      className: cls?.title ?? formData.classId,
-      teacherName: cls?.instructor,
-      progress: 0,
-      total: parseInt(formData.total, 10) || 30,
-      deadline,
-      deadlineAt: deadlineAtIso,
-      isUrgent: formData.isUrgent,
-      questions: asgQuestions,
-    });
+    const parsedTimeLimit = Math.max(0, parseInt(formData.timeLimit, 10) || 0);
+
+    if (isEditMode && editingAssignmentId) {
+      const existing = assignments.find((a) => a.id === editingAssignmentId);
+      if (!existing) return;
+      updateAssignment(editingAssignmentId, {
+        title: formData.title || existing.title,
+        description: formData.description.trim() || undefined,
+        type: formData.type,
+        classId: formData.classId,
+        className: cls?.title ?? formData.classId,
+        teacherName: cls?.instructor ?? existing.teacherName,
+        total: parseInt(formData.total, 10) || existing.total,
+        deadline,
+        deadlineAt: deadlineAtIso,
+        isUrgent: formData.isUrgent,
+        timeLimit: parsedTimeLimit,
+        questions: asgQuestions,
+      });
+    } else {
+      const id = `ASG-${Math.floor(Math.random() * 9000 + 1000)}`;
+      addAssignment({
+        id,
+        title: formData.title || "Bài tập mới",
+        description: formData.description.trim() || undefined,
+        type: formData.type,
+        typeColor: "mint",
+        status: "Đang mở",
+        classId: formData.classId,
+        className: cls?.title ?? formData.classId,
+        teacherName: cls?.instructor,
+        progress: 0,
+        total: parseInt(formData.total, 10) || 30,
+        deadline,
+        deadlineAt: deadlineAtIso,
+        isUrgent: formData.isUrgent,
+        timeLimit: parsedTimeLimit,
+        questions: asgQuestions,
+      });
+    }
+
     setIsModalOpen(false);
-    setFormData({
-      title: "",
-      description: "",
-      classId: defaultClassId,
-      type: "Trắc nghiệm",
-      deadlineAt: "",
-      total: "30",
-      isUrgent: false,
-    });
-    setQuizQuestions([
-      {
-        id: `Q-${Date.now()}-0`,
-        text: "",
-        type: "multiple_choice",
-        options: ["", "", "", ""],
-        correctAnswer: "A",
-      }
-    ]);
-    setAttachedFiles([]);
-    setFileError("");
+    resetAssignmentForm();
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setAttachedFiles([]);
-    setFileError("");
-    setQuizQuestions([
-      {
-        id: `Q-${Date.now()}-0`,
-        text: "",
-        type: "multiple_choice",
-        options: ["", "", "", ""],
-        correctAnswer: "A",
-      }
-    ]);
+    resetAssignmentForm();
+  };
+
+  const handleDeleteAssignment = (asgn: Assignment) => {
+    const confirmed = window.confirm(
+      `Bạn có chắc muốn xóa bài tập "${asgn.title}"?\nThao tác này không thể hoàn tác.`
+    );
+    if (!confirmed) return;
+    deleteAssignment(asgn.id);
+    setOpenMenuId(null);
+    if (editingAssignmentId === asgn.id) closeModal();
   };
 
   const resetAdminFilters = () => {
@@ -586,13 +670,19 @@ export default function AssignmentsPage() {
             >
               <div className="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-[20px] bg-mint-500 text-white flex items-center justify-center shadow-lg shadow-mint-100">
-                    <Plus className="w-6 h-6" />
+                  <div className={`w-12 h-12 rounded-[20px] text-white flex items-center justify-center shadow-lg ${
+                    isEditMode ? "bg-amber-500 shadow-amber-100" : "bg-mint-500 shadow-mint-100"
+                  }`}>
+                    {isEditMode ? <PenLine className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
                   </div>
                   <div>
-                    <h3 className="text-xl font-black text-slate-900 tracking-tight">Tạo Bài tập Mới</h3>
+                    <h3 className="text-xl font-black text-slate-900 tracking-tight">
+                      {isEditMode ? "Sửa bài tập" : "Tạo Bài tập Mới"}
+                    </h3>
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">
-                      Hệ thống quản lý SMASH Math
+                      {isEditMode
+                        ? `Mã bài: ${editingAssignmentId} · Cập nhật sau khi phát hành`
+                        : "Hệ thống quản lý SMASH Math"}
                     </p>
                   </div>
                 </div>
@@ -605,7 +695,7 @@ export default function AssignmentsPage() {
                 </button>
               </div>
 
-              <form onSubmit={handleCreate} className="p-8 space-y-6 overflow-y-auto flex-1">
+              <form onSubmit={handleSaveAssignment} className="p-8 space-y-6 overflow-y-auto flex-1">
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-mint-500 uppercase tracking-[0.2em] ml-1">
                     Tiêu đề bài tập
@@ -665,7 +755,7 @@ export default function AssignmentsPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                   <div className="space-y-2">
                     <label className="text-[10px] font-black text-mint-500 uppercase tracking-[0.2em] ml-1">
                       Hạn nộp
@@ -680,6 +770,27 @@ export default function AssignmentsPage() {
                         onChange={(e) => setFormData({ ...formData, deadlineAt: e.target.value })}
                       />
                     </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-mint-500 uppercase tracking-[0.2em] ml-1">
+                      Thời gian làm bài (phút)
+                    </label>
+                    <div className="relative">
+                      <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                      <input
+                        type="number"
+                        min={0}
+                        max={300}
+                        required
+                        placeholder="45"
+                        className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm font-bold focus:ring-4 focus:ring-mint-500/10 focus:border-mint-500/50 focus:bg-white transition-all outline-none"
+                        value={formData.timeLimit}
+                        onChange={(e) => setFormData({ ...formData, timeLimit: e.target.value })}
+                      />
+                    </div>
+                    <p className="text-[10px] text-slate-400 font-medium ml-1">
+                      Nhập 0 nếu không giới hạn thời gian khi làm bài
+                    </p>
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-black text-mint-500 uppercase tracking-[0.2em] ml-1">
@@ -930,16 +1041,20 @@ export default function AssignmentsPage() {
                 <div className="pt-6 flex gap-4">
                   <button
                     type="button"
-                    onClick={() => setIsModalOpen(false)}
+                    onClick={() => closeModal()}
                     className="flex-1 py-4 bg-slate-50 text-slate-500 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-100 transition-colors"
                   >
                     Hủy bỏ
                   </button>
                   <button
                     type="submit"
-                    className="flex-[2] py-4 bg-gradient-to-r from-mint-600 to-mint-400 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-mint-100 hover:shadow-2xl hover:shadow-mint-200 hover:-translate-y-0.5 transition-all"
+                    className={`flex-[2] py-4 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all ${
+                      isEditMode
+                        ? "bg-gradient-to-r from-amber-600 to-amber-400 shadow-amber-100 hover:shadow-amber-200"
+                        : "bg-gradient-to-r from-mint-600 to-mint-400 shadow-mint-100 hover:shadow-mint-200"
+                    }`}
                   >
-                    Phát hành Bài tập
+                    {isEditMode ? "Lưu thay đổi" : "Phát hành Bài tập"}
                   </button>
                 </div>
               </form>
@@ -960,7 +1075,7 @@ export default function AssignmentsPage() {
                 type="button"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => setIsModalOpen(true)}
+                onClick={openCreateModal}
                 className="shrink-0 w-full lg:w-auto bg-gradient-to-r from-mint-600 to-mint-400 text-white rounded-full py-3.5 px-8 font-black text-sm shadow-xl shadow-mint-100 flex items-center justify-center gap-3 transition-all"
               >
                 <Plus className="w-5 h-5" />
@@ -1103,13 +1218,18 @@ export default function AssignmentsPage() {
             </div>
             
             {/* Table Head */}
-            <div className="hidden lg:grid lg:grid-cols-[3fr_1.2fr_1.8fr_1.2fr_2fr_1.2fr] gap-4 px-8 py-4 bg-slate-50/50 border-b border-slate-100 items-center text-[10px] font-black uppercase tracking-widest text-slate-400">
+            <div className={`hidden lg:grid gap-4 px-8 py-4 bg-slate-50/50 border-b border-slate-100 items-center text-[10px] font-black uppercase tracking-widest text-slate-400 ${
+              canEditAssignment
+                ? "lg:grid-cols-[3fr_1.2fr_1.8fr_1.2fr_2fr_1fr_1fr]"
+                : "lg:grid-cols-[3fr_1.2fr_1.8fr_1.2fr_2fr_1.2fr]"
+            }`}>
               <div>Tiêu đề</div>
               <div>Lớp học</div>
               <div>Giáo viên</div>
               <div>Loại bài tập</div>
               <div>Hạn nộp</div>
               <div>Trạng thái</div>
+              {canEditAssignment && <div className="text-right">Thao tác</div>}
             </div>
 
             <PaginatedList<Assignment>
@@ -1128,7 +1248,11 @@ export default function AssignmentsPage() {
                 return (
                   <div
                     key={a.id}
-                    className="grid grid-cols-1 lg:grid-cols-[3fr_1.2fr_1.8fr_1.2fr_2fr_1.2fr] gap-4 px-8 py-6 items-center hover:bg-mint-50/20 transition-all duration-300 border-b border-slate-50 last:border-b-0"
+                    className={`grid grid-cols-1 gap-4 px-8 py-6 items-center hover:bg-mint-50/20 transition-all duration-300 border-b border-slate-50 last:border-b-0 ${
+                      canEditAssignment
+                        ? "lg:grid-cols-[3fr_1.2fr_1.8fr_1.2fr_2fr_1fr_1fr]"
+                        : "lg:grid-cols-[3fr_1.2fr_1.8fr_1.2fr_2fr_1.2fr]"
+                    }`}
                   >
                     {/* Mobile title indicator */}
                     <div className="space-y-1">
@@ -1178,7 +1302,20 @@ export default function AssignmentsPage() {
                       <StatusBadge type="status" value={rs.label} />
                     </div>
 
-
+                    {canEditAssignment && (
+                      <div className="flex justify-end lg:justify-end">
+                        <ActionColumn
+                          itemId={a.id}
+                          actions={["edit", "delete"]}
+                          onAction={(type, id) => {
+                            const target = assignments.find((x) => x.id === id);
+                            if (!target) return;
+                            if (type === "edit") openEditModal(target);
+                            if (type === "delete") handleDeleteAssignment(target);
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
                 );
               }}
@@ -1221,7 +1358,7 @@ export default function AssignmentsPage() {
                 type="button"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => setIsModalOpen(true)}
+                onClick={openCreateModal}
                 className="w-full md:w-auto bg-gradient-to-r from-mint-600 to-mint-400 text-white rounded-full py-3.5 px-8 font-black text-sm shadow-xl shadow-mint-100 flex items-center justify-center gap-3 transition-all"
               >
                 <Plus className="w-5 h-5" />
@@ -1378,38 +1515,56 @@ export default function AssignmentsPage() {
                     </div>
                   </div>
 
-                  <div
-                    className={`flex items-center gap-3 text-xs font-black uppercase tracking-widest mb-8 ${
-                      asgn.isUrgent ? "text-rose-500" : "text-slate-400"
-                    }`}
-                  >
-                    <Clock className="w-4 h-4 shrink-0" />
-                    <div className="flex flex-col">
-                      <span>
-                        {asgn.deadlineAt
-                          ? new Date(asgn.deadlineAt).toLocaleString("vi-VN", {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })
-                          : asgn.deadline}
-                      </span>
-                      {asgn.deadlineAt && (
-                        <span className="text-[10px] font-medium normal-case tracking-normal text-slate-400 mt-0.5">
-                          {relativeViFromDeadline(asgn.deadlineAt)}
+                  <div className="space-y-2 mb-8">
+                    <div
+                      className={`flex items-center gap-3 text-xs font-black uppercase tracking-widest ${
+                        asgn.isUrgent ? "text-rose-500" : "text-slate-400"
+                      }`}
+                    >
+                      <Clock className="w-4 h-4 shrink-0" />
+                      <div className="flex flex-col">
+                        <span>
+                          {asgn.deadlineAt
+                            ? new Date(asgn.deadlineAt).toLocaleString("vi-VN", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })
+                            : asgn.deadline}
+                        </span>
+                        {asgn.deadlineAt && (
+                          <span className="text-[10px] font-medium normal-case tracking-normal text-slate-400 mt-0.5">
+                            {relativeViFromDeadline(asgn.deadlineAt)}
+                          </span>
+                        )}
+                      </div>
+                      {asgn.isUrgent && (
+                        <span className="ml-auto text-[10px] font-black text-rose-500 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-full animate-pulse">
+                          KHẨN
                         </span>
                       )}
                     </div>
-                    {asgn.isUrgent && (
-                      <span className="ml-auto text-[10px] font-black text-rose-500 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-full animate-pulse">
-                        KHẨN
-                      </span>
+                    {asgn.timeLimit != null && asgn.timeLimit > 0 && (
+                      <p className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-100 px-2.5 py-1 rounded-lg inline-flex items-center gap-1.5 normal-case tracking-normal">
+                        <Clock className="w-3 h-3 shrink-0" />
+                        Thời gian làm bài: {asgn.timeLimit} phút
+                      </p>
                     )}
                   </div>
 
                   <div className="flex gap-2 pt-6 border-t border-slate-100">
+                    {canEditAssignment && (
+                      <button
+                        type="button"
+                        onClick={() => openEditModal(asgn)}
+                        title="Sửa bài tập"
+                        className="w-12 h-12 flex items-center justify-center bg-amber-50 border border-amber-200 rounded-2xl text-amber-700 hover:bg-amber-100 transition-colors shrink-0"
+                      >
+                        <PenLine className="w-5 h-5" />
+                      </button>
+                    )}
                     {canSubmitAssignment && asgn.status === "Đang mở" ? (
                       <button
                         type="button"
@@ -1422,21 +1577,20 @@ export default function AssignmentsPage() {
                     ) : (
                       <button
                         type="button"
-                        disabled={canSubmitAssignment && asgn.status === "Chờ chấm điểm"}
                         className={`flex-1 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${
                           asgn.status === "Chờ chấm điểm"
                             ? canSubmitAssignment
-                              ? "bg-slate-100 text-slate-400 border border-slate-200 cursor-default"
+                              ? "bg-slate-100 text-slate-400 border border-slate-200"
                               : "bg-gradient-to-r from-mint-600 to-mint-400 text-white shadow-lg shadow-mint-100 hover:brightness-110"
                             : "bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 hover:text-slate-900"
                         }`}
                         onClick={() => {
                           if (asgn.status === "Chờ chấm điểm") {
                             if (!canSubmitAssignment) {
-                              setShowEssaySection(true);
-                              setTimeout(() => {
-                                essaySectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                              }, 50);
+                              navigate(`/grading?assignmentId=${asgn.id}`);
+                            } else {
+                              // Học viên xem trạng thái bài tự luận đã nộp
+                              navigate(`/assignments/take/${asgn.id}`);
                             }
                           } else {
                             navigate(`/assignments/take/${asgn.id}`);
@@ -1450,12 +1604,38 @@ export default function AssignmentsPage() {
                           : "Xem kết quả"}
                       </button>
                     )}
-                    <button
-                      type="button"
-                      className="w-12 h-12 flex items-center justify-center bg-white border border-slate-200 rounded-2xl text-slate-300 hover:text-slate-900 transition-colors"
-                    >
-                      <MoreVertical className="w-5 h-5" />
-                    </button>
+                    {canEditAssignment && (
+                      <div className="relative shrink-0" ref={openMenuId === asgn.id ? menuRef : undefined}>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenMenuId((prev) => (prev === asgn.id ? null : asgn.id));
+                          }}
+                          className={`w-12 h-12 flex items-center justify-center bg-white border rounded-2xl transition-colors ${
+                            openMenuId === asgn.id
+                              ? "border-slate-300 text-slate-700"
+                              : "border-slate-200 text-slate-300 hover:text-slate-900"
+                          }`}
+                          aria-label="Tùy chọn bài tập"
+                          aria-expanded={openMenuId === asgn.id}
+                        >
+                          <MoreVertical className="w-5 h-5" />
+                        </button>
+                        {openMenuId === asgn.id && (
+                          <div className="absolute right-0 bottom-full mb-2 z-30 min-w-[11rem] py-1.5 bg-white rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/60">
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteAssignment(asgn)}
+                              className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors text-left"
+                            >
+                              <Trash2 className="w-4 h-4 shrink-0" />
+                              Xóa bài tập
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
