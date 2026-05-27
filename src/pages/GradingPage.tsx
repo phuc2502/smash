@@ -5,7 +5,6 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import {
   GraduationCap,
   ChevronDown,
@@ -13,7 +12,6 @@ import {
   BookOpen,
   BarChart3,
   MessageSquare,
-  ClipboardList,
   Lock,
   Users,
 } from 'lucide-react';
@@ -25,13 +23,11 @@ import PrintableGradeReport, { type GradeRow } from '../components/grading/Print
 
 import GradeTableTab from '../components/grading/GradeTableTab';
 import CommentTab from '../components/grading/CommentTab';
-import EssayGradingTab from '../components/grading/EssayGradingTab';
 import { calcAverage, classifyGrade } from '../utils/gradeUtils';
 
-type TabKey = 'grades' | 'comments' | 'essay';
+type TabKey = 'grades' | 'comments';
 
 export default function GradingPage() {
-  const [searchParams] = useSearchParams();
   const {
     classes,
     users,
@@ -47,28 +43,11 @@ export default function GradingPage() {
     classStudentMap,
     parentChildMap,
     appendActivity,
-    quizSubmissions,
-    gradeEssaySubmission,
   } = useAppContext();
 
   const [selectedClassId, setSelectedClassId] = useState<string>('');
   const [activeTab, setActiveTab] = useState<TabKey>('grades');
   const [adminStatTab, setAdminStatTab] = useState<'classes' | 'exams' | 'types'>('classes');
-
-  const assignmentIdFromQuery = searchParams.get('assignmentId') ?? '';
-  const targetAssignmentFromQuery = useMemo(
-    () => (assignmentIdFromQuery ? assignments.find(a => a.id === assignmentIdFromQuery) : undefined),
-    [assignmentIdFromQuery, assignments]
-  );
-
-  // Deep-link from "Chấm điểm ngay": auto-select class + open essay tab
-  React.useEffect(() => {
-    if (!assignmentIdFromQuery) return;
-    if (!targetAssignmentFromQuery) return;
-    // Set class and move to essay tab for grading
-    setSelectedClassId(targetAssignmentFromQuery.classId);
-    setActiveTab('essay');
-  }, [assignmentIdFromQuery, targetAssignmentFromQuery]);
 
   // ── Permissions ──────────────────────────────────────────────
   const canGrade = canAccess('grade_assignments');
@@ -96,15 +75,6 @@ export default function GradingPage() {
   const parentChildren = useMemo(() => {
     return parentChildIds.map(id => users.find(u => u.id === id)).filter(Boolean) as typeof users;
   }, [parentChildIds, users]);
-
-  const pendingEssaySubmissions = useMemo(() => {
-    if (!canGrade) return [];
-    return quizSubmissions.filter((submission) => {
-      const assignment = assignments.find((a) => a.id === submission.assignmentId);
-      if (!assignment?.questions) return false;
-      return submission.score === undefined && assignment.questions.some((q) => q.type === 'essay');
-    });
-  }, [quizSubmissions, assignments, canGrade]);
 
   // Filter classes so teachers, students, and parents only see relevant classes
   const visibleClasses = useMemo(() => {
@@ -273,8 +243,7 @@ export default function GradingPage() {
 
   // ── Tab config ───────────────────────────────────────────────
   const tabs: { key: TabKey; label: string; icon: React.ElementType; badge?: number }[] = [
-    { key: 'grades' as TabKey, label: 'Bảng điểm', icon: BarChart3 },
-    ...(canGrade ? [{ key: 'essay' as TabKey, label: 'Chấm tự luận', icon: ClipboardList, badge: pendingEssaySubmissions.length }] : []),
+    { key: 'grades' as TabKey, label: 'Điểm số', icon: BarChart3 },
     ...((isStudent || isParent || isAdmin)
       ? [{ key: 'comments' as TabKey, label: 'Nhận xét', icon: MessageSquare }]
       : []),
@@ -565,17 +534,6 @@ export default function GradingPage() {
 
           {/* Tab content */}
           <div className="p-6">
-            {activeTab === 'essay' && (
-              <EssayGradingTab
-                classId={selectedClassId}
-                submissions={pendingEssaySubmissions}
-                assignments={assignments}
-                users={users}
-                onGrade={gradeEssaySubmission}
-                initialAssignmentId={assignmentIdFromQuery || undefined}
-              />
-            )}
-
             {activeTab === 'grades' && (
               <GradeTableTab
                 classId={selectedClassId}
