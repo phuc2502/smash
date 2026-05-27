@@ -26,6 +26,7 @@ import {
   Link2Off,
   ChevronDown,
   KeyRound,
+  Check,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAppContext, User } from "../context/AppContext";
@@ -46,6 +47,14 @@ export default function UserManagementPage() {
   const [resetPasswords, setResetPasswords] = useState<Record<string, string>>({});
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedUserToEdit, setSelectedUserToEdit] = useState<User | null>(null);
+
+  // Success Toast state
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const triggerToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const handleResetPassword = (userId: string, userName: string) => {
     if (window.confirm(`Bạn có chắc chắn muốn khôi phục mật khẩu cho người dùng ${userName}?`)) {
@@ -127,7 +136,24 @@ export default function UserManagementPage() {
   };
 
   return (
-    <div className="space-y-10 pb-10">
+    <div className="space-y-10 pb-10 relative">
+      {/* Toast Alert */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            className="fixed top-8 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md text-white border border-mint-500/30 px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 z-[9999]"
+          >
+            <div className="w-5 h-5 rounded-full bg-mint-500 text-white flex items-center justify-center">
+              <Check className="w-3.5 h-3.5" />
+            </div>
+            <span className="text-sm font-semibold">{toastMessage}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <motion.h2
@@ -189,7 +215,13 @@ export default function UserManagementPage() {
       <CreateUserModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={addUser}
+        onSubmit={(newUser) => {
+          const res = addUser(newUser);
+          if (res && res.success) {
+            triggerToast("Thêm mới thành viên thành công!");
+          }
+          return res;
+        }}
       />
 
       <EditUserModal
@@ -199,7 +231,13 @@ export default function UserManagementPage() {
           setSelectedUserToEdit(null);
         }}
         user={selectedUserToEdit}
-        onSubmit={updateUser}
+        onSubmit={(id, updatedFields) => {
+          const res = updateUser(id, updatedFields);
+          if (res && res.success) {
+            triggerToast("Cập nhật thông tin thành công!");
+          }
+          return res;
+        }}
       />
 
       <ApproveUsersModal
@@ -354,6 +392,7 @@ export default function UserManagementPage() {
                       } else if (type === 'delete') {
                         if (window.confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn tài khoản người dùng ${user.name}? Hành động này không thể hoàn tác.`)) {
                           deleteUser(id);
+                          triggerToast("Đã xóa tài khoản thành công!");
                         }
                       }
                     }}
