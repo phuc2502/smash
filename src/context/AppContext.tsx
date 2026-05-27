@@ -442,17 +442,22 @@ interface AppContextType extends AppState, SystemImprovementsState, SystemImprov
   markAttendance: (session: AttendanceSession) => void;
   updateAttendanceRecord: (sessionId: string, studentId: string, status: AttendanceStatus, note?: string) => void;
   finalizeAttendanceSession: (sessionId: string) => void;
+  unfinalizeAttendanceSession: (sessionId: string) => void;
   getAttendanceByClass: (classId: string) => AttendanceSession[];
   getAttendanceByStudent: (studentId: string) => AttendanceRecord[];
 
   // Leave Requests
   submitLeaveRequest: (request: Omit<LeaveRequest, 'id' | 'status' | 'submittedAt'>) => void;
   resolveLeaveRequest: (id: string, status: 'approved' | 'rejected', resolvedBy: string) => void;
+  updateLeaveRequest: (id: string, date: string, reason: string, classId: string, className: string) => void;
+  deleteLeaveRequest: (id: string) => void;
 
   // Late Requests
   lateRequests: LateRequest[];
   submitLateRequest: (request: Omit<LateRequest, 'id' | 'status' | 'submittedAt'>) => void;
   resolveLateRequest: (id: string, status: 'approved' | 'rejected', resolvedBy: string) => void;
+  updateLateRequest: (id: string, date: string, reason: string, classId: string, className: string) => void;
+  deleteLateRequest: (id: string) => void;
 
   // Quiz
   quizSubmissions: QuizSubmission[];
@@ -1744,6 +1749,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
     ));
   };
 
+  const unfinalizeAttendanceSession = (sessionId: string) => {
+    setAttendanceSessions(prev => prev.map(s =>
+      s.id === sessionId ? { ...s, isFinalized: false } : s
+    ));
+    appendActivity('Mở khóa sổ điểm danh', `Mở khóa sổ phiên điểm danh ID: ${sessionId}`, 'slate');
+  };
+
   const getAttendanceByClass = (classId: string) => {
     return attendanceSessions.filter(s => s.classId === classId);
   };
@@ -1836,6 +1848,30 @@ export function AppProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  const updateLeaveRequest = (id: string, date: string, reason: string, classId: string, className: string) => {
+    setLeaveRequests(prev => prev.map(req => {
+      if (req.id !== id) return req;
+      if (req.status !== 'pending') return req; // Chỉ được sửa khi trạng thái là pending
+      return {
+        ...req,
+        date,
+        reason,
+        classId,
+        className,
+      };
+    }));
+    appendActivity('Sửa đơn nghỉ phép', `Mã đơn: ${id}`, 'mint');
+  };
+
+  const deleteLeaveRequest = (id: string) => {
+    setLeaveRequests(prev => prev.filter(req => {
+      if (req.id !== id) return true;
+      if (req.status !== 'pending') return true; // Chỉ được xóa khi trạng thái là pending
+      return false;
+    }));
+    appendActivity('Xóa đơn nghỉ phép', `Mã đơn: ${id}`, 'slate');
+  };
+
   const submitLateRequest = (request: Omit<LateRequest, 'id' | 'status' | 'submittedAt'>) => {
     const newRequest: LateRequest = {
       ...request,
@@ -1918,6 +1954,30 @@ export function AppProvider({ children }: { children: ReactNode }) {
       `Đơn: ${id}, Người duyệt: ${resolvedBy}`,
       status === 'approved' ? 'mint' : 'slate'
     );
+  };
+
+  const updateLateRequest = (id: string, date: string, reason: string, classId: string, className: string) => {
+    setLateRequests(prev => prev.map(req => {
+      if (req.id !== id) return req;
+      if (req.status !== 'pending') return req; // Chỉ được sửa khi trạng thái là pending
+      return {
+        ...req,
+        date,
+        reason,
+        classId,
+        className,
+      };
+    }));
+    appendActivity('Sửa đơn đi muộn', `Mã đơn: ${id}`, 'mint');
+  };
+
+  const deleteLateRequest = (id: string) => {
+    setLateRequests(prev => prev.filter(req => {
+      if (req.id !== id) return true;
+      if (req.status !== 'pending') return true; // Chỉ được xóa khi trạng thái là pending
+      return false;
+    }));
+    appendActivity('Xóa đơn đi muộn', `Mã đơn: ${id}`, 'slate');
   };
 
   const appendAccessLog = (entry: Omit<AccessLogEntry, 'id' | 'timestamp'>) => {
@@ -2471,12 +2531,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
         leaveRequests,
         submitLeaveRequest,
         resolveLeaveRequest,
+        updateLeaveRequest,
+        deleteLeaveRequest,
         lateRequests,
         submitLateRequest,
         resolveLateRequest,
+        updateLateRequest,
+        deleteLateRequest,
         markAttendance,
         updateAttendanceRecord,
         finalizeAttendanceSession,
+        unfinalizeAttendanceSession,
         getAttendanceByClass,
         getAttendanceByStudent,
         addUser,

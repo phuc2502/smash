@@ -12,11 +12,20 @@ export default function LeaveRequestsPage() {
     leaveRequests,
     submitLeaveRequest,
     resolveLeaveRequest,
+    updateLeaveRequest,
+    deleteLeaveRequest,
     classes,
     users,
     classStudentMap,
     parentChildMap,
   } = useAppContext();
+
+  // Bulletproof safety fallbacks for context state
+  const safeLeaveRequests = leaveRequests ?? [];
+  const safeClasses = classes ?? [];
+  const safeUsers = users ?? [];
+  const safeClassStudentMap = classStudentMap ?? {};
+  const safeParentChildMap = parentChildMap ?? {};
 
   // Role identification
   const isStudent = currentAccount?.role === ROLE_LABELS.student;
@@ -25,10 +34,10 @@ export default function LeaveRequestsPage() {
   const isAdmin = currentAccount?.role === ROLE_LABELS.admin;
 
   // Retrieve students associated with this parent
-  const parentChildIds = isParent && currentAccount ? (parentChildMap[currentAccount.id] ?? []) : [];
+  const parentChildIds = isParent && currentAccount ? (safeParentChildMap[currentAccount.id] ?? []) : [];
   const parentChildren = useMemo(() => {
-    return users.filter(u => parentChildIds.includes(u.id));
-  }, [users, parentChildIds]);
+    return safeUsers.filter(u => u && parentChildIds.includes(u.id));
+  }, [safeUsers, parentChildIds]);
 
   // Form states
   const [selectedStudentId, setSelectedStudentId] = useState(() => {
@@ -42,21 +51,34 @@ export default function LeaveRequestsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
 
+  const [editingRequest, setEditingRequest] = useState<LeaveRequest | null>(null);
+
   const [formError, setFormError] = useState("");
   const [formSuccess, setFormSuccess] = useState("");
 
   // Determine active classes for the chosen student
   const studentActiveClasses = useMemo(() => {
     if (!selectedStudentId) return [];
-    return classes.filter(c => {
-      const enrolledStudentIds = classStudentMap[c.id] ?? [];
+    return safeClasses.filter(c => {
+      if (!c) return false;
+      const enrolledStudentIds = safeClassStudentMap[c.id] ?? [];
       return enrolledStudentIds.includes(selectedStudentId);
     });
-  }, [classes, classStudentMap, selectedStudentId]);
+  }, [safeClasses, safeClassStudentMap, selectedStudentId]);
+
+  // Memoize teacher's class IDs to prevent recurrent filtering inside loops
+  const teacherClassIds = useMemo(() => {
+    if (!currentAccount || !isTeacher) return [];
+    const teacherId = currentAccount.id;
+    const teacherName = currentAccount.name;
+    return safeClasses
+      .filter(c => c && (c.instructorId === teacherId || c.instructor === teacherName))
+      .map(c => c.id);
+  }, [safeClasses, currentAccount, isTeacher]);
 
   // Filter leave requests based on user role and filters
   const filteredLeaveRequests = useMemo(() => {
-    let list = [...leaveRequests];
+    let list = [...safeLeaveRequests].filter(Boolean);
 
     // Filter by role
     if (isStudent && currentAccount) {
@@ -64,8 +86,6 @@ export default function LeaveRequestsPage() {
     } else if (isParent) {
       list = list.filter(r => parentChildIds.includes(r.studentId));
     } else if (isTeacher && currentAccount) {
-      // Teacher can only see requests for classes they teach
-      const teacherClassIds = classes.filter(c => c.instructorId === currentAccount.id || c.instructor === currentAccount.name).map(c => c.id);
       list = list.filter(r => teacherClassIds.includes(r.classId));
     } // Admin sees everything
 
@@ -78,15 +98,15 @@ export default function LeaveRequestsPage() {
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       list = list.filter(r =>
-        r.studentName.toLowerCase().includes(q) ||
-        r.className.toLowerCase().includes(q) ||
-        r.reason.toLowerCase().includes(q)
+        (r.studentName ?? "").toLowerCase().includes(q) ||
+        (r.className ?? "").toLowerCase().includes(q) ||
+        (r.reason ?? "").toLowerCase().includes(q)
       );
     }
 
     // Sort by submittedAt descending
-    return list.sort((a, b) => b.submittedAt.localeCompare(a.submittedAt));
-  }, [leaveRequests, currentAccount, isStudent, isParent, isTeacher, isAdmin, classes, parentChildIds, statusFilter, searchQuery]);
+    return list.sort((a, b) => (b.submittedAt ?? "").localeCompare(a.submittedAt ?? ""));
+  }, [safeLeaveRequests, currentAccount, isStudent, isParent, isTeacher, parentChildIds, teacherClassIds, statusFilter, searchQuery]);
 
   // Handle leave request submission
   const handleSubmit = (e: React.FormEvent) => {
@@ -119,16 +139,28 @@ export default function LeaveRequestsPage() {
       return;
     }
 
-    submitLeaveRequest({
-      studentId: selectedStudentId,
-      studentName: studentObj.name,
-      classId: selectedClassId,
-      className: classObj.title,
-      date: leaveDate,
-      reason: leaveReason.trim(),
-    });
+    if (editingRequest) {
+      updateLeaveRequest(
+        editingRequest.id,
+        leaveDate,
+        leaveReason.trim(),
+        selectedClassId,
+        classObj.title
+      );
+      setFormSuccess("Cập nhật đơn nghỉ phép thành công!");
+      setEditingRequest(null);
+    } else {
+      submitLeaveRequest({
+        studentId: selectedStudentId,
+        studentName: studentObj.name,
+        classId: selectedClassId,
+        className: classObj.title,
+        date: leaveDate,
+        reason: leaveReason.trim(),
+      });
+      setFormSuccess("Đơn yêu cầu nghỉ phép của bạn đã được gửi thành công!");
+    }
 
-    setFormSuccess("Đơn yêu cầu nghỉ phép của bạn đã được gửi thành công!");
     setLeaveReason("");
     setLeaveDate("");
     setSelectedClassId("");
@@ -137,10 +169,64 @@ export default function LeaveRequestsPage() {
     setTimeout(() => setFormSuccess(""), 4000);
   };
 
+  // Effect to populate form when editing
+  React.useEffect(() => {
+    if (editingRequest) {
+      setSelectedStudentId(editingRequest.studentId);
+      setSelectedClassId(editingRequest.classId);
+      setLeaveDate(editingRequest.date);
+      setLeaveReason(editingRequest.reason);
+      setFormError("");
+      setFormSuccess("");
+    } else {
+      setLeaveReason("");
+      setLeaveDate("");
+      setSelectedClassId("");
+    }
+  }, [editingRequest]);
+
+  const handleCancelEdit = () => {
+    setEditingRequest(null);
+  };
+
   // Handle moderation approval/rejection
   const handleResolve = (requestId: string, status: "approved" | "rejected") => {
     if (!currentAccount) return;
     resolveLeaveRequest(requestId, status, currentAccount.name);
+  };
+
+  // Safe Date format helpers to prevent RangeError crash on invalid/unsupported date formats
+  const safeFormatDate = (dateStr: string) => {
+    if (!dateStr) return "Chưa cập nhật";
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    try {
+      return d.toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
+    } catch {
+      return dateStr;
+    }
+  };
+
+  const safeFormatDateTime = (dateStr: string) => {
+    if (!dateStr) return "Chưa cập nhật";
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    try {
+      return d.toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return dateStr;
+    }
+  };
+
+  const safeFormatSimpleDate = (dateStr: string) => {
+    if (!dateStr) return "Chưa cập nhật";
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    try {
+      return d.toLocaleDateString('vi-VN');
+    } catch {
+      return dateStr;
+    }
   };
 
   const getStatusBadge = (status: LeaveRequest["status"]) => {
@@ -189,10 +275,12 @@ export default function LeaveRequestsPage() {
         {(isStudent || isParent) && (
           <div className="xl:col-span-1 bg-white/80 backdrop-blur-xl p-8 rounded-[40px] border border-slate-100 shadow-sm space-y-6">
             <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-              <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <div className={`w-10 h-10 rounded-2xl flex items-center justify-center ${editingRequest ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'}`}>
                 <PlusCircle className="w-5 h-5" />
               </div>
-              <h3 className="text-lg font-black text-slate-900">Gửi đơn mới</h3>
+              <h3 className="text-lg font-black text-slate-900">
+                {editingRequest ? `Sửa đơn ${editingRequest.id}` : "Gửi đơn mới"}
+              </h3>
             </div>
 
             {formError && (
@@ -271,12 +359,24 @@ export default function LeaveRequestsPage() {
                 />
               </div>
 
-              <button
-                type="submit"
-                className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-full font-bold text-sm hover:shadow-xl hover:shadow-blue-200 hover:-translate-y-0.5 transition-all shadow-lg shadow-blue-100"
-              >
-                Gửi yêu cầu nghỉ phép
-              </button>
+              <div className="flex gap-3 w-full">
+                {editingRequest && (
+                  <button
+                    type="button"
+                    onClick={handleCancelEdit}
+                    className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full font-bold text-sm transition-all"
+                  >
+                    Hủy
+                  </button>
+                )}
+                <button
+                  type="submit"
+                  className="py-3 bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-full font-bold text-sm hover:shadow-xl hover:shadow-blue-200 hover:-translate-y-0.5 transition-all shadow-lg shadow-blue-100"
+                  style={{ flex: editingRequest ? 2 : 1 }}
+                >
+                  {editingRequest ? "Lưu thay đổi" : "Gửi yêu cầu nghỉ phép"}
+                </button>
+              </div>
             </form>
           </div>
         )}
@@ -308,7 +408,8 @@ export default function LeaveRequestsPage() {
           {/* Status Tab Bar */}
           <div className="flex gap-2 border-b border-slate-100 pb-4 overflow-x-auto">
             {(["all", "pending", "approved", "rejected"] as const).map(f => {
-              const count = leaveRequests.filter(r => {
+              const count = safeLeaveRequests.filter(r => {
+                if (!r) return false;
                 const baseFilter = f === "all" ? true : r.status === f;
                 if (isStudent && currentAccount) {
                   return baseFilter && r.studentId === currentAccount.id;
@@ -317,7 +418,6 @@ export default function LeaveRequestsPage() {
                   return baseFilter && parentChildIds.includes(r.studentId);
                 }
                 if (isTeacher && currentAccount) {
-                  const teacherClassIds = classes.filter(c => c.instructorId === currentAccount.id || c.instructor === currentAccount.name).map(c => c.id);
                   return baseFilter && teacherClassIds.includes(r.classId);
                 }
                 return baseFilter;
@@ -392,7 +492,7 @@ export default function LeaveRequestsPage() {
                       {/* Date details */}
                       <div className="flex items-center gap-1.5 text-sm font-black text-slate-950">
                         <CalendarDays className="w-4 h-4 text-mint-600" />
-                        <span>Nghỉ ngày: {new Date(request.date).toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                        <span>Nghỉ ngày: {safeFormatDate(request.date)}</span>
                       </div>
 
                       {/* Reason */}
@@ -403,14 +503,14 @@ export default function LeaveRequestsPage() {
 
                       {/* Submitted detail */}
                       <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                        Gửi lúc: {new Date(request.submittedAt).toLocaleDateString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+                        Gửi lúc: {safeFormatDateTime(request.submittedAt)}
                       </div>
 
                       {/* Resolved details */}
                       {request.resolvedBy && (
                         <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg w-fit">
                           <UserCheck className="w-3.5 h-3.5 text-mint-600" />
-                          <span>Duyệt bởi {request.resolvedBy} vào {new Date(request.resolvedAt || "").toLocaleDateString('vi-VN')}</span>
+                          <span>Duyệt bởi {request.resolvedBy} vào {safeFormatSimpleDate(request.resolvedAt || "")}</span>
                         </div>
                       )}
                     </div>
@@ -418,6 +518,34 @@ export default function LeaveRequestsPage() {
                     {/* Moderation Actions / Status Badge */}
                     <div className="flex flex-col items-start md:items-end justify-between self-stretch shrink-0">
                       <div>{getStatusBadge(request.status)}</div>
+
+                      {/* Student & Parent Edit / Delete Actions */}
+                      {request.status === "pending" && (
+                        (isStudent && request.studentId === currentAccount?.id) ||
+                        (isParent && parentChildIds.includes(request.studentId))
+                      ) && (
+                        <div className="flex items-center gap-2 mt-4 md:mt-0">
+                          <button
+                            onClick={() => setEditingRequest(request)}
+                            className="px-3.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 text-[10px] font-black uppercase tracking-wider rounded-xl shadow-sm transition-all hover:scale-105"
+                          >
+                            Sửa
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (window.confirm("Bạn có chắc chắn muốn xóa đơn xin nghỉ phép này không?")) {
+                                deleteLeaveRequest(request.id);
+                                if (editingRequest?.id === request.id) {
+                                  setEditingRequest(null);
+                                }
+                              }
+                            }}
+                            className="px-3.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-[10px] font-black uppercase tracking-wider rounded-xl shadow-sm transition-all hover:scale-105"
+                          >
+                            Xóa
+                          </button>
+                        </div>
+                      )}
 
                       {/* Admin & Teacher Decision Actions */}
                       {(isAdmin || isTeacher) && request.status === "pending" && (

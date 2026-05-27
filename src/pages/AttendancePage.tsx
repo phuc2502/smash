@@ -24,9 +24,16 @@ const STATUS_CONFIG: Record<AttendanceStatus, { label: string; icon: typeof Chec
 export default function AttendancePage() {
   const {
     canAccess, currentAccount, classes, users, attendanceSessions,
-    updateAttendanceRecord, finalizeAttendanceSession,
+    updateAttendanceRecord, finalizeAttendanceSession, unfinalizeAttendanceSession,
     classStudentMap, parentChildMap,
   } = useAppContext();
+
+  // Bulletproof safety fallbacks for context state
+  const safeClasses = classes ?? [];
+  const safeUsers = users ?? [];
+  const safeAttendanceSessions = attendanceSessions ?? [];
+  const safeClassStudentMap = classStudentMap ?? {};
+  const safeParentChildMap = parentChildMap ?? {};
 
   const canView = canAccess('view_attendance');
   const canManage = canAccess('manage_attendance');
@@ -47,40 +54,43 @@ export default function AttendancePage() {
   // Determine role
   const isParent = currentAccount?.role === ROLE_LABELS.parent;
   const isStudent = currentAccount?.role === ROLE_LABELS.student;
-  const parentChildIds = isParent && currentAccount ? (parentChildMap[currentAccount.id] ?? []) : [];
+  const parentChildIds = isParent && currentAccount ? (safeParentChildMap[currentAccount.id] ?? []) : [];
   const studentId = isStudent && currentAccount ? currentAccount.id : null;
 
   // Filter classes based on role
   const availableClasses = useMemo(() => {
     if (isParent) {
-      return classes.filter(c => {
-        const studentIds = classStudentMap[c.id] ?? [];
+      return safeClasses.filter(c => {
+        if (!c) return false;
+        const studentIds = safeClassStudentMap[c.id] ?? [];
         return parentChildIds.some(pid => studentIds.includes(pid));
       });
     }
     if (isStudent && studentId) {
-      return classes.filter(c => {
-        const studentIds = classStudentMap[c.id] ?? [];
+      return safeClasses.filter(c => {
+        if (!c) return false;
+        const studentIds = safeClassStudentMap[c.id] ?? [];
         return studentIds.includes(studentId);
       });
     }
-    return classes;
-  }, [classes, classStudentMap, isParent, parentChildIds, isStudent, studentId]);
+    return safeClasses;
+  }, [safeClasses, safeClassStudentMap, isParent, parentChildIds, isStudent, studentId]);
 
   // All sessions, filtered for parent/student
   const filteredSessions = useMemo(() => {
+    const sessions = safeAttendanceSessions.filter(Boolean);
     if (isParent) {
-      return attendanceSessions.filter(s => {
-        const studentIds = classStudentMap[s.classId] ?? [];
+      return sessions.filter(s => {
+        const studentIds = safeClassStudentMap[s.classId] ?? [];
         return parentChildIds.some(pid => studentIds.includes(pid));
       });
     }
     if (isStudent && studentId) {
       // For student: only show sessions where they have a record, filter records to own
-      return attendanceSessions
-        .filter(s => s.records.some(r => r.studentId === studentId))
+      return sessions
+        .filter(s => s.records && s.records.some(r => r && r.studentId === studentId))
         .map(s => {
-          const ownRecords = s.records.filter(r => r.studentId === studentId);
+          const ownRecords = (s.records ?? []).filter(r => r && r.studentId === studentId);
           return {
             ...s,
             records: ownRecords,
@@ -92,16 +102,16 @@ export default function AttendancePage() {
           } as AttendanceSession;
         });
     }
-    return attendanceSessions;
-  }, [attendanceSessions, isParent, parentChildIds, isStudent, studentId]);
+    return sessions;
+  }, [safeAttendanceSessions, safeClassStudentMap, isParent, parentChildIds, isStudent, studentId]);
 
   // Stats
   const totalSessions = filteredSessions.length;
-  const allRecords = filteredSessions.flatMap(s => s.records);
+  const allRecords = filteredSessions.flatMap(s => s.records ?? []);
   const totalRecords = allRecords.length;
-  const presentRate = totalRecords > 0 ? Math.round((allRecords.filter(r => r.status === 'present').length / totalRecords) * 100) : 0;
-  const absentRate = totalRecords > 0 ? Math.round((allRecords.filter(r => r.status === 'absent').length / totalRecords) * 100) : 0;
-  const lateRate = totalRecords > 0 ? Math.round((allRecords.filter(r => r.status === 'late').length / totalRecords) * 100) : 0;
+  const presentRate = totalRecords > 0 ? Math.round((allRecords.filter(r => r && r.status === 'present').length / totalRecords) * 100) : 0;
+  const absentRate = totalRecords > 0 ? Math.round((allRecords.filter(r => r && r.status === 'absent').length / totalRecords) * 100) : 0;
+  const lateRate = totalRecords > 0 ? Math.round((allRecords.filter(r => r && r.status === 'late').length / totalRecords) * 100) : 0;
 
   // Current session for "by_class" tab
   const currentSession = useMemo(() => {
@@ -115,13 +125,17 @@ export default function AttendancePage() {
     
     const LIMIT_MS = 24 * 60 * 60 * 1000;
     const sessionTime = new Date(currentSession.date).getTime();
+    if (isNaN(sessionTime)) return false;
     const elapsed = Date.now() - sessionTime;
     if (elapsed > LIMIT_MS) return true;
     
-    const firstRecordMarkedAt = currentSession.records[0]?.markedAt;
+    const firstRecordMarkedAt = currentSession.records?.[0]?.markedAt;
     if (firstRecordMarkedAt) {
-      const recordElapsed = Date.now() - new Date(firstRecordMarkedAt).getTime();
-      if (recordElapsed > LIMIT_MS) return true;
+      const recordTime = new Date(firstRecordMarkedAt).getTime();
+      if (!isNaN(recordTime)) {
+        const recordElapsed = Date.now() - recordTime;
+        if (recordElapsed > LIMIT_MS) return true;
+      }
     }
     
     return false;
@@ -129,11 +143,11 @@ export default function AttendancePage() {
 
   // Students for "by_student" tab
   const studentList = useMemo(() => {
-    const studentUsers = users.filter(u => u.role === ROLE_LABELS.student);
+    const studentUsers = safeUsers.filter(u => u && u.role === ROLE_LABELS.student);
     if (isParent) return studentUsers.filter(u => parentChildIds.includes(u.id));
     if (isStudent && studentId) return studentUsers.filter(u => u.id === studentId);
     return studentUsers;
-  }, [users, isParent, parentChildIds, isStudent, studentId]);
+  }, [safeUsers, isParent, parentChildIds, isStudent, studentId]);
 
   const selectedStudentRecords = useMemo(() => {
     if (!selectedStudentId) return [];
@@ -197,6 +211,12 @@ export default function AttendancePage() {
     finalizeAttendanceSession(sessionId);
   };
 
+  const handleUnfinalizeSession = (sessionId: string) => {
+    if (!currentSession) return;
+    setErrorMsg('');
+    unfinalizeAttendanceSession(sessionId);
+  };
+
   const handleOpenSMSPopup = (record: { studentId: string; studentName: string; status: AttendanceStatus; note?: string }) => {
     setSmsStudentData({
       studentId: record.studentId,
@@ -252,7 +272,7 @@ export default function AttendancePage() {
           studentId={smsStudentData.studentId}
           studentName={smsStudentData.studentName}
           classId={selectedClassId}
-          className={classes.find(c => c.id === selectedClassId)?.title ?? ""}
+          className={safeClasses.find(c => c && c.id === selectedClassId)?.title ?? ""}
           date={selectedDate}
           status={smsStudentData.status}
           reason={smsStudentData.reason}
@@ -523,14 +543,25 @@ export default function AttendancePage() {
                     </div>
 
                     {/* Actions */}
-                    {canManage && !currentSession.isFinalized && (
-                      <div className="flex justify-end">
-                        <button
-                          onClick={() => handleFinalizeSession(currentSession.id)}
-                          className="px-6 py-3 bg-slate-900 text-white rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-slate-800 transition-colors shadow-lg shadow-slate-200"
-                        >
-                          <Lock className="w-4 h-4" /> Khóa sổ điểm danh
-                        </button>
+                    {canManage && (
+                      <div className="flex justify-end gap-3">
+                        {!currentSession.isFinalized ? (
+                          <button
+                            onClick={() => handleFinalizeSession(currentSession.id)}
+                            className="px-6 py-3 bg-slate-900 text-white rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-slate-800 transition-colors shadow-lg shadow-slate-200"
+                          >
+                            <Lock className="w-4 h-4" /> Khóa sổ điểm danh
+                          </button>
+                        ) : (
+                          currentAccount?.role === ROLE_LABELS.admin && (
+                            <button
+                              onClick={() => handleUnfinalizeSession(currentSession.id)}
+                              className="px-6 py-3 bg-gradient-to-r from-amber-600 to-amber-400 text-white rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:shadow-xl hover:shadow-amber-200 hover:-translate-y-0.5 transition-all shadow-lg shadow-amber-100"
+                            >
+                              <Unlock className="w-4 h-4" /> Mở khóa sổ điểm danh
+                            </button>
+                          )
+                        )}
                       </div>
                     )}
                   </div>
@@ -629,32 +660,66 @@ export default function AttendancePage() {
                 )}
 
                 <div className="space-y-4">
-                  {historySessions.map((session) => (
-                    <motion.div key={session.id} layout
-                      className="bg-slate-50/50 rounded-[24px] border border-slate-100 p-6 hover:bg-white hover:shadow-lg transition-all duration-300"
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div>
-                          <div className="flex items-center gap-3 mb-1">
-                            <h4 className="text-base font-black text-slate-900">{session.className}</h4>
-                            {session.isFinalized && (
-                              <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-1">
-                                <Lock className="w-2.5 h-2.5" /> Đã khóa
-                              </span>
-                            )}
+                  {historySessions.map((session) => {
+                    // Check if locked after 24h
+                    const isSessionLocked24h = (() => {
+                      if (currentAccount?.role === ROLE_LABELS.admin) return false;
+                      const LIMIT_MS = 24 * 60 * 60 * 1000;
+                      const sessionTime = new Date(session.date).getTime();
+                      const elapsed = Date.now() - sessionTime;
+                      if (elapsed > LIMIT_MS) return true;
+                      
+                      const firstRecordMarkedAt = session.records[0]?.markedAt;
+                      if (firstRecordMarkedAt) {
+                        const recordElapsed = Date.now() - new Date(firstRecordMarkedAt).getTime();
+                        if (recordElapsed > LIMIT_MS) return true;
+                      }
+                      return false;
+                    })();
+
+                    return (
+                      <motion.div
+                        key={session.id}
+                        layout
+                        onClick={() => {
+                          setSelectedClassId(session.classId);
+                          setSelectedDate(session.date);
+                          setActiveTab('by_class');
+                          setErrorMsg('');
+                        }}
+                        className="bg-slate-50/50 rounded-[24px] border border-slate-100 p-6 hover:bg-white hover:shadow-xl hover:-translate-y-0.5 cursor-pointer transition-all duration-300"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                          <div>
+                            <div className="flex items-center gap-3 mb-1">
+                              <h4 className="text-base font-black text-slate-900 group-hover:text-mint-600 transition-colors">{session.className}</h4>
+                              {session.isFinalized ? (
+                                <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-1">
+                                  <Lock className="w-2.5 h-2.5" /> Đã khóa sổ
+                                </span>
+                              ) : isSessionLocked24h ? (
+                                <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 text-[10px] font-black uppercase tracking-widest flex items-center gap-1">
+                                  <Lock className="w-2.5 h-2.5" /> Khóa 24h
+                                </span>
+                              ) : (
+                                <span className="px-2 py-0.5 rounded-full bg-mint-50 text-mint-600 text-[10px] font-black uppercase tracking-widest flex items-center gap-1">
+                                  <Unlock className="w-2.5 h-2.5" /> Đang mở
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{formatDateVN(session.date)} · {session.classId}</p>
                           </div>
-                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{formatDateVN(session.date)} · {session.classId}</p>
+                          <div className="flex items-center gap-2 text-xs font-bold flex-wrap">
+                            <span className="px-2.5 py-1 rounded-full bg-mint-100 text-mint-600">✅ {session.presentCount}</span>
+                            <span className="px-2.5 py-1 rounded-full bg-rose-100 text-rose-600">❌ {session.absentCount}</span>
+                            <span className="px-2.5 py-1 rounded-full bg-amber-100 text-amber-600">⏰ {session.lateCount}</span>
+                            <span className="px-2.5 py-1 rounded-full bg-blue-100 text-blue-600">📝 {session.excusedCount}</span>
+                            <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-500">👥 {session.totalStudents}</span>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2 text-xs font-bold flex-wrap">
-                          <span className="px-2.5 py-1 rounded-full bg-mint-100 text-mint-600">✅ {session.presentCount}</span>
-                          <span className="px-2.5 py-1 rounded-full bg-rose-100 text-rose-600">❌ {session.absentCount}</span>
-                          <span className="px-2.5 py-1 rounded-full bg-amber-100 text-amber-600">⏰ {session.lateCount}</span>
-                          <span className="px-2.5 py-1 rounded-full bg-blue-100 text-blue-600">📝 {session.excusedCount}</span>
-                          <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-500">👥 {session.totalStudents}</span>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </motion.div>
             )}
