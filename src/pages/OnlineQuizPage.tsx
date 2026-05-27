@@ -26,6 +26,118 @@ function formatTime(seconds: number): string {
   return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
+/** Sidebar cố định: đồng hồ + bản đồ câu hỏi + thống kê */
+function QuizSidebarPanel({
+  questions,
+  answers,
+  answeredCount,
+  tabSwitchCount,
+  hasTimer,
+  timeLeft,
+  totalMinutes,
+  isTimeLow,
+  timeProgressPct,
+}: {
+  questions: QuizQuestion[];
+  answers: Record<string, string>;
+  answeredCount: number;
+  tabSwitchCount: number;
+  hasTimer: boolean;
+  timeLeft: number;
+  totalMinutes: number;
+  isTimeLow: boolean;
+  timeProgressPct: number;
+}) {
+  const scrollToQuestion = (qId: string) => {
+    document.getElementById(`question-container-${qId}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
+  return (
+    <aside
+      className="bg-white/95 backdrop-blur-md rounded-[24px] border border-slate-100 p-5 shadow-lg shadow-slate-200/50 space-y-4"
+      aria-label="Bản đồ câu hỏi và thời gian"
+    >
+      {hasTimer && (
+        <div
+          className={`rounded-[16px] border p-4 text-center ${
+            isTimeLow
+              ? "bg-rose-50 border-rose-200 ring-1 ring-rose-200/80"
+              : "bg-amber-50/80 border-amber-200"
+          }`}
+          aria-live="polite"
+        >
+          <div className="flex items-center justify-center gap-1.5 mb-2">
+            <Clock className={`w-4 h-4 ${isTimeLow ? "text-rose-500" : "text-amber-600"}`} />
+            <p className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+              Thời gian còn lại
+            </p>
+          </div>
+          <p
+            className={`text-3xl font-mono font-black tabular-nums leading-none ${
+              isTimeLow ? "text-rose-600 animate-pulse" : "text-amber-800"
+            }`}
+          >
+            {formatTime(timeLeft)}
+          </p>
+          <p className="text-[10px] text-slate-500 mt-1.5 font-medium">Tổng {totalMinutes} phút</p>
+          <div className="mt-3 h-2 bg-white/80 rounded-full overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all duration-1000 ${
+                isTimeLow ? "bg-rose-500" : "bg-amber-500"
+              }`}
+              style={{ width: `${timeProgressPct}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      <div>
+        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">Bản đồ câu hỏi</h3>
+        <p className="text-[10px] text-slate-400 leading-normal">
+          Nhấp vào ô số để di chuyển nhanh tới câu hỏi tương ứng.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-4 gap-2">
+        {questions.map((q, idx) => {
+          const isAnswered = !!answers[q.id]?.trim();
+          return (
+            <button
+              key={q.id}
+              type="button"
+              onClick={() => scrollToQuestion(q.id)}
+              className={`h-10 rounded-[12px] border flex items-center justify-center text-xs font-bold transition-all active:scale-95 ${
+                isAnswered
+                  ? "bg-mint-500 border-mint-500 text-white shadow-sm shadow-mint-500/20"
+                  : "bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100 hover:border-slate-300"
+              }`}
+            >
+              {idx + 1}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="pt-4 border-t border-slate-100 space-y-2">
+        <div className="flex items-center justify-between text-[11px] text-slate-500">
+          <span>Số câu hỏi:</span>
+          <span className="font-semibold text-slate-700">{questions.length} câu</span>
+        </div>
+        <div className="flex items-center justify-between text-[11px] text-slate-500">
+          <span>Số câu đã làm:</span>
+          <span className="font-semibold text-mint-600">{answeredCount} câu</span>
+        </div>
+        <div className="flex items-center justify-between text-[11px] text-slate-500">
+          <span>Số lần rời tab:</span>
+          <span className={`font-semibold ${tabSwitchCount > 0 ? "text-rose-500" : "text-slate-700"}`}>
+            {tabSwitchCount}/3 lần
+          </span>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
 export function gradeMultipleChoice(
   questions: QuizQuestion[],
   answers: Record<string, string>
@@ -967,6 +1079,16 @@ export default function OnlineQuizPage() {
   const questions = assignment?.questions ?? [];
   const isEssay = assignment?.type === "Tự luận";
   const hasTimer = !!assignment?.timeLimit && assignment.timeLimit > 0;
+  const totalSeconds = hasTimer ? assignment!.timeLimit! * 60 : 0;
+
+  // Khởi tạo đồng hồ khi mở bài (theo timeLimit của bài tập)
+  useEffect(() => {
+    if (hasTimer) {
+      setTimeLeft(assignment!.timeLimit! * 60);
+    } else {
+      setTimeLeft(0);
+    }
+  }, [assignment?.id, assignment?.timeLimit, hasTimer]);
 
   // Check existing submission
   const existingSubmission =
@@ -1157,7 +1279,7 @@ export default function OnlineQuizPage() {
 
   // Countdown timer
   useEffect(() => {
-    if (!hasTimer || timeLeft <= 0 || submitted || existingSubmission || isLocked) return;
+    if (!hasTimer || submitted || existingSubmission || isLocked) return;
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
@@ -1168,12 +1290,14 @@ export default function OnlineQuizPage() {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [hasTimer, timeLeft, submitted, existingSubmission, isLocked, handleSubmit]);
+  }, [hasTimer, submitted, existingSubmission, isLocked, handleSubmit]);
 
   const answeredCount = questions.filter((q) => !!answers[q.id]?.trim() || (fileAttachments[q.id]?.length ?? 0) > 0).length;
   const unansweredCount = questions.length - answeredCount;
   const progressPct = questions.length > 0 ? (answeredCount / questions.length) * 100 : 0;
-  const isTimeLow = hasTimer && timeLeft < 5 * 60;
+  const isTimeLow = hasTimer && timeLeft > 0 && timeLeft <= 5 * 60;
+  const timeProgressPct =
+    hasTimer && totalSeconds > 0 ? Math.min(100, (timeLeft / totalSeconds) * 100) : 100;
 
   // ── Error state: assignment not found ──────────────────────────────────────
   if (!assignment) {
@@ -1290,7 +1414,7 @@ export default function OnlineQuizPage() {
       >
         {/* Fixed Header */}
         <div className="sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-slate-100 px-4 py-3">
-          <div className="max-w-2xl mx-auto flex items-center gap-3">
+          <div className="max-w-3xl mx-auto flex items-center gap-3">
             <button
               onClick={() => navigate("/assignments")}
               className="flex items-center gap-1.5 text-slate-500 hover:text-slate-700 transition-colors text-sm font-medium shrink-0"
@@ -1302,26 +1426,14 @@ export default function OnlineQuizPage() {
             <h1 className="text-sm font-semibold text-slate-700 truncate flex-1 min-w-0">
               {assignment.title}
             </h1>
-            {hasTimer && (
-              <div
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-mono font-bold shrink-0 transition-colors ${
-                  isTimeLow
-                    ? "bg-rose-50 text-rose-600 border border-rose-200"
-                    : "bg-slate-100 text-slate-700 border border-slate-200"
-                }`}
-              >
-                <Clock className={`w-3.5 h-3.5 ${isTimeLow ? "text-rose-500" : "text-slate-500"}`} />
-                {formatTime(timeLeft)}
-              </div>
-            )}
           </div>
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto px-4 py-6">
-          <div className="max-w-5xl mx-auto lg:grid lg:grid-cols-[1fr_280px] lg:gap-6 items-start space-y-4 lg:space-y-0">
-            {/* Left: Questions Column */}
-            <div className="space-y-4">
+        <div className="flex-1 overflow-y-auto px-4 py-6 relative">
+          <div className="max-w-6xl mx-auto lg:pr-[304px]">
+            {/* Cột bài tập — căn giữa */}
+            <div className="w-full max-w-3xl mx-auto space-y-4">
               
               {/* Banner Anti-Cheat Glassmorphic */}
               <div className="bg-rose-500/10 backdrop-blur-md border border-rose-500/20 rounded-[20px] p-4.5 flex items-center gap-3 shadow-[0_4px_20px_-4px_rgba(239,68,68,0.1)]">
@@ -1336,9 +1448,30 @@ export default function OnlineQuizPage() {
                 </div>
               </div>
 
-              {/* Mobile Question Navigator */}
+              {/* Mobile: đồng hồ + chọn nhanh câu */}
               {questions.length > 0 && (
-                <div className="lg:hidden bg-white/70 backdrop-blur-sm rounded-[20px] border border-slate-100 p-4 shadow-sm space-y-2">
+                <div className="lg:hidden bg-white/90 backdrop-blur-sm rounded-[20px] border border-slate-100 p-4 shadow-sm space-y-3">
+                  {hasTimer && (
+                    <div
+                      className={`rounded-[14px] border p-3 flex items-center justify-between gap-3 ${
+                        isTimeLow ? "bg-rose-50 border-rose-200" : "bg-amber-50/80 border-amber-200"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Clock className={`w-4 h-4 shrink-0 ${isTimeLow ? "text-rose-500" : "text-amber-600"}`} />
+                        <span className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                          Còn lại
+                        </span>
+                      </div>
+                      <span
+                        className={`text-xl font-mono font-black tabular-nums ${
+                          isTimeLow ? "text-rose-600" : "text-amber-800"
+                        }`}
+                      >
+                        {formatTime(timeLeft)}
+                      </span>
+                    </div>
+                  )}
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Chọn nhanh câu hỏi:</p>
                   <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
                     {questions.map((q, idx) => {
@@ -1437,55 +1570,29 @@ export default function OnlineQuizPage() {
                 )
               )}
             </div>
-
-            {/* Right: Sticky Sidebar Desktop question grid */}
-            <div className="hidden lg:block sticky top-20 bg-white/80 backdrop-blur-sm rounded-[24px] border border-slate-100 p-5 shadow-sm space-y-4">
-              <div>
-                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">Bản đồ câu hỏi</h3>
-                <p className="text-[10px] text-slate-400 leading-normal">Nhấp vào ô số để di chuyển nhanh tới câu hỏi tương ứng.</p>
-              </div>
-              
-              <div className="grid grid-cols-4 gap-2">
-                {questions.map((q, idx) => {
-                  const isAnswered = !!answers[q.id]?.trim();
-                  return (
-                    <button
-                      key={q.id}
-                      type="button"
-                      onClick={() => document.getElementById(`question-container-${q.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
-                      className={`h-10 rounded-[12px] border flex items-center justify-center text-xs font-bold transition-all active:scale-95 ${
-                        isAnswered
-                          ? "bg-mint-500 border-mint-500 text-white shadow-sm shadow-mint-500/20"
-                          : "bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100 hover:border-slate-300"
-                      }`}
-                    >
-                      {idx + 1}
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div className="pt-4 border-t border-slate-100 space-y-2">
-                <div className="flex items-center justify-between text-[11px] text-slate-500">
-                  <span>Số câu hỏi:</span>
-                  <span className="font-semibold text-slate-700">{questions.length} câu</span>
-                </div>
-                <div className="flex items-center justify-between text-[11px] text-slate-500">
-                  <span>Số câu đã làm:</span>
-                  <span className="font-semibold text-mint-600">{answeredCount} câu</span>
-                </div>
-                <div className="flex items-center justify-between text-[11px] text-slate-500">
-                  <span>Số lần rời tab:</span>
-                  <span className={`font-semibold ${tabSwitchCount > 0 ? "text-rose-500" : "text-slate-700"}`}>{tabSwitchCount}/3 lần</span>
-                </div>
-              </div>
-            </div>
           </div>
+
+          {/* Sidebar cố định — gộp đồng hồ + bản đồ câu hỏi */}
+          {questions.length > 0 && (
+            <div className="hidden lg:block fixed top-36 md:top-40 right-6 xl:right-10 w-[280px] z-40 max-h-[calc(100vh-10rem)] overflow-y-auto">
+              <QuizSidebarPanel
+                questions={questions}
+                answers={answers}
+                answeredCount={answeredCount}
+                tabSwitchCount={tabSwitchCount}
+                hasTimer={hasTimer}
+                timeLeft={timeLeft}
+                totalMinutes={assignment.timeLimit ?? 0}
+                isTimeLow={isTimeLow}
+                timeProgressPct={timeProgressPct}
+              />
+            </div>
+          )}
         </div>
 
         {/* Fixed Footer */}
         <div className="sticky bottom-0 z-20 bg-white/90 backdrop-blur-md border-t border-slate-100 px-4 py-3">
-          <div className="max-w-2xl mx-auto flex items-center gap-4">
+          <div className="max-w-3xl mx-auto flex items-center gap-4">
             {/* Progress */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-1.5">

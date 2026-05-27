@@ -32,6 +32,8 @@ interface EssayGradingTabProps {
   assignments: Assignment[];
   users: UserType[];
   onGrade: (submissionId: string, score: number, comment?: string) => void;
+  /** (Optional) deep-link: tự chọn bài tập cần chấm */
+  initialAssignmentId?: string;
 }
 
 /** Validate điểm: phải là số trong [0, 10] */
@@ -131,6 +133,7 @@ export default function EssayGradingTab({
   assignments,
   users,
   onGrade,
+  initialAssignmentId,
 }: EssayGradingTabProps) {
   // State for active submission in Split-Screen view
   const [activeSubmissionId, setActiveSubmissionId] = useState<string | null>(null);
@@ -210,6 +213,12 @@ export default function EssayGradingTab({
   // Filter assignment ID state
   const [filterAssignmentId, setFilterAssignmentId] = useState<string>('all');
 
+  // Deep-link: auto-select assignment filter + open first submission
+  useEffect(() => {
+    if (!initialAssignmentId) return;
+    setFilterAssignmentId(initialAssignmentId);
+  }, [initialAssignmentId]);
+
   // Unique assignments that have submissions
   const uniqueAssignmentsInSubmissions = React.useMemo(() => {
     const ids = Array.from(new Set(submissions.map(s => s.assignmentId)));
@@ -221,6 +230,14 @@ export default function EssayGradingTab({
     if (filterAssignmentId === 'all') return submissions;
     return submissions.filter(s => s.assignmentId === filterAssignmentId);
   }, [submissions, filterAssignmentId]);
+
+  useEffect(() => {
+    // If deep-linked or filter changed, jump to first submission for faster grading
+    if (!initialAssignmentId) return;
+    if (activeSubmissionId) return;
+    if (filteredSubmissions.length === 0) return;
+    setActiveSubmissionId(filteredSubmissions[0].id);
+  }, [initialAssignmentId, filteredSubmissions, activeSubmissionId]);
 
   // Filter pending submissions from the filtered list
   const pendingSubmissions = filteredSubmissions.filter(s => !getState(s.id).saved);
