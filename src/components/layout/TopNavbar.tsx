@@ -15,6 +15,7 @@ import {
   Clock,
   Menu,
   Zap,
+  Check,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAppContext } from "../../context/AppContext";
@@ -46,7 +47,13 @@ export default function TopNavbar() {
   });
   const [passwordForm, setPasswordForm] = useState({ currentPassword: "", nextPassword: "", confirmNextPassword: "" });
   const [feedback, setFeedback] = useState<{ tone: "success" | "error"; message: string } | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const triggerToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -127,7 +134,7 @@ export default function TopNavbar() {
       phone: profileForm.phone.trim(),
     });
 
-    setFeedback({ tone: "success", message: "Đã cập nhật hồ sơ thành công." });
+    triggerToast("Đã cập nhật hồ sơ cá nhân thành công!");
     setActiveModal(null);
   };
 
@@ -138,10 +145,12 @@ export default function TopNavbar() {
     }
 
     const result = changePassword(passwordForm.currentPassword, passwordForm.nextPassword);
-    setFeedback({ tone: result.success ? "success" : "error", message: result.message });
     if (result.success) {
       setPasswordForm({ currentPassword: "", nextPassword: "", confirmNextPassword: "" });
+      triggerToast("Cập nhật mật khẩu mới thành công!");
       setActiveModal(null);
+    } else {
+      setFeedback({ tone: "error", message: result.message });
     }
   };
 
@@ -149,6 +158,22 @@ export default function TopNavbar() {
 
   return (
     <>
+      {/* Toast Alert */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            className="fixed top-8 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md text-white border border-mint-500/30 px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 z-[9999]"
+          >
+            <div className="w-5 h-5 rounded-full bg-mint-500 text-white flex items-center justify-center">
+              <Check className="w-3.5 h-3.5" />
+            </div>
+            <span className="text-sm font-semibold">{toastMessage}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     <motion.header
       initial={false}
       animate={{

@@ -6,9 +6,10 @@ import { useAppContext } from "../../context/AppContext";
 interface ApproveUsersModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: (msg: string) => void;
 }
 
-export default function ApproveUsersModal({ isOpen, onClose }: ApproveUsersModalProps) {
+export default function ApproveUsersModal({ isOpen, onClose, onSuccess }: ApproveUsersModalProps) {
   const { userRequests, approveRequest, rejectRequest } = useAppContext();
 
   return (
@@ -98,14 +99,20 @@ export default function ApproveUsersModal({ isOpen, onClose }: ApproveUsersModal
 
                       <div className="flex sm:flex-col gap-2 w-full sm:w-auto">
                         <button
-                          onClick={() => approveRequest(req.id)}
+                          onClick={() => {
+                            approveRequest(req.id);
+                            if (onSuccess) onSuccess(`Đã phê duyệt tài khoản cho ${req.name} thành công!`);
+                          }}
                           className="flex-1 sm:w-12 sm:h-12 rounded-2xl bg-mint-500 text-white flex items-center justify-center gap-2 sm:gap-0 p-3 sm:p-0 shadow-lg shadow-mint-100 hover:bg-mint-600 transition-all group/btn"
                         >
                           <Check className="w-5 h-5" />
                           <span className="sm:hidden text-xs font-black uppercase tracking-widest">Duyệt</span>
                         </button>
                         <button
-                          onClick={() => rejectRequest(req.id)}
+                          onClick={() => {
+                            rejectRequest(req.id);
+                            if (onSuccess) onSuccess(`Đã từ chối đăng ký của ${req.name}.`);
+                          }}
                           className="flex-1 sm:w-12 sm:h-12 rounded-2xl bg-white border-2 border-slate-100 text-slate-400 flex items-center justify-center gap-2 sm:gap-0 p-3 sm:p-0 hover:bg-rose-50 hover:text-rose-500 hover:border-transparent transition-all group/btn"
                         >
                           <Trash2 className="w-5 h-5" />

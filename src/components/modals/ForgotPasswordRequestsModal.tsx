@@ -6,9 +6,10 @@ import { useAppContext } from "../../context/AppContext";
 interface ForgotPasswordRequestsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: (msg: string) => void;
 }
 
-export default function ForgotPasswordRequestsModal({ isOpen, onClose }: ForgotPasswordRequestsModalProps) {
+export default function ForgotPasswordRequestsModal({ isOpen, onClose, onSuccess }: ForgotPasswordRequestsModalProps) {
   const { forgotPasswordRequests, approveForgotPasswordRequest, rejectForgotPasswordRequest } = useAppContext();
 
   const pendingRequests = forgotPasswordRequests.filter(r => r.status === "pending");
@@ -99,7 +100,10 @@ export default function ForgotPasswordRequestsModal({ isOpen, onClose }: ForgotP
 
                       <div className="flex sm:flex-col gap-2 w-full sm:w-auto">
                         <button
-                          onClick={() => approveForgotPasswordRequest(req.id)}
+                          onClick={() => {
+                            approveForgotPasswordRequest(req.id);
+                            if (onSuccess) onSuccess(`Đã phê duyệt yêu cầu cấp lại mật khẩu cho ${req.name}!`);
+                          }}
                           className="flex-1 sm:w-12 sm:h-12 rounded-2xl bg-violet-600 text-white flex items-center justify-center gap-2 sm:gap-0 p-3 sm:p-0 shadow-lg shadow-violet-100 hover:bg-violet-700 transition-all group/btn"
                           title="Phê duyệt cho phép đổi mật khẩu"
                         >
@@ -107,7 +111,10 @@ export default function ForgotPasswordRequestsModal({ isOpen, onClose }: ForgotP
                           <span className="sm:hidden text-xs font-black uppercase tracking-widest">Duyệt</span>
                         </button>
                         <button
-                          onClick={() => rejectForgotPasswordRequest(req.id)}
+                          onClick={() => {
+                            rejectForgotPasswordRequest(req.id);
+                            if (onSuccess) onSuccess(`Đã từ chối yêu cầu khôi phục mật khẩu của ${req.name}.`);
+                          }}
                           className="flex-1 sm:w-12 sm:h-12 rounded-2xl bg-white border-2 border-slate-100 text-slate-400 flex items-center justify-center gap-2 sm:gap-0 p-3 sm:p-0 hover:bg-rose-50 hover:text-rose-500 hover:border-transparent transition-all group/btn"
                           title="Từ chối yêu cầu khôi phục"
                         >

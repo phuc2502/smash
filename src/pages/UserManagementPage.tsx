@@ -244,11 +244,13 @@ export default function UserManagementPage() {
       <ApproveUsersModal
         isOpen={isApproveModalOpen}
         onClose={() => setIsApproveModalOpen(false)}
+        onSuccess={triggerToast}
       />
 
       <ForgotPasswordRequestsModal
         isOpen={isForgotPasswordModalOpen}
         onClose={() => setIsForgotPasswordModalOpen(false)}
+        onSuccess={triggerToast}
       />
 
       {/* Stats Bento Grid */}
