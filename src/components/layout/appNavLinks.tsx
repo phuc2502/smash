@@ -57,7 +57,7 @@ export function isClassNavPath(pathname: string): boolean {
 }
 
 /** Các path con thuộc nhóm Điểm danh */
-export const ATTENDANCE_NAV_PATHS = ["/attendance", "/attendance/leave-requests", "/attendance/late-requests"] as const;
+export const ATTENDANCE_NAV_PATHS = ["/attendance", "/attendance/leave-requests"] as const;
 
 export function isAttendanceNavPath(pathname: string): boolean {
   return ATTENDANCE_NAV_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
@@ -88,12 +88,11 @@ export const APP_NAV_LINKS: AppNavEntry[] = [
     children: [
       { path: "/attendance", label: "Quản lý điểm danh", icon: ClipboardCheck },
       { path: "/attendance/leave-requests", label: "Yêu cầu nghỉ phép", icon: CalendarDays },
-      { path: "/attendance/late-requests", label: "Yêu cầu đi muộn", icon: Clock },
     ],
   },
   { path: "/materials", label: "Tài liệu", icon: FileText, requiredPermission: "view_materials" },
   { path: "/assignments", label: "Bài tập", icon: GraduationCap, countKey: "pendingGrading", requiredPermission: "view_assignments" },
   { path: "/grading", label: "Chấm điểm", icon: CheckCircle2, requiredPermission: "grade_assignments" },
-  { path: "/announcements", label: "Thông báo", icon: Megaphone, requiredPermission: "manage_classes" },
+  { path: "/announcements", label: "Thông báo", icon: Megaphone },
   { path: "/settings", label: "Cài đặt", icon: Settings },
 ];

@@ -30,10 +30,9 @@ global.document = {
 
 import { AppProvider } from '../context/AppContext';
 import LeaveRequestsPage from './LeaveRequestsPage';
-import LateRequestsPage from './LateRequestsPage';
 
 describe('Render test', () => {
-  it('renders LeaveRequestsPage and LateRequestsPage for Admin role without crashing', () => {
+  it('renders LeaveRequestsPage for Admin role without crashing', () => {
     // Mock local storage for Admin
     global.window.localStorage.setItem('smash.auth', 'true');
     global.window.localStorage.setItem('smash.account', JSON.stringify({
@@ -53,20 +52,13 @@ describe('Render test', () => {
         </AppProvider>
       );
       console.log('ADMIN LEAVE RENDER SUCCESSFUL! HTML LENGTH:', htmlLeave.length);
-
-      const htmlLate = renderToString(
-        <AppProvider>
-          <LateRequestsPage />
-        </AppProvider>
-      );
-      console.log('ADMIN LATE RENDER SUCCESSFUL! HTML LENGTH:', htmlLate.length);
     } catch (err) {
       console.error('ADMIN RENDER ERROR FOUND:', err);
       throw err;
     }
   });
 
-  it('renders LeaveRequestsPage and LateRequestsPage for Teacher role without crashing', () => {
+  it('renders LeaveRequestsPage for Teacher role without crashing', () => {
     // Mock local storage for Teacher
     global.window.localStorage.setItem('smash.auth', 'true');
     global.window.localStorage.setItem('smash.account', JSON.stringify({
@@ -86,13 +78,6 @@ describe('Render test', () => {
         </AppProvider>
       );
       console.log('TEACHER LEAVE RENDER SUCCESSFUL! HTML LENGTH:', htmlLeave.length);
-
-      const htmlLate = renderToString(
-        <AppProvider>
-          <LateRequestsPage />
-        </AppProvider>
-      );
-      console.log('TEACHER LATE RENDER SUCCESSFUL! HTML LENGTH:', htmlLate.length);
     } catch (err) {
       console.error('TEACHER RENDER ERROR FOUND:', err);
       throw err;

@@ -57,13 +57,25 @@ export default function AttendancePage() {
   const parentChildIds = isParent && currentAccount ? (safeParentChildMap[currentAccount.id] ?? []) : [];
   const studentId = isStudent && currentAccount ? currentAccount.id : null;
 
+  const [selectedChildId, setSelectedChildId] = useState<string>('all');
+
+  const parentChildren = useMemo(() => {
+    return safeUsers.filter(u => u && parentChildIds.includes(u.id));
+  }, [safeUsers, parentChildIds]);
+
+  const activeParentChildIds = useMemo(() => {
+    if (!isParent) return [];
+    if (selectedChildId === 'all') return parentChildIds;
+    return [selectedChildId];
+  }, [isParent, selectedChildId, parentChildIds]);
+
   // Filter classes based on role
   const availableClasses = useMemo(() => {
     if (isParent) {
       return safeClasses.filter(c => {
         if (!c) return false;
         const studentIds = safeClassStudentMap[c.id] ?? [];
-        return parentChildIds.some(pid => studentIds.includes(pid));
+        return activeParentChildIds.some(pid => studentIds.includes(pid));
       });
     }
     if (isStudent && studentId) {
@@ -74,16 +86,29 @@ export default function AttendancePage() {
       });
     }
     return safeClasses;
-  }, [safeClasses, safeClassStudentMap, isParent, parentChildIds, isStudent, studentId]);
+  }, [safeClasses, safeClassStudentMap, isParent, activeParentChildIds, isStudent, studentId]);
 
   // All sessions, filtered for parent/student
   const filteredSessions = useMemo(() => {
     const sessions = safeAttendanceSessions.filter(Boolean);
     if (isParent) {
-      return sessions.filter(s => {
-        const studentIds = safeClassStudentMap[s.classId] ?? [];
-        return parentChildIds.some(pid => studentIds.includes(pid));
-      });
+      return sessions
+        .filter(s => {
+          const studentIds = safeClassStudentMap[s.classId] ?? [];
+          return activeParentChildIds.some(pid => studentIds.includes(pid));
+        })
+        .map(s => {
+          const childRecords = (s.records ?? []).filter(r => r && activeParentChildIds.includes(r.studentId));
+          return {
+            ...s,
+            records: childRecords,
+            totalStudents: childRecords.length,
+            presentCount: childRecords.filter(r => r.status === 'present').length,
+            absentCount: childRecords.filter(r => r.status === 'absent').length,
+            lateCount: childRecords.filter(r => r.status === 'late').length,
+            excusedCount: childRecords.filter(r => r.status === 'excused').length,
+          } as AttendanceSession;
+        });
     }
     if (isStudent && studentId) {
       // For student: only show sessions where they have a record, filter records to own
@@ -103,7 +128,7 @@ export default function AttendancePage() {
         });
     }
     return sessions;
-  }, [safeAttendanceSessions, safeClassStudentMap, isParent, parentChildIds, isStudent, studentId]);
+  }, [safeAttendanceSessions, safeClassStudentMap, isParent, activeParentChildIds, isStudent, studentId]);
 
   // Stats
   const totalSessions = filteredSessions.length;
@@ -259,6 +284,41 @@ export default function AttendancePage() {
           )
         )}
       </div>
+
+      {isParent && parentChildren.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white/80 backdrop-blur-xl p-6 rounded-[28px] border border-slate-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-mint-50 text-mint-600 flex items-center justify-center">
+              <Users className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-black text-slate-900">Xem điểm danh của con em</h4>
+              <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mt-0.5">Tài khoản Phụ huynh</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <select
+              value={selectedChildId}
+              onChange={e => {
+                const childId = e.target.value;
+                setSelectedChildId(childId);
+                setSelectedClassId('');
+                setSelectedStudentId(childId === 'all' ? '' : childId);
+              }}
+              className="w-full sm:w-64 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-xs outline-none focus:ring-4 focus:ring-mint-500/10 focus:border-mint-500/50"
+            >
+              <option value="all">Tất cả con em ({parentChildren.length})</option>
+              {parentChildren.map(c => (
+                <option key={c.id} value={c.id}>{c.name} ({c.id})</option>
+              ))}
+            </select>
+          </div>
+        </motion.div>
+      )}
 
       {canManage && <AttendanceModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
 
@@ -572,7 +632,15 @@ export default function AttendancePage() {
             {/* ══ TAB: BY STUDENT ══ */}
             {activeTab === 'by_student' && (
               <motion.div key="by_student" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
-                <select value={selectedStudentId} onChange={e => setSelectedStudentId(e.target.value)}
+                <select
+                  value={selectedStudentId}
+                  onChange={e => {
+                    const val = e.target.value;
+                    setSelectedStudentId(val);
+                    if (isParent) {
+                      setSelectedChildId(val || 'all');
+                    }
+                  }}
                   className="w-full sm:w-80 px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm focus:ring-4 focus:ring-mint-500/10 focus:border-mint-500/50 outline-none"
                 >
                   <option value="">-- Chọn học viên --</option>

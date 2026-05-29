@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useAppContext, LeaveRequest, ROLE_LABELS } from "../context/AppContext";
+import ConfirmModal from "../components/modals/ConfirmModal";
 
 export default function LeaveRequestsPage() {
   const {
@@ -52,6 +53,7 @@ export default function LeaveRequestsPage() {
   const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
 
   const [editingRequest, setEditingRequest] = useState<LeaveRequest | null>(null);
+  const [requestToDelete, setRequestToDelete] = useState<LeaveRequest | null>(null);
 
   const [formError, setFormError] = useState("");
   const [formSuccess, setFormSuccess] = useState("");
@@ -532,14 +534,7 @@ export default function LeaveRequestsPage() {
                             Sửa
                           </button>
                           <button
-                            onClick={() => {
-                              if (window.confirm("Bạn có chắc chắn muốn xóa đơn xin nghỉ phép này không?")) {
-                                deleteLeaveRequest(request.id);
-                                if (editingRequest?.id === request.id) {
-                                  setEditingRequest(null);
-                                }
-                              }
-                            }}
+                            onClick={() => setRequestToDelete(request)}
                             className="px-3.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-[10px] font-black uppercase tracking-wider rounded-xl shadow-sm transition-all hover:scale-105"
                           >
                             Xóa
@@ -579,6 +574,24 @@ export default function LeaveRequestsPage() {
           </AnimatePresence>
         </div>
       </div>
+
+      <ConfirmModal
+        isOpen={requestToDelete !== null}
+        title="Xóa đơn xin nghỉ"
+        message={`Bạn có chắc chắn muốn xóa đơn xin nghỉ ngày ${requestToDelete ? safeFormatSimpleDate(requestToDelete.date) : ''} của học sinh ${requestToDelete?.studentName} không?`}
+        confirmText="Xóa đơn"
+        cancelText="Hủy"
+        type="danger"
+        onConfirm={() => {
+          if (requestToDelete) {
+            deleteLeaveRequest(requestToDelete.id);
+            if (editingRequest?.id === requestToDelete.id) {
+              setEditingRequest(null);
+            }
+          }
+        }}
+        onClose={() => setRequestToDelete(null)}
+      />
     </div>
   );
 }

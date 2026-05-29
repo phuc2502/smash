@@ -23,7 +23,7 @@ interface StudentRow {
 }
 
 export default function AttendanceModal({ isOpen, onClose }: Props) {
-  const { classes, users, currentAccount, markAttendance, appendActivity, classStudentMap, leaveRequests, lateRequests } = useAppContext();
+  const { classes, users, currentAccount, markAttendance, appendActivity, classStudentMap, leaveRequests } = useAppContext();
   const [selectedClassId, setSelectedClassId] = useState('');
   const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [rows, setRows] = useState<StudentRow[]>([]);
@@ -54,21 +54,6 @@ export default function AttendanceModal({ isOpen, onClose }: Props) {
         };
       }
 
-      const approvedLate = lateRequests?.find(lr => 
-        lr.studentId === sid && 
-        lr.classId === selectedClassId && 
-        lr.date === selectedDate && 
-        lr.status === 'approved'
-      );
-
-      if (approvedLate) {
-        return {
-          studentId: sid,
-          studentName: user?.name ?? sid,
-          status: 'late' as AttendanceStatus,
-          note: `Đi muộn có phép: ${approvedLate.reason}`
-        };
-      }
 
       return { studentId: sid, studentName: user?.name ?? sid, status: 'present' as AttendanceStatus, note: '' };
     });

@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
 import type { AppNotification, Announcement } from '../../context/AppContext';
+import AnnouncementDetailModal from '../modals/AnnouncementDetailModal';
 
 // ── Helper: relative time ─────────────────────────────────────
 function relativeTime(iso: string): string {
@@ -91,9 +92,12 @@ function NotifItem({
 }
 
 // ── Announcement Item (Tab Liên lạc) ──────────────────────────
-function AnnouncementItem({ ann }: { ann: Announcement }) {
+function AnnouncementItem({ ann, onClick }: { ann: Announcement; onClick: () => void }) {
   return (
-    <div className={`px-4 py-3.5 border-b border-slate-50 last:border-b-0 ${ann.isPinned ? 'bg-amber-50/30' : ''}`}>
+    <div
+      onClick={onClick}
+      className={`cursor-pointer px-4 py-3.5 border-b border-slate-50 last:border-b-0 hover:bg-slate-50/50 transition-colors ${ann.isPinned ? 'bg-amber-50/30' : ''}`}
+    >
       {ann.isPinned && (
         <span className="inline-flex items-center gap-1 text-[10px] font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full mb-1.5">
           📌 Ghim
@@ -161,6 +165,7 @@ export default function NotificationPanel() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>('all');
+  const [selectedAnn, setSelectedAnn] = useState<Announcement | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
   const canManageAnnouncements = canAccess('manage_classes');
@@ -328,7 +333,10 @@ export default function NotificationPanel() {
                   <div className="divide-y divide-slate-50 py-1">
                     {sortedAnnouncements.map(ann => (
                       <React.Fragment key={ann.id}>
-                        <AnnouncementItem ann={ann} />
+                        <AnnouncementItem
+                          ann={ann}
+                          onClick={() => setSelectedAnn(ann)}
+                        />
                       </React.Fragment>
                     ))}
                   </div>
@@ -360,6 +368,12 @@ export default function NotificationPanel() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <AnnouncementDetailModal
+        isOpen={selectedAnn !== null}
+        announcement={selectedAnn}
+        onClose={() => setSelectedAnn(null)}
+      />
     </div>
   );
 }
