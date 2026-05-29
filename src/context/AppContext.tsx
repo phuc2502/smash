@@ -292,19 +292,6 @@ export interface LeaveRequest {
   resolvedAt?: string;
 }
 
-export interface LateRequest {
-  id: string;
-  studentId: string;
-  studentName: string;
-  classId: string;
-  className: string;
-  date: string;
-  reason: string;
-  status: 'pending' | 'approved' | 'rejected';
-  submittedAt: string;
-  resolvedBy?: string;
-  resolvedAt?: string;
-}
 
 export type RoleKey = 'owner' | 'manager' | 'admin_staff' | 'admin' | 'teacher' | 'student' | 'parent';
 export type AccountStatus = 'active' | 'inactive' | 'locked';
@@ -382,7 +369,6 @@ interface AppState {
   gradeEntries: GradeEntry[];
   studentComments: StudentComment[];
   leaveRequests: LeaveRequest[];
-  lateRequests: LateRequest[];
   forgotPasswordRequests: ForgotPasswordRequest[];
 }
 
@@ -442,17 +428,17 @@ interface AppContextType extends AppState, SystemImprovementsState, SystemImprov
   markAttendance: (session: AttendanceSession) => void;
   updateAttendanceRecord: (sessionId: string, studentId: string, status: AttendanceStatus, note?: string) => void;
   finalizeAttendanceSession: (sessionId: string) => void;
+  unfinalizeAttendanceSession: (sessionId: string) => void;
   getAttendanceByClass: (classId: string) => AttendanceSession[];
   getAttendanceByStudent: (studentId: string) => AttendanceRecord[];
 
   // Leave Requests
   submitLeaveRequest: (request: Omit<LeaveRequest, 'id' | 'status' | 'submittedAt'>) => void;
   resolveLeaveRequest: (id: string, status: 'approved' | 'rejected', resolvedBy: string) => void;
+  updateLeaveRequest: (id: string, date: string, reason: string, classId: string, className: string) => void;
+  deleteLeaveRequest: (id: string) => void;
 
-  // Late Requests
-  lateRequests: LateRequest[];
-  submitLateRequest: (request: Omit<LateRequest, 'id' | 'status' | 'submittedAt'>) => void;
-  resolveLateRequest: (id: string, status: 'approved' | 'rejected', resolvedBy: string) => void;
+
 
   // Quiz
   quizSubmissions: QuizSubmission[];
@@ -1327,32 +1313,6 @@ const initialLeaveRequests: LeaveRequest[] = [
   }
 ];
 
-const initialLateRequests: LateRequest[] = [
-  {
-    id: 'LRT-001',
-    studentId: 'STU-001',
-    studentName: 'Nguyễn Minh Khoa',
-    classId: 'MATH-06-01',
-    className: 'Toán 6 - Nâng cao',
-    date: new Date().toISOString().split('T')[0],
-    reason: 'Em bị hỏng xe đạp điện giữa đường nên xin phép đi học muộn khoảng 30 phút.',
-    status: 'pending',
-    submittedAt: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-  },
-  {
-    id: 'LRT-002',
-    studentId: 'ST-2023-202',
-    studentName: 'Lê Thị Mai',
-    classId: 'MATH-06-01',
-    className: 'Toán 6 - Nâng cao',
-    date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
-    reason: 'Em có lịch thi tuyển chọn học sinh giỏi tại trường nên xin phép vào muộn.',
-    status: 'approved',
-    submittedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-    resolvedBy: 'Trần Văn A',
-    resolvedAt: new Date(Date.now() - 86400000).toISOString(),
-  }
-];
 
 const initialGradeEntries: GradeEntry[] = [
   // ── Lớp MATH-06-01 (Thầy Trần Văn Cường) ───────────────────
@@ -1416,7 +1376,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [materials, setMaterials] = useState<Material[]>(() => loadStoredJson<Material[]>('smash.materials', initialMaterials));
   const [attendanceSessions, setAttendanceSessions] = useState<AttendanceSession[]>(() => loadStoredJson<AttendanceSession[]>('smash.attendanceSessions', initialAttendanceSessions));
   const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>(() => loadStoredJson<LeaveRequest[]>('smash.leaveRequests', initialLeaveRequests));
-  const [lateRequests, setLateRequests] = useState<LateRequest[]>(() => loadStoredJson<LateRequest[]>('smash.lateRequests', initialLateRequests));
   const [quizSubmissions, setQuizSubmissions] = useState<QuizSubmission[]>(() => loadStoredJson<QuizSubmission[]>('smash.quizSubmissions', []));
   const [gradeEntries, setGradeEntries] = useState<GradeEntry[]>(() => loadStoredJson<GradeEntry[]>('smash.gradeEntries', initialGradeEntries));
   const [studentComments, setStudentComments] = useState<StudentComment[]>(() => loadStoredJson<StudentComment[]>('smash.studentComments', []));
@@ -1427,9 +1386,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     () => loadStoredJson<Record<string, string[]>>('smash.parentChildMap.v2', INITIAL_PARENT_CHILD_MAP)
   );
   const [announcements, setAnnouncements] = useState<Announcement[]>(initialAnnouncements);
-  const [readNotificationIds, setReadNotificationIds] = useState<string[]>(() =>
-    loadStoredJson<string[]>(LS_KEYS.readNotifs, []),
-  );
   const [forgotPasswordRequests, setForgotPasswordRequests] = useState<ForgotPasswordRequest[]>(() =>
     loadStoredJson<ForgotPasswordRequest[]>('smash.forgotPasswordRequests', [])
   );
@@ -1453,6 +1409,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!loadStoredJson<boolean>(LS_KEYS.auth, false)) return null;
     return loadStoredJson<AccountProfile>(LS_KEYS.account, defaultAccount);
   });
+
+  const [readNotificationIds, setReadNotificationIds] = useState<string[]>(() => {
+    const key = currentAccount ? `smash.notifications.read.${currentAccount.id}` : LS_KEYS.readNotifs;
+    return loadStoredJson<string[]>(key, []);
+  });
+
+  useEffect(() => {
+    const key = currentAccount ? `smash.notifications.read.${currentAccount.id}` : LS_KEYS.readNotifs;
+    setReadNotificationIds(loadStoredJson<string[]>(key, []));
+  }, [currentAccount]);
   const [accountPreferences, setAccountPreferences] = useState<AccountPreferences>(() => ({
     ...defaultPreferences,
     ...loadStoredJson<Partial<AccountPreferences>>(LS_KEYS.prefs, defaultPreferences),
@@ -1491,7 +1457,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => { saveJson('smash.parentChildMap.v2', parentChildMap); }, [parentChildMap]);
   useEffect(() => { saveJson('smash.materials', materials); }, [materials]);
   useEffect(() => { saveJson('smash.leaveRequests', leaveRequests); }, [leaveRequests]);
-  useEffect(() => { saveJson('smash.lateRequests', lateRequests); }, [lateRequests]);
   useEffect(() => { saveJson('smash.forgotPasswordRequests', forgotPasswordRequests); }, [forgotPasswordRequests]);
   useEffect(() => { saveJson('smash.quizSubmissions', quizSubmissions); }, [quizSubmissions]);
   useEffect(() => { saveJson('smash.studentComments', studentComments); }, [studentComments]);
@@ -1775,6 +1740,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
     ));
   };
 
+  const unfinalizeAttendanceSession = (sessionId: string) => {
+    setAttendanceSessions(prev => prev.map(s =>
+      s.id === sessionId ? { ...s, isFinalized: false } : s
+    ));
+    appendActivity('Mở khóa sổ điểm danh', `Mở khóa sổ phiên điểm danh ID: ${sessionId}`, 'slate');
+  };
+
   const getAttendanceByClass = (classId: string) => {
     return attendanceSessions.filter(s => s.classId === classId);
   };
@@ -1867,89 +1839,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
     );
   };
 
-  const submitLateRequest = (request: Omit<LateRequest, 'id' | 'status' | 'submittedAt'>) => {
-    const newRequest: LateRequest = {
-      ...request,
-      id: `LRT-${Date.now()}`,
-      status: 'pending',
-      submittedAt: new Date().toISOString(),
-    };
-    setLateRequests(prev => [newRequest, ...prev]);
-    appendActivity('Nộp đơn đi muộn', `Học sinh: ${request.studentName}, Lớp: ${request.className}`, 'mint');
-  };
-
-  const resolveLateRequest = (id: string, status: 'approved' | 'rejected', resolvedBy: string) => {
-    let resolvedReq: LateRequest | undefined;
-    setLateRequests(prev => prev.map(req => {
+  const updateLeaveRequest = (id: string, date: string, reason: string, classId: string, className: string) => {
+    setLeaveRequests(prev => prev.map(req => {
       if (req.id !== id) return req;
-      resolvedReq = {
+      if (req.status !== 'pending') return req; // Chỉ được sửa khi trạng thái là pending
+      return {
         ...req,
-        status,
-        resolvedBy,
-        resolvedAt: new Date().toISOString(),
+        date,
+        reason,
+        classId,
+        className,
       };
-      return resolvedReq;
     }));
-
-    if (status === 'approved') {
-      setAttendanceSessions(prev => {
-        const request = resolvedReq;
-        if (!request) return prev;
-
-        const dateStr = request.date;
-        const classId = request.classId;
-
-        const sessionIdx = prev.findIndex(s => s.classId === classId && s.date === dateStr);
-        if (sessionIdx >= 0) {
-          const updated = [...prev];
-          const session = updated[sessionIdx];
-          const recordIdx = session.records.findIndex(r => r.studentId === request.studentId);
-          let updatedRecords = [...session.records];
-
-          if (recordIdx >= 0) {
-            updatedRecords[recordIdx] = {
-              ...updatedRecords[recordIdx],
-              status: 'late',
-              note: `Đi muộn có phép: ${request.reason}`,
-              markedBy: resolvedBy,
-              markedAt: new Date().toISOString(),
-            };
-          } else {
-            updatedRecords.push({
-              id: `ATR-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-              classId: classId,
-              studentId: request.studentId,
-              studentName: request.studentName,
-              date: dateStr,
-              status: 'late',
-              note: `Đi muộn có phép: ${request.reason}`,
-              markedBy: resolvedBy,
-              markedAt: new Date().toISOString(),
-            });
-          }
-
-          updated[sessionIdx] = {
-            ...session,
-            records: updatedRecords,
-            totalStudents: updatedRecords.length,
-            presentCount: updatedRecords.filter(r => r.status === 'present').length,
-            absentCount: updatedRecords.filter(r => r.status === 'absent').length,
-            lateCount: updatedRecords.filter(r => r.status === 'late').length,
-            excusedCount: updatedRecords.filter(r => r.status === 'excused').length,
-          };
-          return updated;
-        } else {
-          return prev;
-        }
-      });
-    }
-
-    appendActivity(
-      status === 'approved' ? 'Phê duyệt đi muộn' : 'Từ chối đi muộn',
-      `Đơn: ${id}, Người duyệt: ${resolvedBy}`,
-      status === 'approved' ? 'mint' : 'slate'
-    );
+    appendActivity('Sửa đơn nghỉ phép', `Mã đơn: ${id}`, 'mint');
   };
+
+  const deleteLeaveRequest = (id: string) => {
+    setLeaveRequests(prev => prev.filter(req => {
+      if (req.id !== id) return true;
+      if (req.status !== 'pending') return true; // Chỉ được xóa khi trạng thái là pending
+      return false;
+    }));
+    appendActivity('Xóa đơn nghỉ phép', `Mã đơn: ${id}`, 'slate');
+  };
+
+
 
   const appendAccessLog = (entry: Omit<AccessLogEntry, 'id' | 'timestamp'>) => {
     setAccessLogs(prev => [
@@ -2460,7 +2374,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setReadNotificationIds(prev => {
       if (prev.includes(id)) return prev;
       const next = [...prev, id];
-      saveJson(LS_KEYS.readNotifs, next);
+      const key = currentAccount ? `smash.notifications.read.${currentAccount.id}` : LS_KEYS.readNotifs;
+      saveJson(key, next);
       return next;
     });
   };
@@ -2469,7 +2384,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const allIds = notifications.map(n => n.id);
     setReadNotificationIds(prev => {
       const next = Array.from(new Set([...prev, ...allIds]));
-      saveJson(LS_KEYS.readNotifs, next);
+      const key = currentAccount ? `smash.notifications.read.${currentAccount.id}` : LS_KEYS.readNotifs;
+      saveJson(key, next);
       return next;
     });
   };
@@ -2502,12 +2418,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
         leaveRequests,
         submitLeaveRequest,
         resolveLeaveRequest,
-        lateRequests,
-        submitLateRequest,
-        resolveLateRequest,
+        updateLeaveRequest,
+        deleteLeaveRequest,
         markAttendance,
         updateAttendanceRecord,
         finalizeAttendanceSession,
+        unfinalizeAttendanceSession,
         getAttendanceByClass,
         getAttendanceByStudent,
         addUser,

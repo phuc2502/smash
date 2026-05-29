@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -17,20 +17,34 @@ type NavMenuProps = {
 };
 
 function NavCountBadge({ count }: { count: number }) {
-  return null;
+  if (count <= 0) return null;
+  return (
+    <span className="ml-auto shrink-0 min-w-[18px] h-[18px] bg-rose-500 text-white text-[10px] font-black rounded-full flex items-center justify-center px-1.5 shadow-[0_2px_8px_rgba(239,68,68,0.25)] scale-105">
+      {count > 99 ? '99+' : count}
+    </span>
+  );
 }
 
-function resolveCount(entry: AppNavEntry, stats: { totalUsers: number; activeClasses: number; pendingGrading: number }) {
-  if (!("countKey" in entry) || !entry.countKey) return 0;
-  if (entry.countKey === "totalUsers") return stats.totalUsers;
-  if (entry.countKey === "activeClasses") return stats.activeClasses;
-  if (entry.countKey === "pendingGrading") return stats.pendingGrading;
+function resolveCount(
+  entry: AppNavEntry,
+  stats: { totalUsers: number; activeClasses: number; pendingGrading: number },
+  unreadAnnouncementsCount: number
+) {
+  if ("path" in entry && entry.path === "/announcements") {
+    return unreadAnnouncementsCount;
+  }
   return 0;
 }
 
 export default function NavMenu({ onNavigate, className = "" }: NavMenuProps) {
   const location = useLocation();
-  const { stats, canAccess, currentAccount } = useAppContext();
+  const { stats, canAccess, currentAccount, notifications, readNotificationIds } = useAppContext();
+
+  const unreadAnnouncementsCount = useMemo(() => {
+    return (notifications ?? []).filter(
+      n => n.type === 'announcement' && !(readNotificationIds ?? []).includes(n.id)
+    ).length;
+  }, [notifications, readNotificationIds]);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => ({
     classes: isClassNavPath(location.pathname),
     attendance: isAttendanceNavPath(location.pathname),
@@ -107,7 +121,7 @@ export default function NavMenu({ onNavigate, className = "" }: NavMenuProps) {
               >
                 <entry.icon className="w-5 h-5 shrink-0 transition-transform group-hover:scale-110 duration-300" />
                 <span className="text-sm font-medium flex-1">{entry.label}</span>
-                <NavCountBadge count={resolveCount(entry, stats)} />
+                <NavCountBadge count={resolveCount(entry, stats, unreadAnnouncementsCount)} />
                 <ChevronDown
                   className={`w-4 h-4 shrink-0 text-slate-400 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
                 />
@@ -141,6 +155,11 @@ export default function NavMenu({ onNavigate, className = "" }: NavMenuProps) {
           );
         }
 
+        const count = resolveCount(entry, stats, unreadAnnouncementsCount);
+        const labelText = count > 0 && entry.path === "/announcements"
+          ? `${entry.label} (${count})`
+          : entry.label;
+
         return (
           <NavLink
             key={entry.path}
@@ -150,8 +169,8 @@ export default function NavMenu({ onNavigate, className = "" }: NavMenuProps) {
             end
           >
             <entry.icon className="w-5 h-5 shrink-0 transition-transform group-hover:scale-110 duration-300" />
-            <span className="text-sm font-medium flex-1">{entry.label}</span>
-            <NavCountBadge count={resolveCount(entry, stats)} />
+            <span className="text-sm font-medium flex-1">{labelText}</span>
+            <NavCountBadge count={count} />
           </NavLink>
         );
       })}

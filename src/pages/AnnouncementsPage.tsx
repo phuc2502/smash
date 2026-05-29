@@ -1,12 +1,14 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Megaphone, Pin, Trash2, Plus, X, Bell,
   Users, GraduationCap, School, BookOpen,
-  AlertCircle, Info, Clock, Send,
+  AlertCircle, Info, Clock, Send, CheckCircle2,
 } from 'lucide-react';
-import { useAppContext } from '../context/AppContext';
+import { useAppContext, ROLE_LABELS } from '../context/AppContext';
 import type { Announcement } from '../context/AppContext';
+import AnnouncementDetailModal from '../components/modals/AnnouncementDetailModal';
+import ConfirmModal from '../components/modals/ConfirmModal';
 
 type AnnouncementTarget = 'all' | 'teacher' | 'student' | 'parent' | 'admin_staff';
 
@@ -70,7 +72,7 @@ function priorityConfig(priority: string) {
 }
 
 // ── Compose Form (chỉ cho Teacher/Admin) ──────────────────────
-function ComposeForm({ onClose }: { onClose: () => void }) {
+function ComposeForm({ onClose, onSuccess }: { onClose: () => void; onSuccess: (msg: string) => void }) {
   const { createAnnouncement, currentAccount } = useAppContext();
 
   const [title, setTitle] = useState('');
@@ -104,6 +106,7 @@ function ComposeForm({ onClose }: { onClose: () => void }) {
         isPinned: false,
       });
       setIsSending(false);
+      onSuccess('Gửi thông báo thành công!');
       onClose();
     }, 400);
   };
@@ -236,13 +239,19 @@ function ComposeForm({ onClose }: { onClose: () => void }) {
 function AnnouncementCard({
   ann,
   canManage,
+  canDelete,
   onPin,
   onDelete,
+  isNew,
+  onClick,
 }: {
   ann: Announcement;
   canManage: boolean;
+  canDelete: boolean;
   onPin: () => void;
   onDelete: () => void;
+  isNew?: boolean;
+  onClick: () => void;
 }) {
   const cfg = priorityConfig(ann.priority);
 
@@ -253,16 +262,22 @@ function AnnouncementCard({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.3 }}
-      className={`bg-white border rounded-3xl p-6 shadow-sm hover:shadow-md transition-all border-l-4 ${cfg.border} ${cfg.bg} ${
+      onClick={onClick}
+      className={`cursor-pointer bg-white border rounded-3xl p-6 shadow-sm hover:shadow-md transition-all border-l-4 ${cfg.border} ${cfg.bg} ${
         ann.isPinned ? 'border-amber-200/60' : 'border-slate-900/5'
       }`}
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-4 mb-3">
         <div className="flex items-center gap-2 flex-wrap">
+          {isNew && (
+            <span className="flex items-center gap-1 text-[10px] font-black text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-full animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.15)]">
+              ✨ New
+            </span>
+          )}
           {ann.isPinned && (
             <span className="flex items-center gap-1 text-[10px] font-semibold text-amber-600 bg-amber-50 border border-amber-200/50 px-2.5 py-1 rounded-full">
-              <Pin className="w-3 h-3" /> Đã ghim
+              <Pin className="w-3.5 h-3.5" /> Đã ghim
             </span>
           )}
           <span className={`flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full border ${cfg.badge}`}>
@@ -276,18 +291,20 @@ function AnnouncementCard({
         {canManage && (
           <div className="flex items-center gap-1 shrink-0">
             <button
-              onClick={onPin}
+              onClick={(e) => { e.stopPropagation(); onPin(); }}
               title={ann.isPinned ? 'Bỏ ghim' : 'Ghim thông báo'}
               className={`p-2 rounded-xl transition-colors ${ann.isPinned ? 'text-amber-500 bg-amber-50' : 'text-slate-400 hover:text-amber-500 hover:bg-amber-50'}`}
             >
               <Pin className="w-3.5 h-3.5" />
             </button>
-            <button
-              onClick={onDelete}
-              className="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 transition-colors"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-            </button>
+            {canDelete && (
+              <button
+                onClick={(e) => { e.stopPropagation(); onDelete(); }}
+                className="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 transition-colors"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -328,9 +345,20 @@ function ViewerEmptyState() {
 
 // ── Main Page ──────────────────────────────────────────────────
 export default function AnnouncementsPage() {
-  const { announcements, deleteAnnouncement, pinAnnouncement, canAccess, currentAccount } = useAppContext();
+  const {
+    announcements,
+    deleteAnnouncement,
+    pinAnnouncement,
+    canAccess,
+    currentAccount,
+    readNotificationIds,
+    markAsRead
+  } = useAppContext();
   const [showCompose, setShowCompose] = useState(false);
   const [filterTarget, setFilterTarget] = useState<AnnouncementTarget | 'all'>('all');
+  const [successMsg, setSuccessMsg] = useState('');
+  const [selectedAnn, setSelectedAnn] = useState<Announcement | null>(null);
+  const [annToDelete, setAnnToDelete] = useState<Announcement | null>(null);
 
   const canManage = canAccess('manage_classes');
 
@@ -347,9 +375,25 @@ export default function AnnouncementsPage() {
     });
   }, [announcements, canManage, myRole]);
 
-  // Sort: pinned first, then createdAt desc
+  // Keep track of which announcements were unread at the moment the page is opened
+  const [initiallyUnreadIds] = useState<string[]>(() => {
+    return (relevantAnnouncements ?? [])
+      .filter(a => !(readNotificationIds ?? []).includes(`notif-ann-${a.id}`))
+      .map(a => a.id);
+  });
+
+  // Mark all relevant announcements as read on mount
+  useEffect(() => {
+    relevantAnnouncements.forEach(ann => {
+      const notifId = `notif-ann-${ann.id}`;
+      if (!(readNotificationIds ?? []).includes(notifId)) {
+        markAsRead(notifId);
+      }
+    });
+  }, [relevantAnnouncements, readNotificationIds, markAsRead]);
+
+  // Sort strictly by createdAt desc so that the newest is at the top
   const sorted = useMemo(() => [...relevantAnnouncements].sort((a, b) => {
-    if (a.isPinned !== b.isPinned) return b.isPinned ? 1 : -1;
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   }), [relevantAnnouncements]);
 
@@ -390,10 +434,31 @@ export default function AnnouncementsPage() {
         )}
       </div>
 
+      {/* ── Success Alert Banner ── */}
+      <AnimatePresence>
+        {successMsg && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, y: -10 }}
+            animate={{ opacity: 1, height: 'auto', y: 0 }}
+            exit={{ opacity: 0, height: 0, y: -10 }}
+            className="p-4 bg-mint-50 border border-mint-100 rounded-2xl text-xs font-bold text-mint-600 flex items-center gap-2 overflow-hidden shadow-sm shadow-mint-50/50"
+          >
+            <CheckCircle2 className="w-4 h-4 text-mint-500 shrink-0" />
+            <span>{successMsg}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ── Compose Form (Teacher/Admin only) ── */}
       <AnimatePresence>
         {showCompose && canManage && (
-          <ComposeForm onClose={() => setShowCompose(false)} />
+          <ComposeForm
+            onClose={() => setShowCompose(false)}
+            onSuccess={(msg) => {
+              setSuccessMsg(msg);
+              setTimeout(() => setSuccessMsg(''), 4000);
+            }}
+          />
         )}
       </AnimatePresence>
 
@@ -455,19 +520,50 @@ export default function AnnouncementsPage() {
       ) : (
         <div className="space-y-4">
           <AnimatePresence>
-            {filtered.map(ann => (
-              <React.Fragment key={ann.id}>
-                <AnnouncementCard
-                  ann={ann}
-                  canManage={canManage}
-                  onPin={() => pinAnnouncement(ann.id)}
-                  onDelete={() => deleteAnnouncement(ann.id)}
-                />
-              </React.Fragment>
-            ))}
+            {filtered.map(ann => {
+              const isTeacher = currentAccount?.role === 'Giáo viên' || currentAccount?.role === ROLE_LABELS.teacher;
+              const canDelete = canManage && (!isTeacher || (currentAccount && ann.authorId === currentAccount.id));
+
+              return (
+                <React.Fragment key={ann.id}>
+                  <AnnouncementCard
+                    ann={ann}
+                    canManage={canManage}
+                    canDelete={!!canDelete}
+                    onPin={() => pinAnnouncement(ann.id)}
+                    onDelete={() => setAnnToDelete(ann)}
+                    onClick={() => setSelectedAnn(ann)}
+                    isNew={initiallyUnreadIds.includes(ann.id)}
+                  />
+                </React.Fragment>
+              );
+            })}
           </AnimatePresence>
         </div>
       )}
+
+      <AnnouncementDetailModal
+        isOpen={selectedAnn !== null}
+        announcement={selectedAnn}
+        onClose={() => setSelectedAnn(null)}
+      />
+
+      <ConfirmModal
+        isOpen={annToDelete !== null}
+        title="Xóa thông báo"
+        message={`Bạn có chắc chắn muốn xóa thông báo "${annToDelete?.title}" không? Hành động này không thể hoàn tác.`}
+        confirmText="Xóa"
+        cancelText="Hủy"
+        type="danger"
+        onConfirm={() => {
+          if (annToDelete) {
+            deleteAnnouncement(annToDelete.id);
+            setSuccessMsg('Xóa thông báo thành công!');
+            setTimeout(() => setSuccessMsg(''), 4000);
+          }
+        }}
+        onClose={() => setAnnToDelete(null)}
+      />
     </div>
   );
 }

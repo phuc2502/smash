@@ -15,7 +15,7 @@ import GradingPage from "./pages/GradingPage";
 import AnnouncementsPage from "./pages/AnnouncementsPage";
 import AttendancePage from "./pages/AttendancePage";
 import LeaveRequestsPage from "./pages/LeaveRequestsPage";
-import LateRequestsPage from "./pages/LateRequestsPage";
+
 import OnlineQuizPage from "./pages/OnlineQuizPage";
 import SettingsPage from "./pages/SettingsPage";
 import { AppProvider, useAppContext } from "./context/AppContext";
@@ -74,11 +74,7 @@ export default function App() {
                 <LeaveRequestsPage />
               </PermissionRoute>
             } />
-            <Route path="/attendance/late-requests" element={
-              <PermissionRoute permission="view_attendance">
-                <LateRequestsPage />
-              </PermissionRoute>
-            } />
+
 
             <Route path="/materials" element={
               <PermissionRoute permission="view_materials">
