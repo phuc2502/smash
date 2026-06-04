@@ -7,7 +7,16 @@ import ScheduleMonthCalendar from "../components/schedule/ScheduleMonthCalendar"
 import { parseScheduleWeekdays, parseScheduleTimeRange } from "../utils/scheduleCalendar";
 
 export default function ClassSchedulePage() {
-  const { classes, updateClass, classScheduleSlots, updateClassSchedule } = useAppContext();
+  const { classes, updateClass, classScheduleSlots, updateClassSchedule, currentAccount } = useAppContext();
+  const isTeacher = currentAccount?.role === "Giáo viên";
+  const myClasses = isTeacher
+    ? classes.filter(cls => {
+        if (cls.instructorId && currentAccount?.id) {
+          return cls.instructorId === currentAccount.id;
+        }
+        return cls.instructor === currentAccount?.name;
+      })
+    : classes;
   const [selectedClass, setSelectedClass] = useState<Class | null>(null);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
 
@@ -43,7 +52,7 @@ export default function ClassSchedulePage() {
       return;
     }
 
-    const cls = classes.find(c => c.id === builderClassId);
+    const cls = myClasses.find(c => c.id === builderClassId);
     if (!cls) return;
 
     const savedSlots = classScheduleSlots[builderClassId];
@@ -107,13 +116,13 @@ export default function ClassSchedulePage() {
 
   // Conflict checking service
   const checkConflicts = (classId: string, proposedSlots: ScheduleSlot[]) => {
-    const targetClass = classes.find(c => c.id === classId);
+    const targetClass = myClasses.find(c => c.id === classId);
     if (!targetClass) return [];
     
     const conflicts: { otherClassTitle: string; dayOfWeek: number; timeRange: string }[] = [];
     
     // Get other active classes taught by the same teacher
-    const otherClasses = classes.filter(
+    const otherClasses = myClasses.filter(
       c => c.id !== classId && 
       c.status !== "Đã kết thúc" && 
       c.status !== "Đã lưu trữ" &&
@@ -195,7 +204,7 @@ export default function ClassSchedulePage() {
   };
 
   // Filter logic: Filter classes taught on a specific date
-  const filteredClasses = classes.filter(cls => {
+  const filteredClasses = myClasses.filter(cls => {
     // Hide archived
     if (cls.status === "Đã lưu trữ") return false;
 
@@ -278,7 +287,7 @@ export default function ClassSchedulePage() {
                 className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-3.5 px-5 text-sm font-bold text-slate-800 focus:ring-4 focus:ring-mint-500/10 focus:border-mint-500/50 outline-none transition-all"
               >
                 <option value="">-- Chọn lớp học --</option>
-                {classes.filter(c => c.status !== "Đã lưu trữ").map(cls => (
+                {myClasses.filter(c => c.status !== "Đã lưu trữ").map(cls => (
                   <option key={cls.id} value={cls.id}>
                     {cls.title} ({cls.id}) - {cls.instructor}
                   </option>
@@ -598,7 +607,7 @@ export default function ClassSchedulePage() {
       </div>
 
       {/* MONTHLY CALENDAR VIEW */}
-      <ScheduleMonthCalendar classes={classes} onSelectClass={openSchedule} />
+      <ScheduleMonthCalendar classes={myClasses} onSelectClass={openSchedule} />
     </motion.div>
   );
 }
