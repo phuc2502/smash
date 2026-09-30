@@ -158,14 +158,13 @@ export default function TopNavbar() {
 
   return (
     <>
-      {/* Toast Alert */}
       <AnimatePresence>
         {toastMessage && (
           <motion.div
             initial={{ opacity: 0, y: -20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.9 }}
-            className="fixed top-8 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md text-white border border-mint-500/30 px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 z-[9999]"
+            className="fixed top-8 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md text-white border border-mint-500/30 px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 z-[99]"
           >
             <div className="w-5 h-5 rounded-full bg-mint-500 text-white flex items-center justify-center">
               <Check className="w-3.5 h-3.5" />
@@ -174,308 +173,308 @@ export default function TopNavbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    <motion.header
-      initial={false}
-      animate={{
-        height: isScrolled ? "64px" : "80px",
-        backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.95)" : "rgba(255, 255, 255, 0.7)",
-      }}
-      className="fixed top-0 right-0 z-30 backdrop-blur-xl border-b border-slate-900/5 w-full md:w-[calc(100%-16rem)] px-4 md:px-8 flex items-center justify-between gap-2 transition-colors duration-300"
-    >
-      <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
-        <button
-          type="button"
-          aria-label="Mở menu điều hướng"
-          onClick={() => setIsMobileNavOpen(true)}
-          className="md:hidden shrink-0 w-11 h-11 flex items-center justify-center rounded-xl text-slate-700 bg-white border border-slate-200 shadow-sm hover:bg-slate-50 transition-colors"
-        >
-          <Menu className="w-6 h-6" strokeWidth={2.25} />
-        </button>
-        <div className="flex-1 max-w-xl min-w-0">
-          {location.pathname !== "/grading" && (
-            <motion.div animate={{ scale: isScrolled ? 0.98 : 1 }} className="relative group w-full">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400 group-focus-within:text-mint-600 transition-colors z-10" />
-              <input
-                type="text"
-                placeholder="Tìm kiếm tài liệu, học viên, Toán lớp 6,7,8,9..."
-                className="w-full bg-white border border-slate-900/10 rounded-2xl py-2.5 pl-12 pr-4 text-sm placeholder:text-slate-400 font-medium text-slate-800 focus:ring-1 focus:ring-mint-500/30 focus:border-mint-500/30 focus:shadow-[0_0_0_2px_rgba(20,184,166,0.1)] focus:bg-white transition-all outline-none shadow-sm group-hover:border-slate-900/20"
-              />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden md:flex items-center gap-1.5 px-2 py-1 bg-slate-50 rounded-lg border border-slate-100 group-focus-within:opacity-0 transition-opacity">
-                <span className="text-[10px] font-medium text-slate-400">Ctrl</span>
-                <span className="text-[10px] font-medium text-slate-400">K</span>
-              </div>
-            </motion.div>
-          )}
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2 md:gap-4 ml-2 md:ml-4 shrink-0">
-        <NotificationPanel />
-        <HelpPanel />
-
-        <div className="relative" ref={dropdownRef}>
-          <div
-            onClick={() => setIsAccountOpen(value => !value)}
-            className={`flex items-center gap-3 pl-4 border-l border-slate-900/5 cursor-pointer group px-2 py-1.5 rounded-xl transition-all ${isAccountOpen ? "bg-mint-50/50" : "hover:bg-slate-50/50"}`}
+      <motion.header
+        initial={false}
+        animate={{
+          height: isScrolled ? "64px" : "80px",
+          backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.98)" : "rgba(255, 255, 255, 0.9)",
+        }}
+        className="fixed top-0 right-0 z-30 backdrop-blur-xl border-b border-slate-200/80 w-full md:w-[calc(100%-16rem)] px-4 md:px-8 flex items-center justify-between gap-2 transition-colors duration-300 shadow-[0_1px_0_rgba(15,23,42,0.04)]"
+      >
+        <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+          <button
+            type="button"
+            aria-label="Mở menu điều hướng"
+            onClick={() => setIsMobileNavOpen(true)}
+            className="md:hidden shrink-0 w-11 h-11 flex items-center justify-center rounded-xl text-slate-700 bg-white border border-slate-200 shadow-sm hover:bg-slate-50 transition-colors"
           >
-            <div className="text-right hidden sm:block">
-              <p className="text-sm font-semibold text-slate-900 leading-none group-hover:text-mint-600 transition-colors">{currentAccount.name}</p>
-              <p className="text-xs text-slate-500 font-medium mt-1">{currentAccount.roleTitle}</p>
-            </div>
-            <div className="relative">
-              <div className={`w-9 h-9 rounded-xl overflow-hidden ring-1 transition-all shadow-sm ${isAccountOpen ? "ring-mint-500/30" : "ring-slate-900/5 group-hover:ring-mint-500/10"}`}>
-                <img src={currentAccount.avatarUrl} alt="Avatar" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-              </div>
-              <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-mint-500 border-2 border-white rounded-full"></div>
-            </div>
-            <ChevronDown className={`w-4 h-4 text-slate-400 lg:block hidden transition-transform duration-300 ${isAccountOpen ? "rotate-180 text-mint-600" : "group-hover:text-slate-600"}`} />
-          </div>
-
-          <AnimatePresence>
-            {isAccountOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: 8, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 8, scale: 0.98 }}
-                transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.3 }}
-                className="absolute right-0 mt-4 w-72 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-900/5 overflow-hidden z-50 p-2"
-              >
-                <div className="p-4 bg-mint-50/50 rounded-[24px] mb-2 flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl overflow-hidden ring-2 ring-white shadow-sm">
-                    <img src={currentAccount.avatarUrl} alt="Avatar" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-semibold text-slate-900">{currentAccount.name}</h4>
-                    <div className="flex items-center gap-1 text-[11px] font-medium text-mint-600 mt-0.5">
-                      <ShieldCheck className="w-3 h-3" />
-                      Role {currentAccount.role}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  {menuItems.map((item) => (
-                    <button key={item.id} onClick={() => handleMenuClick(item.id)} className="w-full flex items-center gap-4 p-3.5 rounded-[20px] hover:bg-slate-50 transition-all group/item text-left">
-                      <div className="w-10 h-10 rounded-[14px] bg-mint-50/50 text-mint-600 flex items-center justify-center transition-all group-hover/item:scale-105 group-hover/item:bg-mint-50">
-                        <item.icon className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-slate-900 group-hover/item:text-mint-600 transition-colors">{item.label}</p>
-                        <p className="text-xs text-slate-500 mt-0.5">{item.detail}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-
-                <div className="mt-2 pt-2 border-t border-slate-50">
-                  <button onClick={handleLogout} className="w-full flex items-center gap-4 p-3.5 rounded-[20px] hover:bg-rose-50 transition-all group/logout text-left">
-                    <div className="w-10 h-10 rounded-[14px] bg-rose-50/50 text-rose-600 flex items-center justify-center transition-all group-hover/logout:scale-105 group-hover/logout:bg-rose-50">
-                      <LogOut className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-rose-600">Đăng xuất</p>
-                      <p className="text-xs text-rose-500/70 mt-0.5">Kết thúc phiên làm việc</p>
-                    </div>
-                  </button>
+            <Menu className="w-6 h-6" strokeWidth={2.25} />
+          </button>
+          <div className="flex-1 max-w-xl min-w-0">
+            {location.pathname !== "/grading" && (
+              <motion.div animate={{ scale: isScrolled ? 0.98 : 1 }} className="relative group w-full">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-500 group-focus-within:text-mint-700 transition-colors z-10" />
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm tài liệu, học viên, Toán lớp 6,7,8,9..."
+                  className="w-full bg-white border border-slate-200 rounded-2xl py-2.5 pl-12 pr-4 text-sm placeholder:text-slate-500 font-medium text-slate-800 focus:ring-2 focus:ring-mint-500/30 focus:border-mint-500 shadow-sm"
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden md:flex items-center gap-1.5 px-2 py-1 bg-slate-50 rounded-lg border border-slate-200 group-focus-within:opacity-0 transition-opacity">
+                  <span className="text-[10px] font-medium text-slate-500">Ctrl</span>
+                  <span className="text-[10px] font-medium text-slate-500">K</span>
                 </div>
               </motion.div>
             )}
-          </AnimatePresence>
+          </div>
         </div>
-      </div>
-    </motion.header>
 
-    <AnimatePresence>
-      {isMobileNavOpen && (
-        <>
-          <motion.button
-            type="button"
-            aria-label="Đóng menu"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[45] bg-slate-900/45 backdrop-blur-[2px] md:hidden"
-            onClick={() => setIsMobileNavOpen(false)}
-          />
-          <motion.aside
-            role="dialog"
-            aria-modal="true"
-            aria-label="Menu điều hướng"
-            initial={{ x: "-100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
-            transition={{ type: "spring", damping: 28, stiffness: 320 }}
-            className="fixed left-0 top-0 z-[50] h-screen w-[min(18rem,88vw)] border-r border-slate-200/50 bg-slate-200/90 backdrop-blur-2xl flex flex-col py-6 md:hidden shadow-xl shadow-slate-900/10 font-sans"
-          >
-            <div className="px-4 mb-6 flex items-center justify-between gap-2">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-mint-600 to-mint-400 flex items-center justify-center text-white shadow-lg shadow-mint-200 shrink-0">
-                  <Zap className="w-6 h-6" fill="currentColor" />
-                </div>
-                <div className="min-w-0">
-                  <h2 className="text-base font-black text-mint-700 tracking-tight leading-none truncate">SMASH Math</h2>
-                  <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">Education Center</p>
-                </div>
-              </div>
-              <button
-                type="button"
-                aria-label="Đóng"
-                onClick={() => setIsMobileNavOpen(false)}
-                className="shrink-0 w-10 h-10 flex items-center justify-center rounded-xl text-slate-500 hover:bg-white/80 hover:text-slate-800 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+        <div className="flex items-center gap-2 md:gap-4 ml-2 md:ml-4 shrink-0">
+          <NotificationPanel />
+          <HelpPanel />
 
-            <nav className="flex-1 px-3 overflow-y-auto">
-              <NavMenu onNavigate={() => setIsMobileNavOpen(false)} />
-            </nav>
-
-            <div className="px-3 pt-4 border-t border-slate-200/60 mt-auto">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsMobileNavOpen(false);
-                  logout();
-                  navigate("/login", { replace: true });
-                }}
-                className="w-full flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-red-50 hover:text-red-500 rounded-xl transition-all duration-300 group"
-              >
-                <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform shrink-0" />
-                <span className="text-sm font-medium">Đăng xuất</span>
-              </button>
-            </div>
-          </motion.aside>
-        </>
-      )}
-    </AnimatePresence>
-
-    {createPortal(
-      <AnimatePresence>
-        {activeModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.5 }} onClick={() => setActiveModal(null)} className="absolute inset-0 bg-slate-900/20 backdrop-blur-sm"></motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.98 }}
-              transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.35 }}
-              className="relative bg-white w-full max-w-2xl max-h-[85vh] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] flex flex-col border border-slate-900/5 overflow-hidden"
+          <div className="relative" ref={dropdownRef}>
+            <div
+              onClick={() => setIsAccountOpen(value => !value)}
+              className={`flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer group px-2 py-1.5 rounded-xl transition-all ${isAccountOpen ? "bg-mint-50/80" : "hover:bg-slate-50"}`}
             >
-              <div className="p-8 border-b border-slate-900/5 flex justify-between items-center bg-white">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-mint-500 text-white flex items-center justify-center shadow-[0_4px_20px_rgba(20,184,166,0.3)]">
-                    {activeModal === "profile" && <User className="w-6 h-6" />}
-                    {activeModal === "activity" && <Activity className="w-6 h-6" />}
-                    {activeModal === "password" && <KeyRound className="w-6 h-6" />}
+              <div className="text-right hidden sm:block">
+                <p className="text-sm font-semibold text-slate-900 leading-none group-hover:text-mint-700 transition-colors">{currentAccount.name}</p>
+                <p className="text-xs text-slate-600 font-medium mt-1">{currentAccount.roleTitle}</p>
+              </div>
+              <div className="relative">
+                <div className={`w-9 h-9 rounded-xl overflow-hidden ring-1 transition-all shadow-sm ${isAccountOpen ? "ring-mint-500/40" : "ring-slate-200 group-hover:ring-mint-500/20"}`}>
+                  <img src={currentAccount.avatarUrl} alt="Avatar" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-mint-500 border-2 border-white rounded-full"></div>
+              </div>
+              <ChevronDown className={`w-4 h-4 text-slate-500 lg:block hidden transition-transform duration-300 ${isAccountOpen ? "rotate-180 text-mint-700" : "group-hover:text-slate-700"}`} />
+            </div>
+
+            <AnimatePresence>
+              {isAccountOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                  transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.3 }}
+                  className="absolute right-0 mt-4 w-72 bg-white rounded-2xl shadow-[0_8px_30px_rgba(15,23,42,0.12)] border border-slate-200 overflow-hidden z-50 p-2"
+                >
+                  <div className="p-4 bg-mint-50/80 rounded-[24px] mb-2 flex items-center gap-4 border border-mint-100">
+                    <div className="w-12 h-12 rounded-2xl overflow-hidden ring-2 ring-white shadow-sm">
+                      <img src={currentAccount.avatarUrl} alt="Avatar" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-900">{currentAccount.name}</h4>
+                      <div className="flex items-center gap-1 text-[11px] font-medium text-mint-700 mt-0.5">
+                        <ShieldCheck className="w-3 h-3" />
+                        Role {currentAccount.role}
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-slate-900 tracking-tight">{panelTitle}</h3>
+
+                  <div className="space-y-1">
+                    {menuItems.map((item) => (
+                      <button key={item.id} onClick={() => handleMenuClick(item.id)} className="w-full flex items-center gap-4 p-3.5 rounded-[20px] hover:bg-slate-50 transition-all group/item text-left">
+                        <div className="w-10 h-10 rounded-[14px] bg-mint-50 text-mint-700 flex items-center justify-center transition-all group-hover/item:scale-105 group-hover/item:bg-mint-100">
+                          <item.icon className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-slate-900 group-hover/item:text-mint-700 transition-colors">{item.label}</p>
+                          <p className="text-xs text-slate-600 mt-0.5">{item.detail}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="mt-2 pt-2 border-t border-slate-100">
+                    <button onClick={handleLogout} className="w-full flex items-center gap-4 p-3.5 rounded-[20px] hover:bg-rose-50 transition-all group/logout text-left">
+                      <div className="w-10 h-10 rounded-[14px] bg-rose-50 text-rose-600 flex items-center justify-center transition-all group-hover/logout:scale-105 group-hover/logout:bg-rose-100">
+                        <LogOut className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-rose-600">Đăng xuất</p>
+                        <p className="text-xs text-rose-500/80 mt-0.5">Kết thúc phiên làm việc</p>
+                      </div>
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+      </motion.header>
+
+      <AnimatePresence>
+        {isMobileNavOpen && (
+          <>
+            <motion.button
+              type="button"
+              aria-label="Đóng menu"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-[45] bg-slate-900/45 backdrop-blur-[2px] md:hidden"
+              onClick={() => setIsMobileNavOpen(false)}
+            />
+            <motion.aside
+              role="dialog"
+              aria-modal="true"
+              aria-label="Menu điều hướng"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 28, stiffness: 320 }}
+              className="fixed left-0 top-0 z-[50] h-screen w-[min(18rem,88vw)] border-r border-slate-200 bg-white/95 backdrop-blur-2xl flex flex-col py-6 md:hidden shadow-xl shadow-slate-200"
+            >
+              <div className="px-4 mb-6 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-mint-600 to-mint-500 flex items-center justify-center text-white shadow-lg shadow-mint-200 shrink-0">
+                    <Zap className="w-6 h-6" fill="currentColor" />
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="text-base font-black text-mint-800 tracking-tight leading-none truncate">SMASH Math</h2>
+                    <p className="text-[10px] text-slate-600 font-bold uppercase tracking-wider mt-1">Education Center</p>
                   </div>
                 </div>
-                <button onClick={() => setActiveModal(null)} className="p-3 text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-2xl transition-all">
-                  <X className="w-6 h-6" />
+                <button
+                  type="button"
+                  aria-label="Đóng"
+                  onClick={() => setIsMobileNavOpen(false)}
+                  className="shrink-0 w-10 h-10 flex items-center justify-center rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+                >
+                  <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <div className="flex-1 p-8 overflow-y-auto">
-                {activeModal === "profile" && (
-                  <div className="space-y-8">
-                    <div className="flex flex-col items-center gap-4 pb-4">
-                      <div className="relative group cursor-pointer">
-                        <div className="w-28 h-28 rounded-[24px] overflow-hidden ring-1 ring-slate-900/5 shadow-inner">
-                          <img src={currentAccount.avatarUrl} alt="Profile" className="w-full h-full object-cover" />
-                        </div>
-                        <div className="absolute inset-0 bg-mint-600/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-[36px] flex items-center justify-center">
-                          <Edit3 className="w-6 h-6 text-white" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-6">
-                      <div className="space-y-2">
-                        <label className="text-xs font-medium text-slate-600 ml-1">Họ và tên</label>
-                        <input type="text" value={profileForm.name} onChange={(event) => setProfileForm(prev => ({ ...prev, name: event.target.value }))} className="w-full bg-white border border-slate-900/10 rounded-2xl py-3 px-5 text-sm font-medium focus:ring-1 focus:ring-mint-500/30 focus:border-mint-500/30 focus:shadow-[0_0_0_2px_rgba(20,184,166,0.1)] outline-none transition-all shadow-sm" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-xs font-medium text-slate-600 ml-1">Email</label>
-                        <input type="email" value={profileForm.email} onChange={(event) => setProfileForm(prev => ({ ...prev, email: event.target.value }))} className="w-full bg-white border border-slate-900/10 rounded-2xl py-3 px-5 text-sm font-medium focus:ring-1 focus:ring-mint-500/30 focus:border-mint-500/30 focus:shadow-[0_0_0_2px_rgba(20,184,166,0.1)] outline-none transition-all shadow-sm" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-xs font-medium text-slate-600 ml-1">Số điện thoại</label>
-                        <input type="text" value={profileForm.phone} onChange={(event) => setProfileForm(prev => ({ ...prev, phone: event.target.value }))} className="w-full bg-white border border-slate-900/10 rounded-2xl py-3 px-5 text-sm font-medium focus:ring-1 focus:ring-mint-500/30 focus:border-mint-500/30 focus:shadow-[0_0_0_2px_rgba(20,184,166,0.1)] outline-none transition-all shadow-sm" />
-                      </div>
-                    </div>
-                  </div>
-                )}
+              <nav className="flex-1 px-3 overflow-y-auto">
+                <NavMenu onNavigate={() => setIsMobileNavOpen(false)} />
+              </nav>
 
-                {activeModal === "activity" && (
-                  <div className="space-y-6">
-                    {accountActivities.map((activity) => (
-                      <div key={activity.id} className="flex gap-4 p-5 rounded-2xl hover:bg-slate-50/50 transition-all border border-transparent hover:border-slate-900/5 group relative overflow-hidden">
-                        <div className={`shrink-0 w-12 h-12 rounded-xl ${activity.tone === "mint" ? "bg-mint-50/50 text-mint-600" : "bg-slate-50 text-slate-500"} flex items-center justify-center group-hover:bg-white group-hover:shadow-sm transition-all`}>
-                          <Clock className="w-6 h-6" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-slate-900">{activity.title}</p>
-                          <p className="text-xs text-slate-500 mt-1">{activity.description}</p>
-                          <p className="text-[10px] font-medium text-slate-400 mt-2">{activity.time}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {activeModal === "password" && (
-                  <div className="space-y-8">
-                    <div className="space-y-6">
-                      <div className="space-y-2">
-                        <label className="text-xs font-medium text-slate-600 ml-1">Mật khẩu cũ</label>
-                        <input type="password" value={passwordForm.currentPassword} onChange={(event) => setPasswordForm(prev => ({ ...prev, currentPassword: event.target.value }))} placeholder="********" className="w-full bg-white border border-slate-900/10 rounded-2xl py-3 px-5 text-sm font-medium focus:ring-1 focus:ring-mint-500/30 focus:border-mint-500/30 focus:shadow-[0_0_0_2px_rgba(20,184,166,0.1)] outline-none transition-all shadow-sm" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-xs font-medium text-slate-600 ml-1">Mật khẩu mới</label>
-                        <input type="password" value={passwordForm.nextPassword} onChange={(event) => setPasswordForm(prev => ({ ...prev, nextPassword: event.target.value }))} placeholder="********" className="w-full bg-white border border-slate-900/10 rounded-2xl py-3 px-5 text-sm font-medium focus:ring-1 focus:ring-mint-500/30 focus:border-mint-500/30 focus:shadow-[0_0_0_2px_rgba(20,184,166,0.1)] outline-none transition-all shadow-sm" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-xs font-medium text-slate-600 ml-1">Xác nhận mật khẩu mới</label>
-                        <input type="password" value={passwordForm.confirmNextPassword} onChange={(event) => setPasswordForm(prev => ({ ...prev, confirmNextPassword: event.target.value }))} placeholder="********" className="w-full bg-white border border-slate-900/10 rounded-2xl py-3 px-5 text-sm font-medium focus:ring-1 focus:ring-mint-500/30 focus:border-mint-500/30 focus:shadow-[0_0_0_2px_rgba(20,184,166,0.1)] outline-none transition-all shadow-sm" />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
+              <div className="px-3 pt-4 border-t border-slate-200 mt-auto">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMobileNavOpen(false);
+                    logout();
+                    navigate("/login", { replace: true });
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all duration-300 group"
+                >
+                  <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform shrink-0" />
+                  <span className="text-sm font-medium">Đăng xuất</span>
+                </button>
               </div>
-
-              <div className="p-8 bg-slate-50/30 border-t border-slate-50 flex flex-col gap-3">
-                {feedback && (
-                  <p className={`text-xs px-4 py-3 rounded-2xl border font-semibold ${feedback.tone === "success" ? "text-mint-700 bg-mint-50 border-mint-100" : "text-rose-700 bg-rose-50 border-rose-100"}`}>
-                    {feedback.message}
-                  </p>
-                )}
-
-                {activeModal === "profile" || activeModal === "password" ? (
-                  <div className="flex gap-4">
-                    <button onClick={() => setActiveModal(null)} className="flex-1 py-3 bg-white border border-slate-900/10 text-slate-600 rounded-xl font-medium text-sm hover:bg-slate-50 transition-all shadow-sm">
-                      Hủy bỏ
-                    </button>
-                    <button onClick={activeModal === "profile" ? handleSaveProfile : handleSavePassword} className="flex-[2] py-3 bg-mint-600 text-white rounded-xl font-medium text-sm shadow-sm hover:bg-mint-700 transition-all">
-                      Lưu thông tin
-                    </button>
-                  </div>
-                ) : (
-                  <button onClick={() => setActiveModal(null)} className="w-full py-3 bg-white border border-slate-900/10 text-slate-700 rounded-xl font-medium text-sm hover:bg-slate-50 transition-all shadow-sm">
-                    Đóng cửa sổ
-                  </button>
-                )}
-              </div>
-            </motion.div>
-          </div>
+            </motion.aside>
+          </>
         )}
-      </AnimatePresence>,
-      document.body
-    )}
+      </AnimatePresence>
+
+      {createPortal(
+        <AnimatePresence>
+          {activeModal && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.5 }} onClick={() => setActiveModal(null)} className="absolute inset-0 bg-slate-900/45 backdrop-blur-[2px]" />
+
+              <motion.div
+                initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 20, scale: 0.98 }}
+                transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.35 }}
+                className="relative bg-white w-full max-w-2xl max-h-[85vh] rounded-3xl shadow-[0_20px_60px_rgba(15,23,42,0.18)] flex flex-col border border-slate-200 overflow-hidden"
+              >
+                <div className="p-8 border-b border-slate-200 flex justify-between items-center bg-white">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-mint-500 text-white flex items-center justify-center shadow-[0_4px_20px_rgba(46,167,124,0.3)]">
+                      {activeModal === "profile" && <User className="w-6 h-6" />}
+                      {activeModal === "activity" && <Activity className="w-6 h-6" />}
+                      {activeModal === "password" && <KeyRound className="w-6 h-6" />}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-slate-900 tracking-tight">{panelTitle}</h3>
+                    </div>
+                  </div>
+                  <button onClick={() => setActiveModal(null)} className="p-3 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-2xl transition-all">
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                <div className="flex-1 p-8 overflow-y-auto">
+                  {activeModal === "profile" && (
+                    <div className="space-y-8">
+                      <div className="flex flex-col items-center gap-4 pb-4">
+                        <div className="relative group cursor-pointer">
+                          <div className="w-28 h-28 rounded-[24px] overflow-hidden ring-1 ring-slate-200 shadow-inner">
+                            <img src={currentAccount.avatarUrl} alt="Profile" className="w-full h-full object-cover" />
+                          </div>
+                          <div className="absolute inset-0 bg-mint-600/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-[36px] flex items-center justify-center">
+                            <Edit3 className="w-6 h-6 text-white" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="space-y-6">
+                        <div className="space-y-2">
+                          <label className="text-xs font-medium text-slate-700 ml-1">Họ và tên</label>
+                          <input type="text" value={profileForm.name} onChange={(event) => setProfileForm(prev => ({ ...prev, name: event.target.value }))} className="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-mint-500/30 focus:border-mint-500" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-xs font-medium text-slate-700 ml-1">Email</label>
+                          <input type="email" value={profileForm.email} onChange={(event) => setProfileForm(prev => ({ ...prev, email: event.target.value }))} className="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-mint-500/30 focus:border-mint-500" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-xs font-medium text-slate-700 ml-1">Số điện thoại</label>
+                          <input type="text" value={profileForm.phone} onChange={(event) => setProfileForm(prev => ({ ...prev, phone: event.target.value }))} className="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-mint-500/30 focus:border-mint-500" />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeModal === "activity" && (
+                    <div className="space-y-6">
+                      {accountActivities.map((activity) => (
+                        <div key={activity.id} className="flex gap-4 p-5 rounded-2xl hover:bg-slate-50/80 transition-all border border-transparent hover:border-slate-200 group relative overflow-hidden bg-white">
+                          <div className={`shrink-0 w-12 h-12 rounded-xl ${activity.tone === "mint" ? "bg-mint-50 text-mint-700" : "bg-slate-100 text-slate-600"} flex items-center justify-center`}>
+                            <Clock className="w-6 h-6" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm font-medium text-slate-900">{activity.title}</p>
+                            <p className="text-xs text-slate-600 mt-1">{activity.description}</p>
+                            <p className="text-[10px] font-medium text-slate-500 mt-2">{activity.time}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {activeModal === "password" && (
+                    <div className="space-y-8">
+                      <div className="space-y-6">
+                        <div className="space-y-2">
+                          <label className="text-xs font-medium text-slate-700 ml-1">Mật khẩu cũ</label>
+                          <input type="password" value={passwordForm.currentPassword} onChange={(event) => setPasswordForm(prev => ({ ...prev, currentPassword: event.target.value }))} placeholder="Nhập mật khẩu hiện tại" className="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-mint-500/30 focus:border-mint-500" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-xs font-medium text-slate-700 ml-1">Mật khẩu mới</label>
+                          <input type="password" value={passwordForm.nextPassword} onChange={(event) => setPasswordForm(prev => ({ ...prev, nextPassword: event.target.value }))} placeholder="Nhập mật khẩu mới" className="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-mint-500/30 focus:border-mint-500" />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-xs font-medium text-slate-700 ml-1">Xác nhận mật khẩu mới</label>
+                          <input type="password" value={passwordForm.confirmNextPassword} onChange={(event) => setPasswordForm(prev => ({ ...prev, confirmNextPassword: event.target.value }))} placeholder="Nhập lại mật khẩu mới" className="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-mint-500/30 focus:border-mint-500" />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                </div>
+
+                <div className="p-8 bg-slate-50/60 border-t border-slate-200 flex flex-col gap-3">
+                  {feedback && (
+                    <p className={`text-xs px-4 py-3 rounded-2xl border font-semibold ${feedback.tone === "success" ? "text-mint-700 bg-mint-50 border-mint-100" : "text-rose-700 bg-rose-50 border-rose-100"}`}>
+                      {feedback.message}
+                    </p>
+                  )}
+
+                  {activeModal === "profile" || activeModal === "password" ? (
+                    <div className="flex gap-4">
+                      <button onClick={() => setActiveModal(null)} className="flex-1 py-3 bg-white border border-slate-200 text-slate-700 rounded-xl font-medium text-sm hover:bg-slate-50 transition-colors">
+                        Hủy bỏ
+                      </button>
+                      <button onClick={activeModal === "profile" ? handleSaveProfile : handleSavePassword} className="flex-[2] py-3 bg-mint-600 text-white rounded-xl font-medium text-sm shadow-sm hover:bg-mint-700 transition-colors">
+                        Lưu thông tin
+                      </button>
+                    </div>
+                  ) : (
+                    <button onClick={() => setActiveModal(null)} className="w-full py-3 bg-white border border-slate-200 text-slate-700 rounded-xl font-medium text-sm hover:bg-slate-50 transition-colors">
+                      Đóng cửa sổ
+                    </button>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 }

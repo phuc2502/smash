@@ -4,16 +4,16 @@
 @theme {
   --font-sans: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
 
-  --color-mint-50: #D4F0F0;
-  --color-mint-100: #E6F7F7;
-  --color-mint-200: #8FCACA;
-  --color-mint-300: #CCE2CB;
-  --color-mint-400: #B6CFB6;
-  --color-mint-500: #97C1A9;
-  --color-mint-600: #7DA68E;
-  --color-mint-700: #638A73;
-  --color-mint-800: #496E58;
-  --color-mint-900: #2F523D;
+  --color-mint-50: #ECFDF5;
+  --color-mint-100: #D8F7E8;
+  --color-mint-200: #B9EFD2;
+  --color-mint-300: #8FE0B9;
+  --color-mint-400: #5FCB99;
+  --color-mint-500: #2EA77C;
+  --color-mint-600: #1F8A67;
+  --color-mint-700: #1A6D53;
+  --color-mint-800: #145240;
+  --color-mint-900: #103C31;
 
   --color-primary: var(--color-mint-500);
   --color-primary-light: var(--color-mint-300);
@@ -21,7 +21,6 @@
 }
 
 @layer base {
-
   *,
   ::before,
   ::after {
