@@ -1,30 +1,6 @@
 # Đề cương tài liệu hướng dẫn sử dụng SMASH Math
 
-> **Đối tượng:** người dùng SMASH Math đã đăng nhập. Tài liệu này vừa là mục lục đề xuất, vừa là hướng dẫn biên soạn: mỗi mục có gợi ý nội dung cần viết và ảnh giao diện nên chụp. Chỉ mô tả thao tác thực sự có trong phiên bản đang sử dụng; tên nút, trường dữ liệu và kết quả cần được đối chiếu trực tiếp trên giao diện.
->
-> **Nguyên tắc phân quyền:** menu và thao tác người dùng nhìn thấy phụ thuộc vào vai trò/quyền được cấp. Không phải tài khoản nào cũng có tất cả chức năng trong tài liệu.
 
-## I. GIỚI THIỆU CHUNG
-
-### 1.1. Mục đích và phạm vi tài liệu
-**Nội dung nên trình bày:** Hướng dẫn người dùng tìm chức năng, thực hiện các thao tác chính và xử lý tình huống thường gặp sau khi đăng nhập. Ghi rõ phiên bản ứng dụng, ngày cập nhật và phạm vi: tài liệu tập trung vào giao diện SMASH Math, không thay thế quy định riêng của trung tâm.
-
-### 1.2. Đối tượng và vai trò người dùng
-**Nội dung nên trình bày:** Giới thiệu bốn nhóm độc giả để trình bày tài liệu dễ hiểu:
-- **Quản trị/nhân sự quản lý:** có thể gồm Owner, Manager, Admin và Admin Staff; quyền cụ thể không giống nhau ở mọi tài khoản.
-- **Giáo viên.**
-- **Học viên.**
-- **Phụ huynh.**
-
-Giải thích đây là cách gom nhóm cho tài liệu, không phải hệ thống chỉ có bốn vai trò. Nêu rằng quyền thực tế được cấp cho tài khoản quyết định chức năng truy cập được.
-
-### 1.3. Quy ước trình bày và sử dụng tài liệu
-**Nội dung nên trình bày:** Giải thích ký hiệu cảnh báo, nút cần chọn, dữ liệu ví dụ và ghi chú “nếu được cấp quyền”. Dùng tên menu/nút đúng như giao diện. Mỗi quy trình nên đánh số bước, nêu điều kiện trước khi làm và kết quả cần thấy sau khi hoàn tất.
-
-### 1.4. Bố cục giao diện và điều hướng chung
-**Nội dung nên trình bày:** Giới thiệu thanh điều hướng, khu vực nội dung, thanh trên cùng và các điểm vào trợ giúp/thông báo. Mô tả menu có thể thay đổi theo quyền; hướng dẫn mở/đóng menu trên máy tính và thiết bị nhỏ nếu có khác biệt.
-
-**Ảnh nên chụp:** Một ảnh toàn màn hình sau khi đăng nhập, dùng tài khoản demo không chứa dữ liệu cá nhân; chú thích các khu vực bằng số.
 
 ## II. CHỨC NĂNG DÀNH CHO QUẢN TRỊ VÀ NHÂN SỰ QUẢN LÝ
 
