@@ -1,6 +1,6 @@
 # Đề cương tài liệu hướng dẫn sử dụng SMASH Math
 
-
+## I. GIỚI THIỆU CHUNG
 
 ## II. CHỨC NĂNG DÀNH CHO QUẢN TRỊ VÀ NHÂN SỰ QUẢN LÝ
 
