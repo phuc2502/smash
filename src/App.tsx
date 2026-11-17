@@ -11,11 +11,10 @@ import ClassSchedulePage from "./pages/ClassSchedulePage";
 import UserManagementPage from "./pages/UserManagementPage";
 import MaterialsPage from "./pages/MaterialsPage";
 import AssignmentsPage from "./pages/AssignmentsPage";
-import GradingPage from "./pages/GradingPage";
+import GradingRoutePage from "./pages/GradingRoutePage";
 import AnnouncementsPage from "./pages/AnnouncementsPage";
 import AttendancePage from "./pages/AttendancePage";
 import LeaveRequestsPage from "./pages/LeaveRequestsPage";
-
 import OnlineQuizPage from "./pages/OnlineQuizPage";
 import SettingsPage from "./pages/SettingsPage";
 import { AppProvider, useAppContext } from "./context/AppContext";
@@ -75,7 +74,6 @@ export default function App() {
               </PermissionRoute>
             } />
 
-
             <Route path="/materials" element={
               <PermissionRoute permission="view_materials">
                 <MaterialsPage />
@@ -96,7 +94,7 @@ export default function App() {
 
             <Route path="/grading" element={
               <PermissionRoute permission="view_own_grades">
-                <GradingPage />
+                <GradingRoutePage />
               </PermissionRoute>
             } />
 
