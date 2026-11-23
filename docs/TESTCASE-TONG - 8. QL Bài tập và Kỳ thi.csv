@@ -1,0 +1,510 @@
+TC08 - QUẢN LÝ BÀI TẬP VÀ KỲ THI TRỰC TUYẾN (ASSIGNMENT & ONLINE EXAM MANAGEMENT),,,,,,,,
+Mã testcase,Tính năng,Kịch bản kiểm thử,Điều kiện tiên quyết,Các bước thực hiện,Dữ liệu kiểm thử,Kết quả mong muốn,Trạng thái,Ghi chú
+TC08.1,8.1. Xem danh sách bài tập & Đề thi,,,,,,,
+TC08.1.1,,Kiểm tra giao diện trang “Bài tập & Đề thi”,"Đăng nhập với tài khoản Quản trị viên; Hệ thống có 4 mục: “Ôn tập Chương 1” (Bài tập, Toán 9A, hạn 25/12/2026 23:59); “Kiểm tra giữa kỳ” (Đề thi, Toán 9A, 20/12/2026 08:00); “Bài tập hình học” (Bài tập, Toán 9B, hạn 22/12/2026 23:59); “Đề thi học kỳ I” (Đề thi, Toán 10A, 28/12/2026 09:00)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Quan sát giao diện trang hiển thị",,"- Hiển thị tiêu đề “Bài tập & Đề thi”
+- Hiển thị bộ lọc “Lớp học”, “Loại”, “Trạng thái” với giá trị mặc định “Tất cả”
+- Hiển thị ô tìm kiếm với gợi ý “Tìm theo tên...”
+- Hiển thị button “Tạo mới”
+- Hiển thị danh sách với các cột Tên, Loại, Lớp học, Hạn nộp / Thời gian thi, Trạng thái",,"SRS 8.1.4 gọi là button “Tạo mới”, SRS 8.2.4 gọi là “Tạo bài tập mới”; cần thống nhất tên"
+TC08.1.2,,Quản trị viên xem bài tập và đề thi của tất cả lớp học,"Đăng nhập với tài khoản Quản trị viên; Hệ thống có 4 mục: “Ôn tập Chương 1” (Bài tập, Toán 9A, hạn 25/12/2026 23:59); “Kiểm tra giữa kỳ” (Đề thi, Toán 9A, 20/12/2026 08:00); “Bài tập hình học” (Bài tập, Toán 9B, hạn 22/12/2026 23:59); “Đề thi học kỳ I” (Đề thi, Toán 10A, 28/12/2026 09:00)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Quan sát danh sách và các giá trị của bộ lọc “Lớp học”",,"- Danh sách có đủ 4 mục của “Toán 9A”, “Toán 9B” và “Toán 10A”
+- Bộ lọc “Lớp học” liệt kê toàn bộ lớp học trong Hệ thống",,
+TC08.1.3,,Mỗi dòng hiển thị đủ thông tin,"Đăng nhập với tài khoản Quản trị viên; Hệ thống có 4 mục: “Ôn tập Chương 1” (Bài tập, Toán 9A, hạn 25/12/2026 23:59); “Kiểm tra giữa kỳ” (Đề thi, Toán 9A, 20/12/2026 08:00); “Bài tập hình học” (Bài tập, Toán 9B, hạn 22/12/2026 23:59); “Đề thi học kỳ I” (Đề thi, Toán 10A, 28/12/2026 09:00)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Quan sát dòng “Ôn tập Chương 1” và dòng “Kiểm tra giữa kỳ”",,"- Mỗi dòng hiển thị Tên, Loại, Lớp học, Hạn nộp / Thời gian thi, Trạng thái
+- Dòng “Ôn tập Chương 1” có Loại là “Bài tập”
+- Dòng “Kiểm tra giữa kỳ” có Loại là “Đề thi”",,
+TC08.1.4,,Giáo viên chỉ xem các mục của lớp học được phân công,"Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Hệ thống có 4 mục: “Ôn tập Chương 1” (Bài tập, Toán 9A, hạn 25/12/2026 23:59); “Kiểm tra giữa kỳ” (Đề thi, Toán 9A, 20/12/2026 08:00); “Bài tập hình học” (Bài tập, Toán 9B, hạn 22/12/2026 23:59); “Đề thi học kỳ I” (Đề thi, Toán 10A, 28/12/2026 09:00)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Quan sát danh sách, bộ lọc “Lớp học” và button “Tạo mới”",,"- Danh sách chỉ có 3 mục của “Toán 9A” và “Toán 9B”
+- Không hiển thị “Đề thi học kỳ I” của “Toán 10A”
+- Bộ lọc “Lớp học” chỉ liệt kê “Toán 9A” và “Toán 9B”
+- Hiển thị button “Tạo mới”",,
+TC08.1.5,,Học viên chỉ xem các mục của lớp mình tham gia và trạng thái bài nộp của mình,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Hệ thống có 4 mục: “Ôn tập Chương 1” (Bài tập, Toán 9A, hạn 25/12/2026 23:59); “Kiểm tra giữa kỳ” (Đề thi, Toán 9A, 20/12/2026 08:00); “Bài tập hình học” (Bài tập, Toán 9B, hạn 22/12/2026 23:59); “Đề thi học kỳ I” (Đề thi, Toán 10A, 28/12/2026 09:00); Học viên chưa nộp “Ôn tập Chương 1” và đã nộp “Kiểm tra giữa kỳ”","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Quan sát danh sách, cột Trạng thái và button “Tạo mới”",,"- Danh sách chỉ có “Ôn tập Chương 1” và “Kiểm tra giữa kỳ”
+- Không hiển thị mục của “Toán 9B” và “Toán 10A”
+- Cột Trạng thái hiển thị trạng thái bài nộp của Học viên: “Chưa nộp” và “Đã nộp”
+- Không hiển thị button “Tạo mới”",,SRS 8.1 nêu Học viên chỉ thấy mục đã phát hành; do 8.2 (theo Mô tả màn hình) không có trạng thái “Bản nháp” nên chưa kiểm thử mục chưa phát hành
+TC08.1.6,,Phụ huynh chỉ xem các mục của lớp học mà học viên đã liên kết đang tham gia,"Đăng nhập với tài khoản Phụ huynh “Trần Thị Hoa” (liên kết với Học viên “Phạm Minh Anh”); Hệ thống có 4 mục: “Ôn tập Chương 1” (Bài tập, Toán 9A, hạn 25/12/2026 23:59); “Kiểm tra giữa kỳ” (Đề thi, Toán 9A, 20/12/2026 08:00); “Bài tập hình học” (Bài tập, Toán 9B, hạn 22/12/2026 23:59); “Đề thi học kỳ I” (Đề thi, Toán 10A, 28/12/2026 09:00)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Quan sát danh sách và các button thao tác trên trang",,"- Danh sách chỉ có “Ôn tập Chương 1” và “Kiểm tra giữa kỳ” của “Toán 9A”
+- Không hiển thị mục của “Toán 9B” và “Toán 10A”
+- Không hiển thị button “Tạo mới”, “Chỉnh sửa”, “Xóa”, “Làm bài”",,
+TC08.1.7,,Danh sách sắp xếp theo thời hạn gần nhất lên trước,"Đăng nhập với tài khoản Quản trị viên; Hệ thống có 4 mục: “Ôn tập Chương 1” (Bài tập, Toán 9A, hạn 25/12/2026 23:59); “Kiểm tra giữa kỳ” (Đề thi, Toán 9A, 20/12/2026 08:00); “Bài tập hình học” (Bài tập, Toán 9B, hạn 22/12/2026 23:59); “Đề thi học kỳ I” (Đề thi, Toán 10A, 28/12/2026 09:00)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Quan sát thứ tự các dòng trong danh sách",,"- Thứ tự từ trên xuống: “Kiểm tra giữa kỳ” (20/12), “Bài tập hình học” (22/12), “Ôn tập Chương 1” (25/12), “Đề thi học kỳ I” (28/12)",,
+TC08.1.8,,Học viên xem đủ 4 trạng thái bài nộp,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Lớp “Toán 9A” có 4 mục đã phát hành: “Bài 1” (Học viên chưa nộp), “Bài 2” (đã nộp), “Bài 3” (chờ chấm điểm), “Bài 4” (đã chấm)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Quan sát cột Trạng thái của 4 mục",,"- “Bài 1” hiển thị “Chưa nộp”
+- “Bài 2” hiển thị “Đã nộp”
+- “Bài 3” hiển thị “Chờ chấm điểm”
+- “Bài 4” hiển thị “Đã chấm”",,
+TC08.1.9,,Lọc theo lớp học,"Đăng nhập với tài khoản Quản trị viên; Hệ thống có 4 mục: “Ôn tập Chương 1” (Bài tập, Toán 9A, hạn 25/12/2026 23:59); “Kiểm tra giữa kỳ” (Đề thi, Toán 9A, 20/12/2026 08:00); “Bài tập hình học” (Bài tập, Toán 9B, hạn 22/12/2026 23:59); “Đề thi học kỳ I” (Đề thi, Toán 10A, 28/12/2026 09:00)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Chọn “Toán 9B” tại bộ lọc “Lớp học”",- Lớp học = “Toán 9B”,- Danh sách chỉ có “Bài tập hình học”,,
+TC08.1.10,,Lọc theo loại “Bài tập”,"Đăng nhập với tài khoản Quản trị viên; Hệ thống có 4 mục: “Ôn tập Chương 1” (Bài tập, Toán 9A, hạn 25/12/2026 23:59); “Kiểm tra giữa kỳ” (Đề thi, Toán 9A, 20/12/2026 08:00); “Bài tập hình học” (Bài tập, Toán 9B, hạn 22/12/2026 23:59); “Đề thi học kỳ I” (Đề thi, Toán 10A, 28/12/2026 09:00)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Chọn “Bài tập” tại bộ lọc “Loại”",- Loại = “Bài tập”,- Danh sách chỉ có “Ôn tập Chương 1” và “Bài tập hình học”,,"SRS 8.1 phân loại “Bài tập” / “Đề thi”, còn SRS 8.2.4 phân loại “Trắc nghiệm” / “Tự luận”; chưa rõ cách ánh xạ, kiểm thử theo 8.1"
+TC08.1.11,,Lọc theo loại “Đề thi”,"Đăng nhập với tài khoản Quản trị viên; Hệ thống có 4 mục: “Ôn tập Chương 1” (Bài tập, Toán 9A, hạn 25/12/2026 23:59); “Kiểm tra giữa kỳ” (Đề thi, Toán 9A, 20/12/2026 08:00); “Bài tập hình học” (Bài tập, Toán 9B, hạn 22/12/2026 23:59); “Đề thi học kỳ I” (Đề thi, Toán 10A, 28/12/2026 09:00)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Chọn “Đề thi” tại bộ lọc “Loại”",- Loại = “Đề thi”,- Danh sách chỉ có “Kiểm tra giữa kỳ” và “Đề thi học kỳ I”,,Như TC08.1.10
+TC08.1.12,,Giáo viên lọc theo trạng thái của bài tập,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có mục ở trạng thái “Đang mở” và mục ở trạng thái “Chờ chấm điểm”,"1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Chọn “Đang mở” tại bộ lọc “Trạng thái”",- Trạng thái = “Đang mở”,- Danh sách chỉ có các mục ở trạng thái “Đang mở”,,SRS chưa liệt kê đầy đủ các giá trị của bộ lọc “Trạng thái” của Giáo viên và Quản trị viên
+TC08.1.13,,Học viên lọc theo trạng thái bài nộp của mình,Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Lớp “Toán 9A” có mục “Bài 1” (Học viên chưa nộp) và “Bài 2” (đã nộp),"1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Chọn “Chưa nộp” tại bộ lọc “Trạng thái”",- Trạng thái = “Chưa nộp”,"- Danh sách chỉ có “Bài 1”
+- Không hiển thị “Bài 2”",,
+TC08.1.14,,Tìm kiếm theo tên,"Đăng nhập với tài khoản Quản trị viên; Hệ thống có 4 mục: “Ôn tập Chương 1” (Bài tập, Toán 9A, hạn 25/12/2026 23:59); “Kiểm tra giữa kỳ” (Đề thi, Toán 9A, 20/12/2026 08:00); “Bài tập hình học” (Bài tập, Toán 9B, hạn 22/12/2026 23:59); “Đề thi học kỳ I” (Đề thi, Toán 10A, 28/12/2026 09:00)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Nhập từ khóa vào ô tìm kiếm",- Từ khóa = “giữa kỳ”,- Danh sách chỉ có “Kiểm tra giữa kỳ”,,
+TC08.1.15,,Kết hợp đồng thời nhiều bộ lọc và tìm kiếm,"Đăng nhập với tài khoản Quản trị viên; Hệ thống có 4 mục: “Ôn tập Chương 1” (Bài tập, Toán 9A, hạn 25/12/2026 23:59); “Kiểm tra giữa kỳ” (Đề thi, Toán 9A, 20/12/2026 08:00); “Bài tập hình học” (Bài tập, Toán 9B, hạn 22/12/2026 23:59); “Đề thi học kỳ I” (Đề thi, Toán 10A, 28/12/2026 09:00)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Chọn “Toán 9A” tại bộ lọc “Lớp học”
+3. Chọn “Bài tập” tại bộ lọc “Loại”
+4. Nhập từ khóa vào ô tìm kiếm","- Lớp học = “Toán 9A”
+- Loại = “Bài tập”
+- Từ khóa = “Chương”",- Danh sách chỉ có “Ôn tập Chương 1”,,
+TC08.1.16,,Xóa từ khóa tìm kiếm thì hiển thị lại theo bộ lọc hiện tại,"Đăng nhập với tài khoản Quản trị viên; Hệ thống có 4 mục: “Ôn tập Chương 1” (Bài tập, Toán 9A, hạn 25/12/2026 23:59); “Kiểm tra giữa kỳ” (Đề thi, Toán 9A, 20/12/2026 08:00); “Bài tập hình học” (Bài tập, Toán 9B, hạn 22/12/2026 23:59); “Đề thi học kỳ I” (Đề thi, Toán 10A, 28/12/2026 09:00)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Chọn “Toán 9A” tại bộ lọc “Lớp học”
+3. Nhập từ khóa “Chương” vào ô tìm kiếm
+4. Xóa toàn bộ từ khóa","- Lớp học = “Toán 9A”
+- Từ khóa = “Chương”","- Sau bước 3 danh sách chỉ có “Ôn tập Chương 1”
+- Sau bước 4 danh sách có “Kiểm tra giữa kỳ” và “Ôn tập Chương 1” (theo bộ lọc “Toán 9A”)",,
+TC08.1.17,,Chọn “Tất cả” tại bộ lọc thì bỏ điều kiện lọc,"Đăng nhập với tài khoản Quản trị viên; Hệ thống có 4 mục: “Ôn tập Chương 1” (Bài tập, Toán 9A, hạn 25/12/2026 23:59); “Kiểm tra giữa kỳ” (Đề thi, Toán 9A, 20/12/2026 08:00); “Bài tập hình học” (Bài tập, Toán 9B, hạn 22/12/2026 23:59); “Đề thi học kỳ I” (Đề thi, Toán 10A, 28/12/2026 09:00)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Chọn “Toán 9B” tại bộ lọc “Lớp học”
+3. Chọn “Tất cả” tại bộ lọc “Lớp học”",,- Sau bước 3 danh sách hiển thị đủ 4 mục,,
+TC08.1.18,,Người dùng chưa có bài tập hoặc đề thi nào,Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Lớp “Toán 9A” chưa có bài tập hoặc đề thi,"1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Quan sát khu vực danh sách",,"- Hiển thị thông báo “Chưa có bài tập hoặc đề thi”
+- Hệ thống không thay đổi dữ liệu",,
+TC08.1.19,,Không có mục nào thỏa điều kiện lọc và từ khóa,"Đăng nhập với tài khoản Quản trị viên; Hệ thống có 4 mục: “Ôn tập Chương 1” (Bài tập, Toán 9A, hạn 25/12/2026 23:59); “Kiểm tra giữa kỳ” (Đề thi, Toán 9A, 20/12/2026 08:00); “Bài tập hình học” (Bài tập, Toán 9B, hạn 22/12/2026 23:59); “Đề thi học kỳ I” (Đề thi, Toán 10A, 28/12/2026 09:00)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Nhập từ khóa vào ô tìm kiếm",- Từ khóa = “xyz123”,"- Hiển thị thông báo “Không tìm thấy bài tập hoặc đề thi phù hợp.”
+- Hệ thống không thay đổi dữ liệu",,
+TC08.1.20,,Hệ thống không tải được dữ liệu,Đăng nhập với tài khoản Quản trị viên; Hệ thống bị lỗi hoặc mất kết nối khi tải danh sách,"1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Quan sát khu vực danh sách",,"- Hiển thị thông báo lỗi “Không thể tải danh sách. Vui lòng thử lại sau.”
+- Hệ thống không thay đổi dữ liệu",,
+TC08.2,8.2. Khởi tạo bài tập / Đề thi trực tuyến,,,,,,,
+TC08.2.1,,Mở biểu mẫu tạo bài tập mới và kiểm tra giá trị mặc định,Đăng nhập với tài khoản Quản trị viên; Hệ thống có ít nhất một lớp học,"1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Click button “Tạo bài tập mới”
+3. Quan sát biểu mẫu",,"- Hiển thị biểu mẫu với tiêu đề “Tạo Bài tập Mới”
+- Ô Tiêu đề bài tập trống, gợi ý “VD: Ôn tập Chương 1 - Số học 6”
+- Lớp học mặc định là lớp học đầu tiên; Loại bài tập mặc định là “Trắc nghiệm”
+- Thời gian làm bài mặc định 45; Tổng số bài phải nộp / học viên mặc định 30
+- Đánh dấu khẩn cấp chưa chọn; Khu vực tệp đính kèm rỗng
+- Khu vực câu hỏi trắc nghiệm có sẵn câu hỏi, Đáp án đúng mặc định “A”
+- Có button đóng, button “Hủy bỏ” và button xác nhận tạo",,Tên button mở biểu mẫu khác nhau giữa 8.1.4 và 8.2.4
+TC08.2.2,,Giáo viên có button tạo bài tập; Học viên và Phụ huynh không có,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”),"1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Quan sát khu vực Header
+3. Đăng xuất, đăng nhập bằng tài khoản Học viên “Phạm Minh Anh”, lặp lại bước 1 và 2
+4. Đăng xuất, đăng nhập bằng tài khoản Phụ huynh “Trần Thị Hoa”, lặp lại bước 1 và 2",,"- Giáo viên: hiển thị button “Tạo bài tập mới”
+- Học viên: không hiển thị button
+- Phụ huynh: không hiển thị button",,
+TC08.2.3,,Quản trị viên tạo bài tập trắc nghiệm thành công,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở,"1. Nhập Tiêu đề bài tập
+2. Chọn Lớp học, Loại bài tập
+3. Chọn Hạn nộp
+4. Nhập nội dung câu hỏi, 4 đáp án và chọn đáp án đúng
+5. Click button xác nhận tạo","- Tiêu đề bài tập = “Ôn tập Chương 2 - Phương trình”
+- Lớp học = “Toán 9A”
+- Loại bài tập = “Trắc nghiệm”
+- Hạn nộp = 30/12/2026 23:59
+- Câu 1: “2 + 3 = ?”, đáp án A = “4”, B = “5”, C = “6”, D = “7”, đáp án đúng = B
+- Thời gian làm bài = 45
+- Tổng số bài phải nộp / học viên = 30","- Đóng biểu mẫu
+- Bài tập mới xuất hiện trong danh sách với Loại tương ứng, lớp “Toán 9A” và trạng thái “Đang mở”",,SRS 8.2.4 chưa nêu thông báo thành công khi tạo mới (8.2.2 ghi “Phát hành thành công!”)
+TC08.2.4,,Giáo viên tạo bài tập tự luận thành công,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Biểu mẫu “Tạo Bài tập Mới” đang mở,"1. Nhập Tiêu đề bài tập và Mô tả ngắn
+2. Chọn Lớp học “Toán 9A”, Loại bài tập “Tự luận”
+3. Chọn Hạn nộp
+4. Nhập Thời gian làm bài = 0
+5. Đính kèm một tệp hợp lệ
+6. Click button xác nhận tạo","- Tiêu đề bài tập = “Bài tập tự luận tuần 3”
+- Mô tả ngắn = “Giải các phương trình bậc nhất sau và trình bày lời giải”
+- Hạn nộp = 30/12/2026 23:59
+- Thời gian làm bài = 0
+- Tệp = “de_bai_tuan_3.pdf” (2MB)","- Đóng biểu mẫu
+- Bài tập xuất hiện trong danh sách với trạng thái “Đang mở”",,"Với bài tự luận, Mô tả ngắn dùng làm đề bài; SRS chưa nêu Mô tả ngắn có bắt buộc hay không"
+TC08.2.5,,Đổi loại bài tập thì ẩn/hiện khu vực câu hỏi trắc nghiệm,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở,"1. Quan sát khu vực câu hỏi
+2. Chọn Loại bài tập “Tự luận”
+3. Chọn lại Loại bài tập “Trắc nghiệm”",,"- Với “Trắc nghiệm”: hiển thị khu vực câu hỏi trắc nghiệm
+- Với “Tự luận”: không hiển thị khu vực câu hỏi trắc nghiệm
+- Chọn lại “Trắc nghiệm”: hiển thị lại khu vực câu hỏi",,
+TC08.2.6,,Quản trị viên chọn được mọi lớp học,"Đăng nhập với tài khoản Quản trị viên; Hệ thống có lớp “Toán 9A”, “Toán 9B”, “Toán 10A”; Biểu mẫu “Tạo Bài tập Mới” đang mở",1. Click dropdown “Lớp học”,,"- Danh sách liệt kê đủ 3 lớp học
+- Giá trị mặc định là lớp học đầu tiên",,
+TC08.2.7,,Giáo viên chỉ tạo cho lớp học mình phụ trách,"Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Hệ thống có lớp “Toán 9A”, “Toán 9B”, “Toán 10A”; Biểu mẫu “Tạo Bài tập Mới” đang mở",1. Click dropdown “Lớp học”,,"- Danh sách chỉ liệt kê “Toán 9A” và “Toán 9B”
+- Không có “Toán 10A”",,SRS 8.2.4 ghi “Danh sách lớp học trong Hệ thống” còn 8.2.1 giới hạn theo lớp phụ trách; kiểm thử theo 8.2.1
+TC08.2.8,,Thêm câu hỏi trắc nghiệm,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở; Loại bài tập là “Trắc nghiệm”,"1. Click button thêm câu hỏi
+2. Quan sát câu hỏi mới",,"- Xuất hiện thêm một câu hỏi trắc nghiệm trống
+- Câu hỏi có 4 ô đáp án A, B, C, D với gợi ý “Đáp án {A-D}...”
+- Đáp án đúng mặc định là “A”",,
+TC08.2.9,,Chỉ chọn được một đáp án đúng cho mỗi câu,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở; Có 1 câu hỏi trắc nghiệm,"1. Chọn đáp án đúng “C”
+2. Chọn đáp án đúng “D”",,"- Sau bước 1 chỉ đáp án “C” được chọn
+- Sau bước 2 chỉ đáp án “D” được chọn",,
+TC08.2.10,,Xóa một câu hỏi khi còn nhiều hơn một câu,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở; Có 2 câu hỏi trắc nghiệm,1. Click button “Xóa câu hỏi” của câu 2,,"- Câu 2 bị xóa khỏi biểu mẫu
+- Biểu mẫu còn 1 câu hỏi",,
+TC08.2.11,,Xóa câu hỏi cuối cùng,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở; Có 1 câu hỏi trắc nghiệm,1. Click button “Xóa câu hỏi” của câu duy nhất,,"- Hiển thị thông báo “Phải có ít nhất 1 câu hỏi trắc nghiệm.”
+- Câu hỏi không bị xóa",,
+TC08.2.12,,Để trống Tiêu đề bài tập,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở,"1. Để trống Tiêu đề bài tập, nhập các trường bắt buộc còn lại
+2. Click button xác nhận tạo","- Lớp học = “Toán 9A”
+- Loại bài tập = “Trắc nghiệm”
+- Hạn nộp = 30/12/2026 23:59
+- Câu 1: “2 + 3 = ?”, đáp án A = “4”, B = “5”, C = “6”, D = “7”, đáp án đúng = B","- Giữ nguyên biểu mẫu
+- Hiển thị cảnh báo tại trường Tiêu đề bài tập
+- Hệ thống không lưu dữ liệu",,SRS 8.2.4 chưa nêu nội dung cảnh báo cụ thể; kiểm tra có cảnh báo tại trường tương ứng
+TC08.2.13,,Tiêu đề bài tập chỉ chứa khoảng trắng,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở,"1. Nhập khoảng trắng vào Tiêu đề bài tập, nhập các trường bắt buộc còn lại
+2. Click button xác nhận tạo","- Tiêu đề bài tập = “   ”
+- Lớp học = “Toán 9A”
+- Loại bài tập = “Trắc nghiệm”
+- Hạn nộp = 30/12/2026 23:59
+- Câu 1: “2 + 3 = ?”, đáp án A = “4”, B = “5”, C = “6”, D = “7”, đáp án đúng = B","- Giữ nguyên biểu mẫu
+- Hiển thị cảnh báo tại trường Tiêu đề bài tập
+- Hệ thống không lưu dữ liệu",,SRS 8.2.2 ghi “Vui lòng nhập tên.”; Mô tả màn hình chỉ ghi “Không được để trống”
+TC08.2.14,,Để trống Hạn nộp,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở,"1. Để trống Hạn nộp, nhập các trường bắt buộc còn lại
+2. Click button xác nhận tạo","- Tiêu đề bài tập = “Ôn tập Chương 2 - Phương trình”
+- Lớp học = “Toán 9A”
+- Loại bài tập = “Trắc nghiệm”
+- Câu 1: “2 + 3 = ?”, đáp án A = “4”, B = “5”, C = “6”, D = “7”, đáp án đúng = B","- Giữ nguyên biểu mẫu
+- Hiển thị cảnh báo tại trường Hạn nộp
+- Hệ thống không lưu dữ liệu",,SRS 8.2.4 chưa nêu nội dung cảnh báo cụ thể; kiểm tra có cảnh báo tại trường tương ứng
+TC08.2.15,,Hạn nộp không sau thời điểm hiện tại,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở,"1. Chọn Hạn nộp là một thời điểm đã qua, nhập các trường bắt buộc còn lại
+2. Click button xác nhận tạo","- Tiêu đề bài tập = “Ôn tập Chương 2 - Phương trình”
+- Lớp học = “Toán 9A”
+- Loại bài tập = “Trắc nghiệm”
+- Hạn nộp = 01/11/2026 08:00
+- Câu 1: “2 + 3 = ?”, đáp án A = “4”, B = “5”, C = “6”, D = “7”, đáp án đúng = B","- Giữ nguyên biểu mẫu
+- Hiển thị thông báo lỗi “Thời gian phải sau thời điểm hiện tại.”
+- Hệ thống không lưu dữ liệu",,"Quy tắc và thông báo lấy từ SRS 8.2.1, 8.2.2; Mô tả màn hình 8.2.4 không nêu"
+TC08.2.16,,Thời gian làm bài vượt giá trị tối đa,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở,"1. Nhập Thời gian làm bài vượt giá trị cho phép, nhập các trường bắt buộc còn lại
+2. Click button xác nhận tạo","- Tiêu đề bài tập = “Ôn tập Chương 2 - Phương trình”
+- Lớp học = “Toán 9A”
+- Loại bài tập = “Trắc nghiệm”
+- Hạn nộp = 30/12/2026 23:59
+- Câu 1: “2 + 3 = ?”, đáp án A = “4”, B = “5”, C = “6”, D = “7”, đáp án đúng = B
+- Thời gian làm bài = 301","- Giữ nguyên biểu mẫu
+- Hiển thị cảnh báo tại trường Thời gian làm bài (khoảng hợp lệ từ 0 đến 300)
+- Hệ thống không lưu dữ liệu",,SRS 8.2.4 chưa nêu nội dung cảnh báo cụ thể; kiểm tra có cảnh báo tại trường tương ứng
+TC08.2.17,,Thời gian làm bài là số âm,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở,"1. Nhập Thời gian làm bài là số âm, nhập các trường bắt buộc còn lại
+2. Click button xác nhận tạo","- Tiêu đề bài tập = “Ôn tập Chương 2 - Phương trình”
+- Lớp học = “Toán 9A”
+- Loại bài tập = “Trắc nghiệm”
+- Hạn nộp = 30/12/2026 23:59
+- Câu 1: “2 + 3 = ?”, đáp án A = “4”, B = “5”, C = “6”, D = “7”, đáp án đúng = B
+- Thời gian làm bài = -1","- Giữ nguyên biểu mẫu
+- Hiển thị cảnh báo tại trường Thời gian làm bài
+- Hệ thống không lưu dữ liệu",,SRS 8.2.4 chưa nêu nội dung cảnh báo cụ thể; kiểm tra có cảnh báo tại trường tương ứng
+TC08.2.18,,Thời gian làm bài ở giá trị biên 0 và 300,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở,"1. Nhập Thời gian làm bài = 0, nhập các trường bắt buộc còn lại, click button xác nhận tạo
+2. Mở lại biểu mẫu, nhập Thời gian làm bài = 300 và các trường bắt buộc, click button xác nhận tạo","- Tiêu đề bài tập = “Ôn tập Chương 2 - Phương trình”
+- Lớp học = “Toán 9A”
+- Loại bài tập = “Trắc nghiệm”
+- Hạn nộp = 30/12/2026 23:59
+- Câu 1: “2 + 3 = ?”, đáp án A = “4”, B = “5”, C = “6”, D = “7”, đáp án đúng = B
+- Thời gian làm bài = 0 (lần 1) và 300 (lần 2)","- Cả hai lần Hệ thống lưu thành công, đóng biểu mẫu
+- Bài tập có Thời gian làm bài = 0 là bài không giới hạn thời gian",,
+TC08.2.19,,Tổng số bài phải nộp nhỏ hơn giá trị tối thiểu,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở,"1. Nhập Tổng số bài phải nộp / học viên = 0, nhập các trường bắt buộc còn lại
+2. Click button xác nhận tạo","- Tiêu đề bài tập = “Ôn tập Chương 2 - Phương trình”
+- Lớp học = “Toán 9A”
+- Loại bài tập = “Trắc nghiệm”
+- Hạn nộp = 30/12/2026 23:59
+- Câu 1: “2 + 3 = ?”, đáp án A = “4”, B = “5”, C = “6”, D = “7”, đáp án đúng = B
+- Tổng số bài phải nộp / học viên = 0","- Giữ nguyên biểu mẫu
+- Hiển thị cảnh báo tại trường Tổng số bài phải nộp / học viên (tối thiểu 1)
+- Hệ thống không lưu dữ liệu",,SRS 8.2.4 chưa nêu nội dung cảnh báo cụ thể; kiểm tra có cảnh báo tại trường tương ứng
+TC08.2.20,,Câu hỏi trắc nghiệm thiếu nội dung hoặc thiếu đáp án,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở,"1. Nhập các trường bắt buộc, để trống đáp án B của câu 1
+2. Click button xác nhận tạo","- Tiêu đề bài tập = “Ôn tập Chương 2 - Phương trình”
+- Lớp học = “Toán 9A”
+- Loại bài tập = “Trắc nghiệm”
+- Hạn nộp = 30/12/2026 23:59
+- Câu 1: “2 + 3 = ?”, đáp án A = “4”, B = “”, C = “6”, D = “7”, đáp án đúng = A","- Giữ nguyên biểu mẫu
+- Hiển thị cảnh báo tại đáp án B
+- Hệ thống không lưu dữ liệu",,SRS 8.2.4 chưa nêu nội dung cảnh báo cụ thể; kiểm tra có cảnh báo tại trường tương ứng
+TC08.2.21,,Đính kèm tệp hợp lệ,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở,"1. Click khu vực tệp đính kèm và chọn một tệp
+2. Quan sát khu vực tệp đính kèm",- Tệp = “de_bai.pdf” (5MB),"- Tệp được nhận và hiển thị tên trong khu vực tệp đính kèm
+- Không hiển thị thông báo lỗi",,
+TC08.2.22,,Kéo thả tệp vào khu vực tệp đính kèm,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở,1. Kéo một tệp hợp lệ thả vào khu vực tệp đính kèm,- Tệp = “de_bai.pdf” (5MB),- Tệp được nhận và hiển thị tên trong khu vực tệp đính kèm,,
+TC08.2.23,,Đính kèm tệp vượt quá 10MB,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở,1. Click khu vực tệp đính kèm và chọn tệp có dung lượng lớn hơn 10MB,- Tệp = “bai_giang_lon.pdf” (15MB),"- Hiển thị lỗi “File “bai_giang_lon.pdf” vượt quá 10MB.”
+- Hệ thống không nhận tệp",,
+TC08.2.24,,Đánh dấu bài tập khẩn cấp,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở,"1. Chọn “Đánh dấu khẩn cấp”, nhập các trường bắt buộc
+2. Click button xác nhận tạo","- Tiêu đề bài tập = “Ôn tập Chương 2 - Phương trình”
+- Lớp học = “Toán 9A”
+- Loại bài tập = “Trắc nghiệm”
+- Hạn nộp = 30/12/2026 23:59
+- Câu 1: “2 + 3 = ?”, đáp án A = “4”, B = “5”, C = “6”, D = “7”, đáp án đúng = B
+- Đánh dấu khẩn cấp = chọn","- Hệ thống lưu thành công và đóng biểu mẫu
+- Bài tập được lưu ở trạng thái đánh dấu khẩn cấp",,SRS chưa nêu nơi hiển thị dấu khẩn cấp; kiểm tra tại dữ liệu bài tập
+TC08.2.25,,Hủy bỏ khi đã nhập dữ liệu,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở; Đã nhập Tiêu đề bài tập,"1. Click button “Hủy bỏ”
+2. Quan sát danh sách bài tập",,"- Đóng biểu mẫu
+- Hệ thống không lưu bài tập, danh sách không thay đổi",,
+TC08.2.26,,Đóng biểu mẫu bằng button đóng,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở; Đã nhập Tiêu đề bài tập,"1. Click button đóng (X)
+2. Quan sát danh sách bài tập",,"- Đóng biểu mẫu
+- Hệ thống không lưu bài tập, danh sách không thay đổi",,
+TC08.2.27,,Hệ thống không lưu được dữ liệu,Đăng nhập với tài khoản Quản trị viên; Biểu mẫu “Tạo Bài tập Mới” đang mở; Hệ thống bị lỗi khi lưu,"1. Nhập các trường bắt buộc hợp lệ
+2. Click button xác nhận tạo","- Tiêu đề bài tập = “Ôn tập Chương 2 - Phương trình”
+- Lớp học = “Toán 9A”
+- Loại bài tập = “Trắc nghiệm”
+- Hạn nộp = 30/12/2026 23:59
+- Câu 1: “2 + 3 = ?”, đáp án A = “4”, B = “5”, C = “6”, D = “7”, đáp án đúng = B","- Hiển thị thông báo lỗi “Không thể lưu. Vui lòng thử lại sau.”
+- Hệ thống không lưu dữ liệu",,Thông báo lấy từ SRS 8.2.2 (luồng thất bại 9a)
+TC08.3,8.3. Chỉnh sửa và xóa bài tập,,,,,,,
+TC08.3.1,,Quản trị viên và Giáo viên thấy biểu tượng “Chỉnh sửa” và “Xóa”,"Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo); Giáo viên “Nguyễn Thị Lan” phụ trách “Toán 9A”","1. Đăng nhập tài khoản Quản trị viên, click mục “Bài tập & Đề thi” trên thanh điều hướng và quan sát dòng “Ôn tập Chương 1”
+2. Đăng nhập tài khoản Giáo viên “Nguyễn Thị Lan”, lặp lại bước 1",,- Cả hai vai trò đều thấy biểu tượng “Chỉnh sửa” và biểu tượng “Xóa” (thùng rác) tại dòng bài tập,,
+TC08.3.2,,"Học viên và Phụ huynh không có biểu tượng “Chỉnh sửa”, “Xóa”","Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo); Bài tập đã phát hành","1. Đăng nhập tài khoản Học viên “Phạm Minh Anh”, click mục “Bài tập & Đề thi” trên thanh điều hướng và quan sát dòng “Ôn tập Chương 1”
+2. Đăng nhập tài khoản Phụ huynh “Trần Thị Hoa”, lặp lại bước 1",,- Không hiển thị biểu tượng “Chỉnh sửa” và “Xóa” ở cả hai vai trò,,
+TC08.3.3,,Mở biểu mẫu chỉnh sửa bài tập chưa có bài nộp,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Click biểu tượng “Chỉnh sửa” tại dòng “Ôn tập Chương 1”
+3. Quan sát biểu mẫu",,"- Hiển thị biểu mẫu với tiêu đề “Chỉnh sửa bài tập / đề thi”
+- Các trường hiển thị dữ liệu hiện tại của bài tập
+- Tất cả các trường (Tên, Hạn nộp, Lớp học, Loại, Câu hỏi, đáp án, điểm tối đa) đều cho phép chỉnh sửa",,
+TC08.3.4,,Chỉnh sửa bài tập chưa có bài nộp thành công,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Click biểu tượng “Chỉnh sửa” tại dòng “Ôn tập Chương 1”
+3. Sửa Tên, Lớp học, Hạn nộp và nội dung một câu hỏi
+4. Click button “Lưu thay đổi”","- Tên = “Ôn tập Chương 1 - Bản sửa”
+- Lớp học = “Toán 9B”
+- Hạn nộp = 30/12/2026 23:59
+- Nội dung câu 1 = “3 + 4 = ?”","- Đóng biểu mẫu và hiển thị thông báo “Cập nhật thành công!”
+- Dòng bài tập trong danh sách hiển thị Tên, Lớp học, Hạn nộp mới",,
+TC08.3.5,,Để trống Tên khi chỉnh sửa,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo); Biểu mẫu “Chỉnh sửa bài tập / đề thi” của “Ôn tập Chương 1” đang mở","1. Xóa toàn bộ Tên
+2. Click button “Lưu thay đổi”",,"- Giữ nguyên biểu mẫu
+- Hiển thị lỗi tại trường Tên
+- Hệ thống không lưu thay đổi",,SRS chưa nêu nội dung cảnh báo cụ thể; kiểm tra có cảnh báo tại trường tương ứng
+TC08.3.6,,Để trống Hạn nộp khi chỉnh sửa,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo); Biểu mẫu “Chỉnh sửa bài tập / đề thi” của “Ôn tập Chương 1” đang mở","1. Xóa Hạn nộp
+2. Click button “Lưu thay đổi”",,"- Trình duyệt hiển thị cảnh báo yêu cầu nhập trường bắt buộc
+- Hệ thống không lưu thay đổi",,"Cảnh báo do trình duyệt hiển thị (SRS 8.3.2, luồng thất bại 5a)"
+TC08.3.7,,Hạn nộp không sau thời điểm hiện tại khi chỉnh sửa,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo); Biểu mẫu “Chỉnh sửa bài tập / đề thi” của “Ôn tập Chương 1” đang mở","1. Chọn Hạn nộp là một thời điểm đã qua
+2. Click button “Lưu thay đổi”",- Hạn nộp = 01/11/2026 08:00,"- Giữ nguyên biểu mẫu
+- Hiển thị lỗi “Thời gian phải sau thời điểm hiện tại.”
+- Hệ thống không lưu thay đổi",,Quy tắc validate như SRS 8.2; thông báo lấy từ 8.2.2
+TC08.3.8,,Đính kèm tệp vượt dung lượng khi chỉnh sửa,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo); Biểu mẫu “Chỉnh sửa bài tập / đề thi” của “Ôn tập Chương 1” đang mở","1. Chọn tệp đính kèm có dung lượng lớn hơn giới hạn
+2. Quan sát khu vực tệp đính kèm",- Tệp = “bai_giang_lon.pdf” (60MB),"- Hiển thị lỗi “File “bai_giang_lon.pdf” vượt quá 10MB.”
+- Hệ thống không nhận và không lưu tệp",,"SRS 8.2.4 ghi giới hạn 10MB, SRS 8.3.2 ghi “vượt quá 50MB”; cần thống nhất giới hạn và thông báo"
+TC08.3.9,,Hủy chỉnh sửa bằng button “Hủy”,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo); Biểu mẫu “Chỉnh sửa bài tập / đề thi” của “Ôn tập Chương 1” đang mở; Đã sửa Tên","1. Click button “Hủy”
+2. Quan sát dòng “Ôn tập Chương 1”",,"- Đóng biểu mẫu
+- Tên bài tập giữ nguyên giá trị cũ",,
+TC08.3.10,,Đóng biểu mẫu chỉnh sửa bằng button đóng “X”,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo); Biểu mẫu “Chỉnh sửa bài tập / đề thi” của “Ôn tập Chương 1” đang mở; Đã sửa Tên","1. Click button đóng “X”
+2. Quan sát dòng “Ôn tập Chương 1”",,"- Đóng biểu mẫu
+- Tên bài tập giữ nguyên giá trị cũ",,
+TC08.3.11,,Hệ thống không lưu được thay đổi,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo); Biểu mẫu “Chỉnh sửa bài tập / đề thi” của “Ôn tập Chương 1” đang mở; Hệ thống bị lỗi khi lưu","1. Sửa Tên
+2. Click button “Lưu thay đổi”",- Tên = “Ôn tập Chương 1 - Bản sửa”,"- Hiển thị thông báo lỗi “Không thể cập nhật. Vui lòng thử lại sau.”
+- Hệ thống không lưu thay đổi",,
+TC08.3.12,,Bài tập đã có bài nộp: khóa các trường không được sửa,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59) đã có ít nhất một bài nộp","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Click biểu tượng “Chỉnh sửa” tại dòng “Ôn tập Chương 1”
+3. Quan sát trạng thái các trường",,"- Lớp học và Loại bị vô hiệu hóa
+- Câu hỏi, đáp án, điểm tối đa bị vô hiệu hóa
+- Tên và Hạn nộp vẫn cho phép chỉnh sửa",,
+TC08.3.13,,Bài tập đã có bài nộp: sửa Tên thành công,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59) đã có ít nhất một bài nộp; Biểu mẫu “Chỉnh sửa bài tập / đề thi” của bài tập đã có bài nộp đang mở","1. Sửa Tên
+2. Click button “Lưu thay đổi”",- Tên = “Ôn tập Chương 1 - Bản sửa”,"- Đóng biểu mẫu và hiển thị thông báo “Cập nhật thành công!”
+- Tên mới hiển thị trong danh sách
+- Các bài nộp hiện có không bị thay đổi",,
+TC08.3.14,,Bài tập đã có bài nộp: gia hạn thành công,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59) đã có ít nhất một bài nộp; Biểu mẫu “Chỉnh sửa bài tập / đề thi” của bài tập đã có bài nộp đang mở","1. Chọn Hạn nộp muộn hơn hạn hiện tại
+2. Click button “Lưu thay đổi”",- Hạn nộp mới = 30/12/2026 23:59,"- Đóng biểu mẫu và hiển thị thông báo “Cập nhật thành công!”
+- Hạn nộp mới hiển thị trong danh sách",,
+TC08.3.15,,Bài tập đã có bài nộp: rút ngắn Hạn nộp,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59) đã có ít nhất một bài nộp; Biểu mẫu “Chỉnh sửa bài tập / đề thi” của bài tập đã có bài nộp đang mở","1. Chọn Hạn nộp sớm hơn hạn hiện tại (vẫn sau thời điểm hiện tại)
+2. Click button “Lưu thay đổi”",- Hạn nộp mới = 20/12/2026 23:59,"- Hệ thống không cho lưu Hạn nộp sớm hơn hạn hiện tại
+- Hạn nộp giữ nguyên giá trị cũ",,"SRS 8.3.4 chỉ ghi “chỉ cho phép gia hạn”, chưa nêu thông báo lỗi"
+TC08.3.16,,"Bài tập đã có bài nộp: thay đổi câu hỏi, đáp án, điểm tối đa","Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59) đã có ít nhất một bài nộp; Biểu mẫu “Chỉnh sửa bài tập / đề thi” của bài tập đã có bài nộp đang mở","1. Gửi yêu cầu cập nhật có thay đổi nội dung câu hỏi hoặc đáp án đúng (bằng công cụ gửi yêu cầu trực tiếp)
+2. Quan sát phản hồi",- Đáp án đúng câu 1 đổi từ “B” sang “C”,"- Hiển thị thông báo “Không thể thay đổi câu hỏi, đáp án và điểm tối đa khi đã có bài nộp.”
+- Hệ thống không lưu thay đổi",,Giao diện đã vô hiệu hóa các trường nên kiểm thử bằng gửi yêu cầu trực tiếp
+TC08.3.17,,Chặn chỉnh sửa đề thi đang diễn ra,Đăng nhập với tài khoản Quản trị viên; Có đề thi “Kiểm tra giữa kỳ” (Toán 9A) đang diễn ra (thời điểm hiện tại nằm trong khoảng thời gian thi),"1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Click biểu tượng “Chỉnh sửa” tại dòng “Kiểm tra giữa kỳ”",,"- Hiển thị thông báo “Đề thi đang diễn ra, không thể chỉnh sửa hoặc xóa.”
+- Không mở biểu mẫu chỉnh sửa",,
+TC08.3.18,,Chặn xóa đề thi đang diễn ra,Đăng nhập với tài khoản Quản trị viên; Có đề thi “Kiểm tra giữa kỳ” (Toán 9A) đang diễn ra (thời điểm hiện tại nằm trong khoảng thời gian thi),"1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Click biểu tượng “Xóa” tại dòng “Kiểm tra giữa kỳ”",,"- Hiển thị thông báo “Đề thi đang diễn ra, không thể chỉnh sửa hoặc xóa.”
+- Không hiển thị hộp thoại xác nhận xóa
+- Đề thi vẫn còn trong danh sách",,
+TC08.3.19,,Hiển thị hộp thoại xác nhận xóa bài tập chưa có bài nộp,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Click biểu tượng “Xóa” (thùng rác) tại dòng “Ôn tập Chương 1”
+3. Quan sát hộp thoại",,"- Hiển thị hộp thoại với nội dung “Bạn có chắc chắn muốn xóa Ôn tập Chương 1? Hành động này không thể hoàn tác.”
+- Có button “Xác nhận” và “Hủy”",,Nội dung hộp thoại khác nhau giữa 8.3.1 (“xóa bài tập “{Tên bài tập}”?”) và 8.3.4; kiểm thử theo 8.3.4
+TC08.3.20,,Xác nhận xóa bài tập chưa có bài nộp,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo); Hộp thoại xác nhận xóa đang mở","1. Click button “Xác nhận”
+2. Quan sát danh sách bài tập",,"- Hiển thị thông báo “Đã xóa thành công!”
+- “Ôn tập Chương 1” bị loại khỏi danh sách
+- Học viên và Phụ huynh của lớp không còn thấy bài tập này",,
+TC08.3.21,,Hủy xóa bài tập,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo); Hộp thoại xác nhận xóa đang mở","1. Click button “Hủy”
+2. Quan sát danh sách bài tập",,"- Đóng hộp thoại
+- “Ôn tập Chương 1” vẫn còn trong danh sách, dữ liệu không thay đổi",,
+TC08.3.22,,Chặn xóa bài tập đã có bài nộp,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59) đã có ít nhất một bài nộp","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Click biểu tượng “Xóa” (thùng rác) tại dòng “Ôn tập Chương 1”",,"- Hiển thị thông báo “Đã có bài nộp, không thể xóa.”
+- Không hiển thị hộp thoại xác nhận xóa
+- Bài tập và các bài nộp vẫn còn",,SRS 8.3.1 ghi Hệ thống không chặn xóa bài tập đã có bài nộp; kiểm thử theo Mô tả màn hình 8.3.4 (đã được xác nhận)
+TC08.3.23,,Giáo viên chỉnh sửa bài tập do người khác tạo,"Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Click biểu tượng “Chỉnh sửa” tại dòng “Ôn tập Chương 1”
+3. Sửa Tên
+4. Click button “Lưu thay đổi”",- Tên = “Ôn tập Chương 1 - GV sửa”,"- Đóng biểu mẫu và hiển thị thông báo “Cập nhật thành công!”
+- Tên mới hiển thị trong danh sách",,"SRS 8.3.1 ghi Hệ thống không kiểm tra người tạo, còn 8.3.2 ghi điều kiện tiên quyết là người tạo; kiểm thử theo 8.3.1"
+TC08.3.24,,Ghi nhận người thao tác và thời gian thao tác,"Đăng nhập với tài khoản Quản trị viên; Có bài tập “Ôn tập Chương 1” (Toán 9A, hạn 25/12/2026 23:59, chưa có bài nộp, do Quản trị viên tạo)","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Click biểu tượng “Chỉnh sửa” tại dòng “Ôn tập Chương 1”
+3. Sửa Tên và click button “Lưu thay đổi”
+4. Kiểm tra dữ liệu ghi nhận của bài tập",- Tên = “Ôn tập Chương 1 - Bản sửa”,- Hệ thống ghi nhận Quản trị viên là người thao tác và thời gian thao tác,,SRS chưa nêu nơi xem dữ liệu ghi nhận; kiểm tra tại nhật ký hoạt động hoặc cơ sở dữ liệu
+TC08.4,8.4. Chấm bài thi tự luận,,,,,,,
+TC08.4.1,,Kiểm tra giao diện khu vực “Chấm tự luận”,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có bài tập tự luận “Phương trình bậc nhất” và bài nộp của Học viên “Phạm Minh Anh” chưa có điểm,"1. Mở mục “Chấm tự luận”
+2. Chọn một bài nộp trong danh sách và quan sát giao diện",,"- Hiển thị tiêu đề “Chấm tự luận” và dòng “Bài tự luận chờ chấm từ tất cả lớp của bạn”
+- Hiển thị danh sách bài nộp chờ chấm, tên Học viên, câu hỏi và câu trả lời
+- Ô Điểm có gợi ý “Ví dụ: 8.5” hoặc “0 - 10”
+- Có 6 nhận xét nhanh mẫu và ô Nhận xét với gợi ý “Nhập nhận xét viết tay hoặc click nhận xét nhanh ở trên...”
+- Button “Lưu điểm số & Hoàn tất” bị vô hiệu hóa khi chưa nhập điểm
+- Hiển thị dòng “* Điểm sẽ được đồng bộ ngay lập tức sang sổ điểm chính.”
+- Không có button “Lưu tạm”",,SRS chưa nêu vị trí của mục “Chấm tự luận” trên thanh điều hướng
+TC08.4.2,,Chỉ liệt kê bài nộp thuộc lớp học Giáo viên phụ trách,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Có bài nộp tự luận chưa có điểm của “Toán 9A” và của “Toán 10A”,"1. Mở mục “Chấm tự luận”
+2. Quan sát danh sách bài nộp chờ chấm",,"- Danh sách có bài nộp của “Toán 9A”
+- Không có bài nộp của “Toán 10A”",,
+TC08.4.3,,Chỉ liệt kê bài nộp tự luận chưa có điểm,"Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có 1 bài nộp tự luận đã chấm, 1 bài nộp tự luận chưa chấm và 1 bài nộp trắc nghiệm","1. Mở mục “Chấm tự luận”
+2. Quan sát danh sách bài nộp chờ chấm",,"- Danh sách chỉ có bài nộp tự luận chưa chấm
+- Không có bài nộp đã chấm và bài nộp trắc nghiệm",,
+TC08.4.4,,Lọc danh sách bài nộp theo bài tập,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Có bài nộp chờ chấm của 2 bài tập tự luận “Phương trình bậc nhất” và “Hình học phẳng”,"1. Mở mục “Chấm tự luận”
+2. Chọn bài tập “Phương trình bậc nhất” tại bộ lọc bài tập",- Bài tập = “Phương trình bậc nhất”,- Danh sách chỉ có bài nộp của “Phương trình bậc nhất”,,
+TC08.4.5,,"Xem câu hỏi, câu trả lời và tệp đính kèm của bài nộp",Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có bài tập tự luận “Phương trình bậc nhất” và bài nộp của Học viên “Phạm Minh Anh” chưa có điểm; Bài nộp có ảnh bài làm viết tay,"1. Mở mục “Chấm tự luận”
+2. Chọn bài nộp của “Phạm Minh Anh”
+3. Click vào ảnh bài làm",,"- Hiển thị tên Học viên, đề bài và câu trả lời
+- Sau bước 3 hiển thị ảnh phóng to",,
+TC08.4.6,,Chấm điểm thành công kèm nhận xét,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có bài tập tự luận “Phương trình bậc nhất” và bài nộp của Học viên “Phạm Minh Anh” chưa có điểm,"1. Mở mục “Chấm tự luận”
+2. Chọn bài nộp của “Phạm Minh Anh”
+3. Nhập Điểm
+4. Nhập Nhận xét
+5. Click button “Lưu điểm số & Hoàn tất”","- Điểm = 8.5
+- Nhận xét = “Trình bày rõ ràng”","- Hiển thị thông báo “Đã chấm điểm thành công!”
+- Bài nộp có điểm 8.5 và biến mất khỏi danh sách chờ chấm
+- Hệ thống tạo điểm thành phần có tiêu đề “Làm bài: Phương trình bậc nhất”, thang 10, kèm người chấm, thời gian chấm và nhận xét
+- Điểm đồng bộ ngay sang sổ điểm chính
+- Nhận xét được lưu thành nhận xét cho Học viên",,
+TC08.4.7,,Chấm điểm thành công khi không nhập nhận xét,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có bài tập tự luận “Phương trình bậc nhất” và bài nộp của Học viên “Phạm Minh Anh” chưa có điểm,"1. Mở mục “Chấm tự luận”
+2. Chọn bài nộp của “Phạm Minh Anh”
+3. Nhập Điểm, để trống Nhận xét
+4. Click button “Lưu điểm số & Hoàn tất”",- Điểm = 7,"- Hiển thị thông báo “Đã chấm điểm thành công!”
+- Điểm thành phần được lưu
+- Không tạo nhận xét cho Học viên",,
+TC08.4.8,,Chọn một nhận xét nhanh mẫu,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có bài tập tự luận “Phương trình bậc nhất” và bài nộp của Học viên “Phạm Minh Anh” chưa có điểm,"1. Mở mục “Chấm tự luận”
+2. Chọn bài nộp của “Phạm Minh Anh”
+3. Click nhận xét nhanh “Trình bày rõ ràng”",,- Nội dung “Trình bày rõ ràng” được thêm vào ô Nhận xét,,
+TC08.4.9,,Chọn nhiều nhận xét nhanh mẫu,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có bài tập tự luận “Phương trình bậc nhất” và bài nộp của Học viên “Phạm Minh Anh” chưa có điểm,"1. Mở mục “Chấm tự luận”
+2. Chọn bài nộp của “Phạm Minh Anh”
+3. Click nhận xét nhanh “Trình bày rõ ràng”
+4. Click nhận xét nhanh “Thiếu đơn vị tính”",,- Ô Nhận xét chứa hai nhận xét nối với nhau bằng dấu chấm phẩy,,
+TC08.4.10,,Kết hợp nhận xét nhanh và nhận xét nhập tay,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có bài tập tự luận “Phương trình bậc nhất” và bài nộp của Học viên “Phạm Minh Anh” chưa có điểm,"1. Mở mục “Chấm tự luận”
+2. Chọn bài nộp của “Phạm Minh Anh”
+3. Click nhận xét nhanh “Rất tốt, phát huy nhé”
+4. Nhập thêm nhận xét vào ô Nhận xét
+5. Nhập Điểm và Click button “Lưu điểm số & Hoàn tất”","- Điểm = 9
+- Nhận xét nhập thêm = “Chú ý trình bày bước 2”","- Nhận xét lưu cho Học viên gồm cả nhận xét mẫu và nhận xét nhập thêm
+- Hiển thị thông báo “Đã chấm điểm thành công!”",,
+TC08.4.11,,Chấm điểm ở giá trị biên 0 và 10,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Có 2 bài nộp tự luận chưa chấm của “Toán 9A”,"1. Mở mục “Chấm tự luận”
+2. Nhập Điểm = 0 cho bài nộp thứ nhất và Click button “Lưu điểm số & Hoàn tất”
+3. Nhập Điểm = 10 cho bài nộp thứ hai và Click button “Lưu điểm số & Hoàn tất”",- Điểm = 0 và 10,- Cả hai lần Hệ thống lưu điểm và hiển thị thông báo “Đã chấm điểm thành công!”,,
+TC08.4.12,,Điểm lớn hơn 10,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có bài tập tự luận “Phương trình bậc nhất” và bài nộp của Học viên “Phạm Minh Anh” chưa có điểm,"1. Mở mục “Chấm tự luận”
+2. Chọn bài nộp của “Phạm Minh Anh”
+3. Nhập Điểm",- Điểm = 10.1,"- Hiển thị lỗi “Điểm phải từ 0 đến 10”
+- Button “Lưu điểm số & Hoàn tất” bị vô hiệu hóa
+- Hệ thống không lưu điểm",,
+TC08.4.13,,Điểm nhỏ hơn 0,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có bài tập tự luận “Phương trình bậc nhất” và bài nộp của Học viên “Phạm Minh Anh” chưa có điểm,"1. Mở mục “Chấm tự luận”
+2. Chọn bài nộp của “Phạm Minh Anh”
+3. Nhập Điểm",- Điểm = -1,"- Hiển thị lỗi “Điểm phải từ 0 đến 10”
+- Button “Lưu điểm số & Hoàn tất” bị vô hiệu hóa
+- Hệ thống không lưu điểm",,
+TC08.4.14,,Điểm không phải số,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có bài tập tự luận “Phương trình bậc nhất” và bài nộp của Học viên “Phạm Minh Anh” chưa có điểm,"1. Mở mục “Chấm tự luận”
+2. Chọn bài nộp của “Phạm Minh Anh”
+3. Nhập Điểm",- Điểm = “abc”,"- Hiển thị lỗi “Điểm phải từ 0 đến 10” hoặc không nhận ký tự không phải số
+- Button “Lưu điểm số & Hoàn tất” bị vô hiệu hóa
+- Hệ thống không lưu điểm",,Trình duyệt có thể không cho nhập chữ vào ô số
+TC08.4.15,,Chưa nhập điểm,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có bài tập tự luận “Phương trình bậc nhất” và bài nộp của Học viên “Phạm Minh Anh” chưa có điểm,"1. Mở mục “Chấm tự luận”
+2. Chọn bài nộp của “Phạm Minh Anh”
+3. Để trống Điểm, nhập Nhận xét
+4. Quan sát button “Lưu điểm số & Hoàn tất”",,"- Button “Lưu điểm số & Hoàn tất” bị vô hiệu hóa
+- Hệ thống không lưu điểm",,
+TC08.4.16,,Sửa điểm không hợp lệ thành hợp lệ,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có bài tập tự luận “Phương trình bậc nhất” và bài nộp của Học viên “Phạm Minh Anh” chưa có điểm,"1. Mở mục “Chấm tự luận”
+2. Chọn bài nộp của “Phạm Minh Anh”
+3. Nhập Điểm = 11
+4. Sửa Điểm = 8",,"- Sau bước 3 hiển thị lỗi “Điểm phải từ 0 đến 10” và button bị vô hiệu hóa
+- Sau bước 4 lỗi biến mất và button “Lưu điểm số & Hoàn tất” được kích hoạt",,
+TC08.4.17,,Học viên xem trạng thái bài nộp “Đã chấm” sau khi được chấm,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có bài tập tự luận “Phương trình bậc nhất” và bài nộp của Học viên “Phạm Minh Anh” chưa có điểm; Giáo viên đã chấm bài nộp của “Phạm Minh Anh” với điểm 8.5,"1. Đăng nhập với tài khoản Học viên “Phạm Minh Anh”
+2. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+3. Quan sát dòng “Phương trình bậc nhất”",,- Cột Trạng thái hiển thị “Đã chấm”,,
+TC08.4.18,,Điểm trung bình và xếp loại cập nhật theo điểm thành phần,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Lớp “Toán 9A” có bài tập tự luận “Phương trình bậc nhất” và bài nộp của Học viên “Phạm Minh Anh” chưa có điểm; Sổ điểm của Học viên đã có các điểm thành phần khác,"1. Mở mục “Chấm tự luận”
+2. Chấm bài nộp của “Phạm Minh Anh” với Điểm = 8.5
+3. Mở sổ điểm của Học viên “Phạm Minh Anh”",- Điểm = 8.5,"- Sổ điểm có điểm thành phần “Làm bài: Phương trình bậc nhất” = 8.5 (thang 10)
+- Điểm trung bình và xếp loại được tính lại từ các điểm thành phần, gồm điểm vừa chấm",,Công thức điểm trung bình và xếp loại do chương Sổ điểm quy định
+TC08.4.19,,Trạng thái bài tập chuyển sang “Chờ chấm điểm” khi có bài nộp tự luận đầu tiên,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh”; Bài tập tự luận “Phương trình bậc nhất” ở trạng thái “Đang mở”, chưa có bài nộp","1. Click button “Làm bài” của “Phương trình bậc nhất”
+2. Nhập câu trả lời và nộp bài
+3. Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” và xem trạng thái bài tập trong danh sách",,- Sau bước 3 trạng thái bài tập là “Chờ chấm điểm”,,
+TC08.4.20,,Bài nộp trắc nghiệm không nằm trong danh sách chấm tự luận,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Có bài nộp của bài tập trắc nghiệm đã được Hệ thống tự chấm,"1. Mở mục “Chấm tự luận”
+2. Quan sát danh sách bài nộp chờ chấm",,- Không có bài nộp của bài tập trắc nghiệm trong danh sách,,
+TC08.4.21,,Hệ thống tự động chấm trắc nghiệm theo thang 10,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh”; Bài tập trắc nghiệm “Kiểm tra 15 phút” gồm 3 câu, “Đang mở”, chưa nộp","1. Click button “Làm bài”
+2. Trả lời đúng 2 câu và sai 1 câu
+3. Click button nộp bài và chọn “Nộp bài”",- Số câu đúng / tổng số câu = 2/3,- Điểm = 2/3 × 10 = 6.7 (làm tròn một chữ số thập phân),,
+TC08.4.22,,"Chấm trắc nghiệm ở các giá trị 0 điểm, điểm tối đa và điểm lẻ","Đăng nhập với tài khoản Học viên “Phạm Minh Anh”; Có 3 bài trắc nghiệm gồm 4 câu, “Đang mở”, chưa nộp","1. Làm và nộp bài thứ nhất, trả lời đúng 0 câu
+2. Làm và nộp bài thứ hai, trả lời đúng 4 câu
+3. Làm và nộp bài thứ ba, trả lời đúng 3 câu","- Số câu đúng / tổng số câu = 0/4, 4/4 và 3/4","- Bài thứ nhất 0.0 điểm
+- Bài thứ hai 10.0 điểm
+- Bài thứ ba 7.5 điểm",,
+TC08.4.23,,"Quản trị viên, Học viên và Phụ huynh không có mục “Chấm tự luận”","Có tài khoản Quản trị viên, Học viên “Phạm Minh Anh”, Phụ huynh “Trần Thị Hoa”; Có bài nộp tự luận chưa chấm","1. Lần lượt đăng nhập từng tài khoản
+2. Quan sát thanh điều hướng và trang Bài tập & Đề thi",,- Cả ba vai trò đều không thấy mục “Chấm tự luận”,,SRS 8.4 chỉ áp dụng cho Giáo viên
+TC08.4.24,,Không còn bài nộp chờ chấm,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Tất cả bài nộp tự luận của lớp Giáo viên phụ trách đã được chấm,"1. Mở mục “Chấm tự luận”
+2. Quan sát danh sách",,- Danh sách bài nộp chờ chấm trống,,SRS chưa nêu thông báo khi không còn bài nộp chờ chấm
+TC08.5,8.5. Giám sát cơ chế thi chống gian lận,,,,,,,
+TC08.5.1,,Bắt đầu làm bài có thời gian làm bài,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Click button “Làm bài” của “Kiểm tra 15 phút”
+3. Quan sát bảng điều khiển làm bài",,"- Mở màn hình làm bài
+- Đồng hồ đếm ngược hiển thị “15:00” (mm:ss) và bắt đầu giảm
+- Bộ đếm vi phạm hiển thị “0/3 lần”
+- Tiến độ trả lời là 0%",,
+TC08.5.2,,Bài tập có thời gian làm bài bằng 0 phút không có đồng hồ,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập “Bài tập tự luận tuần 3” (Toán 9A), thời gian làm bài 0 phút, trạng thái “Đang mở”, Học viên chưa nộp","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Click button “Làm bài” của “Bài tập tự luận tuần 3”
+3. Quan sát bảng điều khiển làm bài",,"- Không hiển thị đồng hồ đếm ngược
+- Bộ đếm vi phạm hiển thị “0/3 lần”",,
+TC08.5.3,,Đồng hồ đếm ngược giảm theo thời gian,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Click button “Làm bài” của “Kiểm tra 15 phút”
+3. Chờ 1 phút
+4. Quan sát đồng hồ",,- Đồng hồ giảm tương ứng thời gian đã trôi qua (khoảng “14:00”),,
+TC08.5.4,,Hết giờ làm bài thì tự động nộp,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 1 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 1 phút, “Đang mở”, Học viên chưa nộp","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Click button “Làm bài” của “Kiểm tra 1 phút”
+3. Trả lời 2 câu rồi chờ đồng hồ về 00:00",- Số câu đã trả lời = 2/4,"- Hệ thống tự động nộp bài làm hiện có và lưu bài nộp
+- Học viên không làm tiếp được
+- Bài nộp trắc nghiệm được chấm điểm tự động",,SRS chưa nêu cách tính điểm với câu chưa trả lời
+TC08.5.5,,Rời khỏi màn hình làm bài lần 1 bằng cách chuyển tab,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp; Học viên đang ở màn hình làm bài của “Kiểm tra 15 phút”","1. Chuyển sang tab khác của trình duyệt rồi quay lại tab làm bài
+2. Quan sát màn hình làm bài",,"- Hiển thị hộp thoại “CẢNH BÁO VI PHẠM!” với nội dung phát hiện rời khỏi màn hình thi (chuyển tab hoặc thu nhỏ trình duyệt) kèm số lần vi phạm
+- Bộ đếm vi phạm hiển thị “1/3 lần” và chuyển màu đỏ",,
+TC08.5.6,,Thu nhỏ trình duyệt được tính là vi phạm,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp; Học viên đang ở màn hình làm bài của “Kiểm tra 15 phút”","1. Thu nhỏ cửa sổ trình duyệt rồi mở lại
+2. Quan sát màn hình làm bài",,"- Hiển thị hộp thoại “CẢNH BÁO VI PHẠM!”
+- Bộ đếm vi phạm hiển thị “1/3 lần”",,
+TC08.5.7,,Tiếp tục làm bài sau cảnh báo,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp; Học viên đang ở màn hình làm bài của “Kiểm tra 15 phút”; Đã vi phạm 1 lần, hộp thoại cảnh báo đang mở","1. Click button “Tôi đã hiểu và tiếp tục làm bài”
+2. Tiếp tục trả lời các câu hỏi",,"- Đóng hộp thoại
+- Cho phép tiếp tục làm bài, các câu trả lời đã nhập được giữ nguyên
+- Bộ đếm vi phạm vẫn hiển thị “1/3 lần”",,
+TC08.5.8,,Rời khỏi màn hình làm bài lần 2,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp; Học viên đang ở màn hình làm bài của “Kiểm tra 15 phút”; Đã vi phạm 1 lần","1. Chuyển sang tab khác của trình duyệt rồi quay lại tab làm bài
+2. Quan sát màn hình làm bài
+3. Click button “Tôi đã hiểu và tiếp tục làm bài”",,"- Hiển thị hộp thoại “CẢNH BÁO VI PHẠM!”
+- Bộ đếm vi phạm hiển thị “2/3 lần”
+- Sau bước 3 đóng hộp thoại và cho phép tiếp tục làm bài",,
+TC08.5.9,,Rời khỏi màn hình làm bài lần 3 thì khóa phiên và tự động nộp,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp; Học viên đang ở màn hình làm bài của “Kiểm tra 15 phút”; Đã vi phạm 2 lần; Học viên đã trả lời 2 câu","1. Chuyển sang tab khác của trình duyệt rồi quay lại tab làm bài
+2. Quan sát màn hình làm bài",,"- Hệ thống khóa phiên làm bài
+- Tự động nộp bài làm hiện có và lưu bài nộp
+- Học viên không làm tiếp được",,
+TC08.5.10,,Không đếm vi phạm khi hộp thoại “Xác nhận nộp bài?” đang mở,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp; Học viên đang ở màn hình làm bài của “Kiểm tra 15 phút”","1. Click button nộp bài để mở hộp thoại “Xác nhận nộp bài?”
+2. Chuyển sang tab khác của trình duyệt rồi quay lại tab làm bài
+3. Quan sát bộ đếm vi phạm",,"- Bộ đếm vi phạm vẫn hiển thị “0/3 lần”
+- Không hiển thị hộp thoại “CẢNH BÁO VI PHẠM!”",,
+TC08.5.11,,Không đếm vi phạm khi hộp tải tệp đang mở,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập “Bài tập tự luận tuần 3” (Toán 9A), thời gian làm bài 0 phút, trạng thái “Đang mở”, Học viên chưa nộp; Học viên đang ở màn hình làm bài, bài cho phép đính kèm tệp","1. Click button chọn tệp để mở hộp tải tệp
+2. Chọn tệp hoặc đóng hộp tải tệp
+3. Quan sát bộ đếm vi phạm",,"- Bộ đếm vi phạm vẫn hiển thị “0/3 lần”
+- Không hiển thị hộp thoại “CẢNH BÁO VI PHẠM!”",,
+TC08.5.12,,Số lần vi phạm được giữ lại khi tải lại trang,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp; Học viên đang ở màn hình làm bài của “Kiểm tra 15 phút”; Đã vi phạm 2 lần","1. Tải lại trang (F5)
+2. Mở lại bài “Kiểm tra 15 phút”",,- Bộ đếm vi phạm hiển thị “2/3 lần”,,Số lần vi phạm lưu trên trình duyệt theo từng bài tập và từng Học viên
+TC08.5.13,,Mở lại bài đã vi phạm đủ 3 lần,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp; Trên trình duyệt đã lưu số lần vi phạm của bài này là 3 nhưng bài chưa có bài nộp","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Click button “Làm bài” của “Kiểm tra 15 phút”",,"- Hệ thống khóa phiên làm bài
+- Tự động nộp bài làm hiện có và lưu bài nộp",,Chuẩn bị dữ liệu bằng cách thiết lập bộ đếm vi phạm trong bộ nhớ trình duyệt
+TC08.5.14,,Bộ đếm vi phạm tách riêng theo bài tập và theo Học viên,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp; Có bài tập khác “Bài tập tự luận tuần 3”; Có thêm Học viên “Lê Hoàng Nam” cùng lớp dùng chung trình duyệt; Học viên đang ở màn hình làm bài của “Kiểm tra 15 phút”; Đã vi phạm 1 lần","1. Mở bài “Bài tập tự luận tuần 3” và quan sát bộ đếm
+2. Đăng xuất, đăng nhập bằng tài khoản “Lê Hoàng Nam”
+3. Mở bài “Kiểm tra 15 phút” và quan sát bộ đếm",,"- Bước 1: bộ đếm “0/3 lần”
+- Bước 3: bộ đếm “0/3 lần”",,
+TC08.5.15,,Tự động lưu nháp mỗi 60 giây,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp; Học viên đang ở màn hình làm bài của “Kiểm tra 15 phút”","1. Trả lời một số câu hỏi
+2. Chờ 60 giây và quan sát
+3. Chờ thêm 60 giây và quan sát",,"- Sau mỗi 60 giây hiển thị thông báo lưu nháp
+- Câu trả lời được lưu trên trình duyệt",,SRS chưa nêu nội dung thông báo lưu nháp
+TC08.5.16,,Khôi phục câu trả lời đã lưu nháp khi mở lại bài,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp; Học viên đang ở màn hình làm bài của “Kiểm tra 15 phút”; Đã trả lời 2 câu và đã có thông báo lưu nháp","1. Tải lại trang (F5)
+2. Mở lại bài “Kiểm tra 15 phút”",,- Các câu trả lời đã lưu nháp vẫn hiển thị,,SRS chưa nêu tường minh việc khôi phục bản nháp
+TC08.5.17,,Tiến độ trả lời cập nhật theo số câu đã trả lời,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp; Học viên đang ở màn hình làm bài của “Kiểm tra 15 phút”","1. Trả lời 2 câu trong 4 câu
+2. Trả lời nốt 2 câu còn lại",,"- Sau bước 1 tiến độ trả lời là 50%
+- Sau bước 2 tiến độ trả lời là 100%",,
+TC08.5.18,,Hiển thị hộp thoại xác nhận nộp bài,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp; Học viên đang ở màn hình làm bài của “Kiểm tra 15 phút”","1. Click button nộp bài
+2. Quan sát hộp thoại",,- Hiển thị hộp thoại “Xác nhận nộp bài?” có button “Tiếp tục làm” và “Nộp bài”,,
+TC08.5.19,,Chọn “Tiếp tục làm” thì không nộp bài,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp; Học viên đang ở màn hình làm bài của “Kiểm tra 15 phút”; Hộp thoại “Xác nhận nộp bài?” đang mở",1. Click button “Tiếp tục làm”,,"- Đóng hộp thoại
+- Bài chưa được nộp, Học viên tiếp tục làm bài, đồng hồ vẫn chạy",,
+TC08.5.20,,Nộp bài trắc nghiệm thủ công thành công,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp; Học viên đang ở màn hình làm bài của “Kiểm tra 15 phút”; Hộp thoại “Xác nhận nộp bài?” đang mở; Học viên trả lời đúng 3/4 câu","1. Click button “Nộp bài”
+2. Quan sát kết quả
+3. Kiểm tra dữ liệu lưu trên trình duyệt",,"- Hệ thống lưu bài nộp và chấm điểm tự động (3/4 × 10 = 7.5)
+- Hiển thị kết quả
+- Cập nhật tiến độ nộp bài
+- Bản nháp và bộ đếm vi phạm của bài được xóa khỏi trình duyệt",,SRS chưa nêu trạng thái bài nộp hiển thị sau khi tự chấm
+TC08.5.21,,Nộp bài tự luận thì chờ chấm,"Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Bài tập “Bài tập tự luận tuần 3” (Toán 9A), thời gian làm bài 0 phút, trạng thái “Đang mở”, Học viên chưa nộp; Học viên đang ở màn hình làm bài, đã nhập câu trả lời; Hộp thoại “Xác nhận nộp bài?” đang mở","1. Click button “Nộp bài”
+2. Quan sát kết quả",,"- Hệ thống lưu bài nộp
+- Bài nộp ở trạng thái “Chờ chấm điểm”, chưa có điểm",,
+TC08.5.22,,Học viên không làm lại được bài đã nộp,Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Học viên đã nộp “Kiểm tra 15 phút”,"1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Quan sát dòng “Kiểm tra 15 phút”",,- Học viên không thể bắt đầu làm lại bài đã nộp (không có button “Làm bài” hoặc không cho vào màn hình làm bài),,SRS chưa nêu cách thể hiện
+TC08.5.23,,Phụ huynh không có button “Làm bài”,"Đăng nhập với tài khoản Phụ huynh “Trần Thị Hoa” (liên kết với Học viên “Phạm Minh Anh”); Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp","1. Click mục “Bài tập & Đề thi” trên thanh điều hướng
+2. Quan sát dòng “Kiểm tra 15 phút”",,- Không hiển thị button “Làm bài”,,
+TC08.5.24,,Giáo viên và Quản trị viên không có button “Làm bài”,"Có tài khoản Giáo viên “Nguyễn Thị Lan” và Quản trị viên; Bài tập trắc nghiệm “Kiểm tra 15 phút” (Toán 9A) gồm 4 câu, thời gian làm bài 15 phút, trạng thái “Đang mở”, Học viên chưa nộp","1. Đăng nhập tài khoản Giáo viên, click mục “Bài tập & Đề thi” trên thanh điều hướng và quan sát dòng “Kiểm tra 15 phút”
+2. Đăng nhập tài khoản Quản trị viên, lặp lại bước 1",,- Cả hai vai trò không có button “Làm bài”,,Chức năng chỉ áp dụng cho Học viên

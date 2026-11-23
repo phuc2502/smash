@@ -1,0 +1,379 @@
+TC07 - QUẢN TRỊ TÀI LIỆU HỌC TẬP (LEARNING MATERIAL MANAGEMENT),,,,,,,,
+Mã testcase,Tính năng,Kịch bản kiểm thử,Điều kiện tiên quyết,Các bước thực hiện,Dữ liệu kiểm thử,Kết quả mong muốn,Trạng thái,Ghi chú
+TC07.1,7.1. Xem kho tài liệu học tập theo lớp,,,,,,,
+TC07.1.1,,Kiểm tra giao diện trang “Tài liệu học tập”,Đăng nhập với tài khoản Quản trị viên; Hệ thống có ít nhất một tài liệu,"1. Click mục “Tài liệu học tập” trên thanh điều hướng
+2. Quan sát giao diện trang hiển thị",,"- Hiển thị tiêu đề “Tài liệu học tập”
+- Hiển thị bộ lọc “Lớp học” với giá trị mặc định “Tất cả lớp học”
+- Hiển thị ô tìm kiếm với gợi ý “Tìm theo tên tài liệu...”
+- Hiển thị các button “Tải lên tài liệu” và “Tài liệu chờ duyệt”
+- Hiển thị danh sách tài liệu",,
+TC07.1.2,,Quản trị viên xem tài liệu của tất cả lớp học,"Đăng nhập với tài khoản Quản trị viên; Hệ thống có tài liệu thuộc “Toán 9A”, “Toán 9B” và “Toán 10A”","1. Click mục “Tài liệu học tập”
+2. Quan sát danh sách tài liệu và các giá trị của bộ lọc “Lớp học”",,"- Danh sách có tài liệu của cả 3 lớp học
+- Bộ lọc “Lớp học” liệt kê toàn bộ lớp học trong Hệ thống",,
+TC07.1.3,,Giáo viên chỉ xem tài liệu của lớp học được phân công,"Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Hệ thống có tài liệu thuộc “Toán 9A”, “Toán 9B” và “Toán 10A”","1. Click mục “Tài liệu học tập”
+2. Quan sát danh sách tài liệu và bộ lọc “Lớp học”",,"- Danh sách chỉ có tài liệu của “Toán 9A” và “Toán 9B”
+- Không hiển thị tài liệu của “Toán 10A”
+- Bộ lọc “Lớp học” chỉ liệt kê “Toán 9A” và “Toán 9B”",,
+TC07.1.4,,Học viên chỉ xem tài liệu của lớp học đang tham gia,Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Lớp “Toán 9A” và “Toán 10A” đều có tài liệu ở trạng thái “Đã duyệt” và “Hiện”,"1. Click mục “Tài liệu học tập”
+2. Quan sát danh sách tài liệu và bộ lọc “Lớp học”",,"- Danh sách chỉ có tài liệu của “Toán 9A”
+- Bộ lọc “Lớp học” chỉ liệt kê “Toán 9A”",,
+TC07.1.5,,"Học viên không thấy tài liệu chưa duyệt, bị từ chối hoặc đang ẩn",Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Lớp “Toán 9A” có 4 tài liệu: “Đã duyệt” và “Hiện”; “Chờ duyệt”; “Bị từ chối”; “Đã duyệt” và “Ẩn”,"1. Click mục “Tài liệu học tập”
+2. Quan sát danh sách tài liệu",,"- Danh sách chỉ hiển thị tài liệu “Đã duyệt” và “Hiện”
+- Không hiển thị 3 tài liệu còn lại",,
+TC07.1.6,,Phụ huynh chỉ xem tài liệu của lớp học mà học viên liên kết đang tham gia,"Đăng nhập với tài khoản Phụ huynh “Trần Thị Hoa” (đã liên kết với học viên “Phạm Minh Anh”, lớp “Toán 9A”); Lớp “Toán 9A” và “Toán 10A” đều có tài liệu ở trạng thái “Đã duyệt” và “Hiện”","1. Click mục “Tài liệu học tập”
+2. Quan sát danh sách tài liệu và bộ lọc “Lớp học”",,"- Danh sách chỉ có tài liệu của “Toán 9A”
+- Bộ lọc “Lớp học” chỉ liệt kê “Toán 9A”",,
+TC07.1.7,,Kiểm tra thông tin hiển thị của mỗi tài liệu,"Đăng nhập với tài khoản Quản trị viên; Tài liệu “Chuyên đề số nguyên” thuộc “Toán 9A”, do Giáo viên “Nguyễn Thị Lan” đăng, có 2 tệp đính kèm định dạng PDF","1. Click mục “Tài liệu học tập”
+2. Quan sát dòng của tài liệu “Chuyên đề số nguyên”",,"- Hiển thị tên tài liệu “Chuyên đề số nguyên”
+- Hiển thị lớp học “Toán 9A”
+- Hiển thị loại tệp (PDF)
+- Hiển thị người đăng “Nguyễn Thị Lan”
+- Hiển thị thời gian cập nhật gần nhất
+- Hiển thị số tệp đính kèm là 2",,
+TC07.1.8,,Kiểm tra sắp xếp danh sách theo thời gian cập nhật mới nhất lên trước,Đăng nhập với tài khoản Quản trị viên; Hệ thống có 3 tài liệu với thời gian cập nhật khác nhau,"1. Click mục “Tài liệu học tập”
+2. Quan sát thứ tự các tài liệu
+3. Chỉnh sửa tài liệu có thời gian cập nhật cũ nhất và lưu thay đổi
+4. Quan sát lại thứ tự các tài liệu",,"- Bước 2: Tài liệu có thời gian cập nhật mới nhất nằm đầu danh sách, các tài liệu còn lại xếp giảm dần theo thời gian
+- Bước 4: Tài liệu vừa chỉnh sửa chuyển lên đầu danh sách",,
+TC07.1.9,,Lọc tài liệu theo lớp học,Đăng nhập với tài khoản Quản trị viên; Hệ thống có tài liệu thuộc nhiều lớp học,"1. Click mục “Tài liệu học tập”
+2. Chọn lớp học “Toán 9A” tại bộ lọc “Lớp học”",- Lớp học = “Toán 9A”,- Danh sách chỉ hiển thị tài liệu của lớp “Toán 9A”,,
+TC07.1.10,,Chọn “Tất cả lớp học” tại bộ lọc,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Đang lọc theo lớp “Toán 9A”,1. Chọn giá trị “Tất cả lớp học” tại bộ lọc “Lớp học”,- Lớp học = “Tất cả lớp học”,- Danh sách hiển thị tài liệu của toàn bộ lớp học thuộc phạm vi quyền của Giáo viên (“Toán 9A” và “Toán 9B”),,
+TC07.1.11,,Tìm kiếm tài liệu theo tên,Đăng nhập với tài khoản Quản trị viên; Hệ thống có tài liệu “Chuyên đề số nguyên”,"1. Click mục “Tài liệu học tập”
+2. Nhập từ khóa vào ô tìm kiếm",- Từ khóa = “số nguyên”,- Danh sách chỉ hiển thị các tài liệu có tên chứa từ khóa “số nguyên”,,
+TC07.1.12,,Kết hợp bộ lọc lớp học và tìm kiếm theo tên,Đăng nhập với tài khoản Quản trị viên; “Toán 9A” có tài liệu “Đề cương số nguyên”; “Toán 9B” có tài liệu “Bài tập số nguyên”,"1. Chọn lớp học “Toán 9A” tại bộ lọc “Lớp học”
+2. Nhập từ khóa vào ô tìm kiếm","- Lớp học = “Toán 9A”
+- Từ khóa = “số nguyên”","- Danh sách chỉ hiển thị tài liệu “Đề cương số nguyên” của lớp “Toán 9A”
+- Không hiển thị “Bài tập số nguyên” của lớp “Toán 9B”",,
+TC07.1.13,,Xóa từ khóa tại ô tìm kiếm,Đăng nhập với tài khoản Quản trị viên; Đang lọc lớp “Toán 9A” và có từ khóa tìm kiếm,1. Xóa toàn bộ nội dung trong ô tìm kiếm,- Từ khóa = “”,- Hệ thống hiển thị lại danh sách tài liệu theo bộ lọc lớp “Toán 9A” hiện tại,,
+TC07.1.14,,Tìm kiếm với từ khóa không có tài liệu phù hợp,Đăng nhập với tài khoản Quản trị viên; Hệ thống có tài liệu,1. Nhập từ khóa không trùng với tên tài liệu nào vào ô tìm kiếm,- Từ khóa = “XYZ_KHONG_TON_TAI_9999”,"- Danh sách không hiển thị tài liệu nào
+- Hiển thị thông báo “Không tìm thấy tài liệu phù hợp”
+- Hệ thống không thay đổi dữ liệu",,
+TC07.1.15,,Lớp học được chọn chưa có tài liệu,Đăng nhập với tài khoản Quản trị viên; Lớp “Toán 10B” chưa có tài liệu nào,1. Chọn lớp học “Toán 10B” tại bộ lọc “Lớp học”,- Lớp học = “Toán 10B”,"- Hiển thị thông báo “Chưa có tài liệu học tập” tại khu vực danh sách
+- Hệ thống không thay đổi dữ liệu",,
+TC07.1.16,,Người dùng không có lớp học nào thuộc phạm vi quyền,Đăng nhập với tài khoản Học viên chưa tham gia lớp học nào,1. Click mục “Tài liệu học tập”,,"- Hiển thị thông báo “Chưa có tài liệu học tập” tại khu vực danh sách
+- Hệ thống không thay đổi dữ liệu",,
+TC07.1.17,,Hệ thống không tải được dữ liệu kho tài liệu,Đăng nhập với tài khoản Quản trị viên; Giả lập lỗi tải dữ liệu (ví dụ: ngắt kết nối với máy chủ),1. Click mục “Tài liệu học tập”,,"- Hiển thị thông báo lỗi “Không thể tải kho tài liệu. Vui lòng thử lại sau.”
+- Hệ thống không thay đổi dữ liệu",,
+TC07.1.18,,"Thao tác xem, lọc và tìm kiếm không làm thay đổi dữ liệu",Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Lớp “Toán 9A” có tài liệu “Đã duyệt” và “Hiện”,"1. Click mục “Tài liệu học tập”
+2. Chọn lớp học “Toán 9A” tại bộ lọc
+3. Nhập từ khóa vào ô tìm kiếm
+4. Đối chiếu thời gian cập nhật và số tệp đính kèm của tài liệu trước và sau các thao tác","- Lớp học = “Toán 9A”
+- Từ khóa = “số nguyên”","- Thời gian cập nhật, số tệp đính kèm và trạng thái của tài liệu không thay đổi
+- Trang không có button “Tải lên tài liệu” và “Tài liệu chờ duyệt”",,
+TC07.2,7.2. Tải lên tài liệu học tập mới,,,,,,,
+TC07.2.1,,Mở cửa sổ “Tải lên tài liệu mới”,Đăng nhập với tài khoản Quản trị viên,"1. Tại trang “Tài liệu học tập”, click button “Tải lên tài liệu”
+2. Quan sát cửa sổ hiển thị",,"- Mở cửa sổ “Tải lên tài liệu mới” với biểu mẫu trống
+- Ô Tên tài liệu và Mô tả để trống; bộ chọn Lớp học hiển thị gợi ý “Chọn lớp học”
+- Khu vực chọn tệp hiển thị “Chọn tệp từ thiết bị”; danh sách tệp đã chọn rỗng
+- Hiển thị button đóng “X”, button “Hủy” và button “Tải lên”",,SRS 7.2.4 ghi button mở cửa sổ “Đăng tài liệu mới” trong khi tiêu đề cửa sổ là “Tải lên tài liệu mới”; cần thống nhất tên
+TC07.2.2,,Giáo viên tải lên tài liệu thành công với một tệp,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Cửa sổ “Tải lên tài liệu mới” đang mở,"1. Nhập Tên tài liệu
+2. Chọn Lớp học
+3. Nhập Mô tả
+4. Chọn một tệp từ thiết bị
+5. Click button “Tải lên”","- Tên tài liệu = “Chuyên đề số nguyên”
+- Lớp học = “Toán 9A”
+- Mô tả = “Lý thuyết và bài tập chuyên đề số nguyên”
+- Tệp = “chuyen_de_so_nguyen.pdf” (định dạng và dung lượng hợp lệ)","- Đóng cửa sổ và hiển thị thông báo nổi “Tải lên tài liệu thành công!”
+- Tài liệu mới xuất hiện đầu danh sách, thuộc lớp “Toán 9A”
+- Trạng thái tài liệu là “Chờ duyệt”
+- Hệ thống ghi nhận người đăng “Nguyễn Thị Lan” và thời gian đăng
+- Học viên và Phụ huynh của lớp “Toán 9A” chưa nhìn thấy tài liệu",,
+TC07.2.3,,Quản trị viên tải lên tài liệu thành công,Đăng nhập với tài khoản Quản trị viên; Cửa sổ “Tải lên tài liệu mới” đang mở,"1. Nhập Tên tài liệu
+2. Chọn Lớp học
+3. Chọn một tệp từ thiết bị
+4. Click button “Tải lên”","- Tên tài liệu = “Đề cương ôn tập học kỳ I”
+- Lớp học = “Toán 10A”
+- Tệp = “de_cuong_hk1.pdf” (hợp lệ)","- Đóng cửa sổ và hiển thị thông báo nổi “Tải lên tài liệu thành công!”
+- Tài liệu mới xuất hiện đầu danh sách
+- Trạng thái tài liệu là “Đã duyệt”
+- Hệ thống ghi nhận người đăng là Quản trị viên và thời gian đăng",,
+TC07.2.4,,Tải lên tài liệu có nhiều tệp đính kèm,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Cửa sổ “Tải lên tài liệu mới” đang mở,"1. Nhập Tên tài liệu và chọn Lớp học
+2. Chọn đồng thời 2 tệp từ thiết bị
+3. Click button “Tải lên”","- Tên tài liệu = “Bộ đề kiểm tra 15 phút”
+- Lớp học = “Toán 9B”
+- Tệp 1 = “de_1.pdf”
+- Tệp 2 = “de_2.docx”","- Tải lên thành công, hiển thị thông báo “Tải lên tài liệu thành công!”
+- Tài liệu mới hiển thị số tệp đính kèm là 2",,
+TC07.2.5,,Tải lên tài liệu khi không nhập Mô tả,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Cửa sổ “Tải lên tài liệu mới” đang mở,"1. Nhập Tên tài liệu, chọn Lớp học và chọn một tệp hợp lệ
+2. Để trống ô Mô tả
+3. Click button “Tải lên”","- Tên tài liệu = “Phiếu bài tập tuần 3”
+- Lớp học = “Toán 9A”
+- Mô tả = “”
+- Tệp = “phieu_bt_tuan3.pdf”","- Tải lên thành công vì Mô tả là trường không bắt buộc
+- Hiển thị thông báo nổi “Tải lên tài liệu thành công!”",,
+TC07.2.6,,Danh sách tệp đã chọn hiển thị tên và dung lượng,Đăng nhập với tài khoản Quản trị viên; Cửa sổ “Tải lên tài liệu mới” đang mở,"1. Chọn 2 tệp từ thiết bị
+2. Quan sát danh sách tệp đã chọn","- Tệp 1 = “de_1.pdf”
+- Tệp 2 = “de_2.docx”","- Danh sách hiển thị tên và dung lượng của từng tệp đã chọn
+- Mỗi tệp có button gỡ tệp",,
+TC07.2.7,,Gỡ một tệp đã chọn trước khi tải lên,"Đăng nhập với tài khoản Quản trị viên; Cửa sổ “Tải lên tài liệu mới” đang mở, đã chọn 2 tệp và nhập đủ thông tin hợp lệ","1. Click button gỡ tệp tại tệp thứ hai
+2. Quan sát danh sách tệp đã chọn
+3. Click button “Tải lên”","- Tệp 1 = “de_1.pdf”
+- Tệp 2 = “de_2.docx”","- Tệp thứ hai bị loại khỏi danh sách tệp đã chọn
+- Tải lên thành công, tài liệu mới chỉ có 1 tệp đính kèm",,
+TC07.2.8,,Để trống Tên tài liệu,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Cửa sổ “Tải lên tài liệu mới” đang mở,"1. Để trống ô Tên tài liệu
+2. Chọn Lớp học và một tệp hợp lệ
+3. Click button “Tải lên”","- Tên tài liệu = “”
+- Lớp học = “Toán 9A”
+- Tệp = “chuyen_de.pdf”","- Giữ nguyên cửa sổ
+- Hiển thị thông báo lỗi “Vui lòng nhập tên tài liệu.”
+- Hệ thống không lưu dữ liệu",,
+TC07.2.9,,Tên tài liệu chỉ chứa khoảng trắng,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Cửa sổ “Tải lên tài liệu mới” đang mở,"1. Nhập chuỗi khoảng trắng vào ô Tên tài liệu
+2. Chọn Lớp học và một tệp hợp lệ
+3. Click button “Tải lên”","- Tên tài liệu = “     ” (chỉ khoảng trắng)
+- Lớp học = “Toán 9A”
+- Tệp = “chuyen_de.pdf”","- Giữ nguyên cửa sổ
+- Hiển thị thông báo lỗi “Vui lòng nhập tên tài liệu.”
+- Hệ thống không lưu dữ liệu",,
+TC07.2.10,,Chưa chọn Lớp học,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Cửa sổ “Tải lên tài liệu mới” đang mở,"1. Nhập Tên tài liệu
+2. Không chọn Lớp học
+3. Chọn một tệp hợp lệ
+4. Click button “Tải lên”","- Tên tài liệu = “Chuyên đề số nguyên”
+- Lớp học = chưa chọn
+- Tệp = “chuyen_de.pdf”","- Giữ nguyên cửa sổ
+- Hiển thị thông báo lỗi “Vui lòng chọn lớp học.”
+- Hệ thống không lưu dữ liệu",,
+TC07.2.11,,Chưa chọn tệp đính kèm,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Cửa sổ “Tải lên tài liệu mới” đang mở,"1. Nhập Tên tài liệu và chọn Lớp học
+2. Không chọn tệp
+3. Click button “Tải lên”","- Tên tài liệu = “Chuyên đề số nguyên”
+- Lớp học = “Toán 9A”
+- Tệp = chưa chọn","- Giữ nguyên cửa sổ
+- Hiển thị thông báo lỗi “Vui lòng chọn ít nhất một tệp đính kèm.”
+- Hệ thống không lưu dữ liệu",,
+TC07.2.12,,Tải lên tệp sai định dạng,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Cửa sổ “Tải lên tài liệu mới” đang mở,"1. Nhập Tên tài liệu và chọn Lớp học
+2. Chọn một tệp có định dạng không được hỗ trợ
+3. Click button “Tải lên”","- Tên tài liệu = “Phần mềm hỗ trợ”
+- Lớp học = “Toán 9A”
+- Tệp = “phan_mem.exe”","- Giữ nguyên cửa sổ
+- Hiển thị thông báo lỗi “Tệp không đúng định dạng hoặc vượt quá dung lượng cho phép.”
+- Hệ thống không lưu dữ liệu",,Danh sách định dạng hợp lệ và dung lượng tối đa theo cấu hình của Hệ thống; SRS chưa nêu giá trị cụ thể
+TC07.2.13,,Tải lên tệp vượt quá dung lượng cho phép,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Cửa sổ “Tải lên tài liệu mới” đang mở,"1. Nhập Tên tài liệu và chọn Lớp học
+2. Chọn một tệp hợp lệ về định dạng nhưng có dung lượng lớn hơn giới hạn cấu hình
+3. Click button “Tải lên”","- Tên tài liệu = “Bài giảng video”
+- Lớp học = “Toán 9A”
+- Tệp = tệp PDF có dung lượng lớn hơn giới hạn cho phép","- Giữ nguyên cửa sổ
+- Hiển thị thông báo lỗi “Tệp không đúng định dạng hoặc vượt quá dung lượng cho phép.”
+- Hệ thống không lưu dữ liệu",,Danh sách định dạng hợp lệ và dung lượng tối đa theo cấu hình của Hệ thống; SRS chưa nêu giá trị cụ thể
+TC07.2.14,,Hệ thống không lưu được tài liệu,"Đăng nhập với tài khoản Quản trị viên; Cửa sổ “Tải lên tài liệu mới” đang mở, đã nhập đủ thông tin hợp lệ; Giả lập lỗi lưu dữ liệu",1. Click button “Tải lên”,"- Tên tài liệu = “Chuyên đề số nguyên”
+- Lớp học = “Toán 9A”
+- Tệp = “chuyen_de.pdf”","- Hiển thị thông báo lỗi “Không thể tải lên tài liệu. Vui lòng thử lại sau.”
+- Hệ thống không lưu dữ liệu",,
+TC07.2.15,,Bộ chọn Lớp học của Giáo viên chỉ liệt kê lớp được phân công,"Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Hệ thống có các lớp “Toán 9A”, “Toán 9B”, “Toán 10A”","1. Click button “Tải lên tài liệu”
+2. Mở bộ chọn Lớp học",,"- Bộ chọn chỉ liệt kê “Toán 9A” và “Toán 9B”
+- Không liệt kê “Toán 10A”",,
+TC07.2.16,,Bộ chọn Lớp học của Quản trị viên liệt kê tất cả lớp,"Đăng nhập với tài khoản Quản trị viên; Hệ thống có các lớp “Toán 9A”, “Toán 9B”, “Toán 10A”","1. Click button “Tải lên tài liệu”
+2. Mở bộ chọn Lớp học",,- Bộ chọn liệt kê toàn bộ lớp học trong Hệ thống,,
+TC07.2.17,,Đóng cửa sổ bằng icon “X”,"Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Cửa sổ “Tải lên tài liệu mới” đang mở, đã nhập thông tin và chọn tệp","1. Click icon “X”
+2. Quan sát danh sách tài liệu","- Tên tài liệu = “Chuyên đề số nguyên”
+- Lớp học = “Toán 9A”
+- Tệp = “chuyen_de.pdf”","- Cửa sổ đóng lại
+- Hệ thống không lưu bất kỳ dữ liệu nào, danh sách tài liệu không có tài liệu mới",,
+TC07.2.18,,Hủy thao tác bằng button “Hủy”,"Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Cửa sổ “Tải lên tài liệu mới” đang mở, đã nhập thông tin và chọn tệp","1. Click button “Hủy”
+2. Quan sát danh sách tài liệu","- Tên tài liệu = “Chuyên đề số nguyên”
+- Lớp học = “Toán 9A”
+- Tệp = “chuyen_de.pdf”","- Cửa sổ đóng lại
+- Hệ thống không lưu bất kỳ dữ liệu nào, danh sách tài liệu không có tài liệu mới",,
+TC07.2.19,,Học viên và Phụ huynh không có chức năng tải lên,Đăng nhập lần lượt với tài khoản Học viên và Phụ huynh,"1. Click mục “Tài liệu học tập”
+2. Quan sát khu vực header của trang",,- Không hiển thị button “Tải lên tài liệu” với Học viên và Phụ huynh,,
+TC07.3,7.3. Kiểm duyệt tài liệu học tập,,,,,,,
+TC07.3.1,,Mở danh sách tài liệu “Chờ duyệt”,Đăng nhập với tài khoản Quản trị viên; Hệ thống có tài liệu ở trạng thái “Chờ duyệt” do Giáo viên tải lên,"1. Tại trang “Tài liệu học tập”, click button “Tài liệu chờ duyệt”
+2. Quan sát danh sách hiển thị",,"- Hiển thị danh sách tài liệu “Chờ duyệt”
+- Mỗi tài liệu hiển thị tên tài liệu, lớp học, người đăng và thời gian đăng",,
+TC07.3.2,,Chỉ Quản trị viên có button “Tài liệu chờ duyệt”,"Đăng nhập lần lượt với tài khoản Giáo viên, Học viên và Phụ huynh","1. Click mục “Tài liệu học tập”
+2. Quan sát khu vực header của trang",,"- Không hiển thị button “Tài liệu chờ duyệt” với Giáo viên, Học viên và Phụ huynh",,
+TC07.3.3,,Xem chi tiết tài liệu chờ duyệt,Đăng nhập với tài khoản Quản trị viên; Tài liệu “Chuyên đề số nguyên” ở trạng thái “Chờ duyệt”,"1. Click button “Tài liệu chờ duyệt”
+2. Click vào tên tài liệu “Chuyên đề số nguyên”",,"- Hiển thị màn hình chi tiết gồm tên, mô tả, lớp học, người đăng và danh sách tệp đính kèm
+- Quản trị viên xem được các tệp đính kèm
+- Hiển thị button “Phê duyệt” và “Từ chối”",,
+TC07.3.4,,Phê duyệt tài liệu thành công,Đăng nhập với tài khoản Quản trị viên; Đang xem chi tiết tài liệu “Chuyên đề số nguyên” (“Chờ duyệt”) do Giáo viên “Nguyễn Thị Lan” đăng,"1. Click button “Phê duyệt”
+2. Quan sát danh sách tài liệu chờ duyệt",,"- Hiển thị thông báo nổi “Đã phê duyệt tài liệu thành công!”
+- Trạng thái tài liệu chuyển sang “Đã duyệt”
+- Tài liệu bị loại khỏi danh sách chờ duyệt
+- Hệ thống ghi nhận người duyệt và thời gian duyệt
+- Giáo viên “Nguyễn Thị Lan” nhận được thông báo kết quả kiểm duyệt",,
+TC07.3.5,,Học viên nhìn thấy tài liệu sau khi được phê duyệt,Tài liệu “Chuyên đề số nguyên” của “Toán 9A” đã được Quản trị viên phê duyệt và đang ở trạng thái “Hiện”,"1. Đăng nhập với tài khoản Học viên “Phạm Minh Anh”
+2. Click mục “Tài liệu học tập”",,- Danh sách hiển thị tài liệu “Chuyên đề số nguyên”,,
+TC07.3.6,,Từ chối tài liệu thành công,Đăng nhập với tài khoản Quản trị viên; Đang xem chi tiết tài liệu “Chuyên đề số nguyên” (“Chờ duyệt”) do Giáo viên “Nguyễn Thị Lan” đăng,"1. Click button “Từ chối”
+2. Nhập lý do từ chối
+3. Click button “Xác nhận từ chối”",- Lý do từ chối = “Nội dung chưa đúng chương trình”,"- Hiển thị thông báo nổi “Đã từ chối tài liệu.”
+- Trạng thái tài liệu chuyển sang “Bị từ chối”
+- Hệ thống lưu lý do từ chối, người duyệt và thời gian duyệt
+- Tài liệu bị loại khỏi danh sách chờ duyệt
+- Giáo viên “Nguyễn Thị Lan” nhận được thông báo kèm lý do từ chối",,
+TC07.3.7,,Tài liệu bị từ chối không hiển thị với Học viên và Phụ huynh,Tài liệu “Chuyên đề số nguyên” của “Toán 9A” đang ở trạng thái “Bị từ chối”,"1. Đăng nhập với tài khoản Học viên “Phạm Minh Anh”, click mục “Tài liệu học tập”
+2. Đăng nhập với tài khoản Phụ huynh “Trần Thị Hoa”, click mục “Tài liệu học tập”",,- Học viên và Phụ huynh không nhìn thấy tài liệu “Chuyên đề số nguyên”,,
+TC07.3.8,,Từ chối tài liệu khi để trống lý do,Đăng nhập với tài khoản Quản trị viên; Hộp nhập lý do từ chối đang hiển thị,"1. Để trống ô Lý do từ chối
+2. Click button “Xác nhận từ chối”",- Lý do từ chối = “”,"- Giữ nguyên hộp nhập lý do
+- Hiển thị thông báo lỗi “Vui lòng nhập lý do từ chối.”
+- Hệ thống không lưu quyết định từ chối, tài liệu vẫn ở trạng thái “Chờ duyệt”",,
+TC07.3.9,,Đóng màn hình chi tiết mà không xử lý,Đăng nhập với tài khoản Quản trị viên; Đang xem chi tiết tài liệu “Chờ duyệt”,"1. Đóng màn hình chi tiết tài liệu
+2. Click button “Tài liệu chờ duyệt” và quan sát danh sách",,- Tài liệu vẫn ở trạng thái “Chờ duyệt” và còn trong danh sách chờ duyệt,,
+TC07.3.10,,Không có tài liệu nào ở trạng thái “Chờ duyệt”,Đăng nhập với tài khoản Quản trị viên; Hệ thống không có tài liệu “Chờ duyệt”,1. Click button “Tài liệu chờ duyệt”,,"- Hiển thị thông báo “Không có tài liệu chờ duyệt.” tại khu vực danh sách
+- Hệ thống không thay đổi dữ liệu",,
+TC07.3.11,,Phê duyệt tài liệu đã được xử lý hoặc không còn tồn tại,Hai Quản trị viên cùng mở chi tiết tài liệu “Chờ duyệt”; Quản trị viên thứ nhất đã phê duyệt tài liệu,1. Quản trị viên thứ hai click button “Phê duyệt”,,"- Hiển thị thông báo lỗi “Tài liệu này đã được xử lý hoặc không còn tồn tại.”
+- Hệ thống làm mới danh sách
+- Hệ thống không thay đổi dữ liệu",,
+TC07.3.12,,Từ chối tài liệu đã được xử lý hoặc không còn tồn tại,Hai Quản trị viên cùng mở chi tiết tài liệu “Chờ duyệt”; Quản trị viên thứ nhất đã phê duyệt tài liệu,"1. Quản trị viên thứ hai click button “Từ chối”
+2. Nhập lý do từ chối
+3. Click button “Xác nhận từ chối”",- Lý do từ chối = “Nội dung chưa phù hợp”,"- Hiển thị thông báo lỗi “Tài liệu này đã được xử lý hoặc không còn tồn tại.”
+- Hệ thống làm mới danh sách
+- Hệ thống không thay đổi dữ liệu",,
+TC07.3.13,,Giáo viên chỉnh sửa tài liệu bị từ chối để gửi duyệt lại,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Tài liệu “Chuyên đề số nguyên” do Giáo viên đăng đang ở trạng thái “Bị từ chối”,"1. Click biểu tượng “Chỉnh sửa” tại dòng tài liệu
+2. Chỉnh sửa Mô tả
+3. Click button “Lưu thay đổi”
+4. Đăng nhập Quản trị viên, click button “Tài liệu chờ duyệt”",- Mô tả mới = “Đã bổ sung đáp án”,"- Hiển thị thông báo nổi “Cập nhật tài liệu thành công!”
+- Trạng thái tài liệu trở về “Chờ duyệt”
+- Tài liệu xuất hiện lại trong danh sách chờ duyệt của Quản trị viên",,
+TC07.4,7.4. Ẩn / Hiện tài liệu công khai,,,,,,,
+TC07.4.1,,Quản trị viên ẩn tài liệu đang hiển thị,Đăng nhập với tài khoản Quản trị viên; Tài liệu “Chuyên đề số nguyên” ở trạng thái “Đã duyệt” và “Hiện”,1. Click biểu tượng “Ẩn” tại dòng tài liệu,,"- Hiển thị thông báo nổi “Đã ẩn tài liệu.”
+- Tài liệu chuyển sang trạng thái “Ẩn”
+- Dòng tài liệu hiển thị nhãn “Đang ẩn”
+- Biểu tượng tại dòng tài liệu chuyển thành “Hiện”",,
+TC07.4.2,,Học viên không nhìn thấy và không tải được tài liệu đã ẩn,Tài liệu “Chuyên đề số nguyên” của “Toán 9A” đã được ẩn,"1. Đăng nhập với tài khoản Học viên “Phạm Minh Anh”
+2. Click mục “Tài liệu học tập”
+3. Quan sát danh sách tài liệu",,"- Danh sách không hiển thị tài liệu “Chuyên đề số nguyên”
+- Học viên không tải được tệp của tài liệu này",,
+TC07.4.3,,Phụ huynh không nhìn thấy tài liệu đã ẩn,Tài liệu “Chuyên đề số nguyên” của “Toán 9A” đã được ẩn,"1. Đăng nhập với tài khoản Phụ huynh “Trần Thị Hoa”
+2. Click mục “Tài liệu học tập”
+3. Quan sát danh sách tài liệu",,- Danh sách không hiển thị tài liệu “Chuyên đề số nguyên”,,
+TC07.4.4,,Quản trị viên và Giáo viên vẫn thấy tài liệu đã ẩn kèm nhãn “Đang ẩn”,"Tài liệu “Chuyên đề số nguyên” do Giáo viên “Nguyễn Thị Lan” đăng, thuộc “Toán 9A”, đã được ẩn","1. Đăng nhập với tài khoản Quản trị viên, click mục “Tài liệu học tập”
+2. Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan”, click mục “Tài liệu học tập”",,"- Cả Quản trị viên và Giáo viên đều thấy tài liệu “Chuyên đề số nguyên”
+- Dòng tài liệu hiển thị nhãn “Đang ẩn”",,
+TC07.4.5,,Hiện tài liệu đã duyệt đang bị ẩn,Đăng nhập với tài khoản Quản trị viên; Tài liệu “Chuyên đề số nguyên” ở trạng thái “Đã duyệt” và “Ẩn”,"1. Click biểu tượng “Hiện” tại dòng tài liệu
+2. Đăng nhập với tài khoản Học viên “Phạm Minh Anh” và click mục “Tài liệu học tập”",,"- Hiển thị thông báo nổi “Đã hiện tài liệu.”
+- Tài liệu chuyển sang trạng thái “Hiện” và nhãn “Đang ẩn” được gỡ
+- Học viên của lớp “Toán 9A” nhìn thấy tài liệu",,
+TC07.4.6,,Giáo viên ẩn tài liệu do mình đăng thuộc lớp phụ trách,"Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Tài liệu “Chuyên đề số nguyên” do Giáo viên đăng, thuộc “Toán 9A”, trạng thái “Đã duyệt” và “Hiện”",1. Click biểu tượng “Ẩn” tại dòng tài liệu,,"- Hiển thị thông báo nổi “Đã ẩn tài liệu.”
+- Tài liệu chuyển sang trạng thái “Ẩn” và hiển thị nhãn “Đang ẩn”",,
+TC07.4.7,,Giáo viên hiện tài liệu do mình đăng thuộc lớp phụ trách,"Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Tài liệu “Chuyên đề số nguyên” do Giáo viên đăng, thuộc “Toán 9A”, trạng thái “Đã duyệt” và “Ẩn”",1. Click biểu tượng “Hiện” tại dòng tài liệu,,"- Hiển thị thông báo nổi “Đã hiện tài liệu.”
+- Tài liệu chuyển sang trạng thái “Hiện” và nhãn “Đang ẩn” được gỡ",,
+TC07.4.8,,Giáo viên ẩn tài liệu không do mình đăng,"Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Tài liệu “Đề cương ôn tập” thuộc “Toán 9A” do Quản trị viên đăng, trạng thái “Đã duyệt” và “Hiện”",1. Click biểu tượng “Ẩn” tại dòng tài liệu “Đề cương ôn tập”,,"- Hiển thị thông báo lỗi “Bạn không có quyền thay đổi tài liệu này.”
+- Hệ thống không thay đổi dữ liệu, tài liệu vẫn ở trạng thái “Hiện”",,
+TC07.4.9,,Hiện tài liệu đang ở trạng thái “Chờ duyệt”,Đăng nhập với tài khoản Quản trị viên; Tài liệu “Chuyên đề số nguyên” ở trạng thái “Chờ duyệt” và “Ẩn”,1. Click biểu tượng “Hiện” tại dòng tài liệu,,"- Hiển thị thông báo lỗi “Chỉ tài liệu đã được duyệt mới được hiển thị công khai.”
+- Hệ thống không thay đổi dữ liệu, tài liệu vẫn ở trạng thái “Ẩn”",,
+TC07.4.10,,Hiện tài liệu đang ở trạng thái “Bị từ chối”,Đăng nhập với tài khoản Quản trị viên; Tài liệu “Chuyên đề số nguyên” ở trạng thái “Bị từ chối” và “Ẩn”,1. Click biểu tượng “Hiện” tại dòng tài liệu,,"- Hiển thị thông báo lỗi “Chỉ tài liệu đã được duyệt mới được hiển thị công khai.”
+- Hệ thống không thay đổi dữ liệu, tài liệu vẫn ở trạng thái “Ẩn”",,
+TC07.4.11,,Hệ thống không lưu được thay đổi trạng thái hiển thị,Đăng nhập với tài khoản Quản trị viên; Tài liệu “Chuyên đề số nguyên” ở trạng thái “Đã duyệt” và “Hiện”; Giả lập lỗi lưu dữ liệu,1. Click biểu tượng “Ẩn” tại dòng tài liệu,,"- Hiển thị thông báo lỗi “Không thể thay đổi trạng thái hiển thị. Vui lòng thử lại sau.”
+- Hệ thống không thay đổi dữ liệu, tài liệu vẫn ở trạng thái “Hiện”",,
+TC07.4.12,,Hệ thống ghi nhận người thay đổi và thời gian thay đổi,Đăng nhập với tài khoản Quản trị viên; Tài liệu “Chuyên đề số nguyên” ở trạng thái “Đã duyệt” và “Hiện”,"1. Click biểu tượng “Ẩn” tại dòng tài liệu
+2. Kiểm tra dữ liệu ghi nhận của tài liệu",,- Hệ thống ghi nhận người thay đổi là Quản trị viên đang đăng nhập và thời gian thay đổi,,SRS chưa nêu nơi hiển thị dữ liệu ghi nhận; kiểm tra tại nhật ký hoạt động hoặc cơ sở dữ liệu
+TC07.4.13,,Học viên và Phụ huynh không có chức năng ẩn / hiện,Đăng nhập lần lượt với tài khoản Học viên và Phụ huynh,"1. Click mục “Tài liệu học tập”
+2. Quan sát dòng tài liệu",,- Không hiển thị biểu tượng “Ẩn” và “Hiện” tại các dòng tài liệu,,
+TC07.5,7.5. Chỉnh sửa thông tin tài liệu,,,,,,,
+TC07.5.1,,Mở cửa sổ “Chỉnh sửa tài liệu” kèm dữ liệu hiện tại,"Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Tài liệu “Chuyên đề số nguyên” do Giáo viên đăng, thuộc “Toán 9A”, có 1 tệp đính kèm","1. Click biểu tượng “Chỉnh sửa” tại dòng tài liệu
+2. Quan sát cửa sổ hiển thị",,"- Mở cửa sổ “Chỉnh sửa tài liệu”
+- Tên tài liệu, Mô tả, Lớp học được điền sẵn theo dữ liệu hiện tại
+- Danh sách tệp hiện có hiển thị tên và dung lượng từng tệp
+- Hiển thị button “Hủy”, “Lưu thay đổi” và icon “X”",,
+TC07.5.2,,Quản trị viên chỉnh sửa tên tài liệu thành công và giữ nguyên trạng thái,Đăng nhập với tài khoản Quản trị viên; Tài liệu “Chuyên đề số nguyên” ở trạng thái “Đã duyệt”; Cửa sổ “Chỉnh sửa tài liệu” đang mở,"1. Sửa Tên tài liệu
+2. Click button “Lưu thay đổi”",- Tên tài liệu mới = “Chuyên đề số nguyên (bản cập nhật)”,"- Đóng cửa sổ và hiển thị thông báo nổi “Cập nhật tài liệu thành công!”
+- Dòng tài liệu hiển thị tên mới
+- Thời gian cập nhật và người chỉnh sửa được ghi nhận
+- Trạng thái tài liệu vẫn là “Đã duyệt”",,
+TC07.5.3,,Quản trị viên chuyển tài liệu sang lớp học khác,Đăng nhập với tài khoản Quản trị viên; Tài liệu “Chuyên đề số nguyên” thuộc “Toán 9A”; Cửa sổ “Chỉnh sửa tài liệu” đang mở,"1. Chọn Lớp học khác
+2. Click button “Lưu thay đổi”",- Lớp học mới = “Toán 10A”,"- Hiển thị thông báo nổi “Cập nhật tài liệu thành công!”
+- Dòng tài liệu hiển thị lớp học “Toán 10A”",,
+TC07.5.4,,Giáo viên chỉnh sửa tài liệu “Đã duyệt” thì trạng thái trở về “Chờ duyệt”,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Tài liệu “Chuyên đề số nguyên” do Giáo viên đăng ở trạng thái “Đã duyệt”; Cửa sổ “Chỉnh sửa tài liệu” đang mở,"1. Sửa Mô tả
+2. Click button “Lưu thay đổi”",- Mô tả mới = “Bổ sung bài tập nâng cao”,"- Hiển thị thông báo nổi “Cập nhật tài liệu thành công!”
+- Trạng thái tài liệu chuyển về “Chờ duyệt”
+- Thời gian cập nhật và người chỉnh sửa được ghi nhận",,
+TC07.5.5,,Giáo viên chỉnh sửa tài liệu “Bị từ chối” thì trạng thái trở về “Chờ duyệt”,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Tài liệu “Chuyên đề số nguyên” do Giáo viên đăng ở trạng thái “Bị từ chối”; Cửa sổ “Chỉnh sửa tài liệu” đang mở,"1. Sửa Tên tài liệu
+2. Click button “Lưu thay đổi”",- Tên tài liệu mới = “Chuyên đề số nguyên (đã sửa)”,"- Hiển thị thông báo nổi “Cập nhật tài liệu thành công!”
+- Trạng thái tài liệu chuyển về “Chờ duyệt”",,
+TC07.5.6,,Giáo viên chỉnh sửa tài liệu đang “Chờ duyệt”,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Tài liệu “Chuyên đề số nguyên” do Giáo viên đăng ở trạng thái “Chờ duyệt”; Cửa sổ “Chỉnh sửa tài liệu” đang mở,"1. Sửa Mô tả
+2. Click button “Lưu thay đổi”",- Mô tả mới = “Bổ sung đáp án”,"- Hiển thị thông báo nổi “Cập nhật tài liệu thành công!”
+- Trạng thái tài liệu vẫn là “Chờ duyệt”",,SRS không nêu tường minh trạng thái sau chỉnh sửa của tài liệu đang “Chờ duyệt”
+TC07.5.7,,Thêm tệp đính kèm mới vào tài liệu,Đăng nhập với tài khoản Quản trị viên; Tài liệu có 1 tệp đính kèm; Cửa sổ “Chỉnh sửa tài liệu” đang mở,"1. Chọn thêm một tệp tại khu vực thêm hoặc thay tệp
+2. Click button “Lưu thay đổi”",- Tệp thêm = “bai_tap_them.pdf”,"- Hiển thị thông báo nổi “Cập nhật tài liệu thành công!”
+- Tài liệu có 2 tệp đính kèm",,
+TC07.5.8,,Thay thế tệp đính kèm,Đăng nhập với tài khoản Quản trị viên; Tài liệu có tệp “chuyen_de.pdf”; Cửa sổ “Chỉnh sửa tài liệu” đang mở,"1. Gỡ tệp “chuyen_de.pdf”
+2. Chọn tệp thay thế
+3. Click button “Lưu thay đổi”",- Tệp thay thế = “chuyen_de_v2.pdf”,"- Hiển thị thông báo nổi “Cập nhật tài liệu thành công!”
+- Tài liệu chỉ còn tệp “chuyen_de_v2.pdf”",,
+TC07.5.9,,Gỡ một tệp khi tài liệu còn tệp khác,Đăng nhập với tài khoản Quản trị viên; Tài liệu có 2 tệp đính kèm; Cửa sổ “Chỉnh sửa tài liệu” đang mở,"1. Click button gỡ tệp tại một tệp
+2. Click button “Lưu thay đổi”",,"- Hiển thị thông báo nổi “Cập nhật tài liệu thành công!”
+- Tài liệu còn 1 tệp đính kèm",,
+TC07.5.10,,Giáo viên chuyển tài liệu sang lớp học thuộc phạm vi phụ trách,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Tài liệu do Giáo viên đăng thuộc “Toán 9A”; Cửa sổ “Chỉnh sửa tài liệu” đang mở,"1. Chọn Lớp học khác thuộc phạm vi phụ trách
+2. Click button “Lưu thay đổi”",- Lớp học mới = “Toán 9B”,"- Hiển thị thông báo nổi “Cập nhật tài liệu thành công!”
+- Dòng tài liệu hiển thị lớp học “Toán 9B”",,
+TC07.5.11,,Giáo viên chỉnh sửa tài liệu không do mình đăng,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Tài liệu “Đề cương ôn tập” thuộc “Toán 9A” do Quản trị viên đăng,"1. Quan sát dòng tài liệu “Đề cương ôn tập”
+2. Thử thực hiện chỉnh sửa tài liệu này",,"- Hệ thống không cho phép Giáo viên chỉnh sửa tài liệu không do mình đăng
+- Dữ liệu tài liệu không thay đổi",,"SRS chưa quy định cách thể hiện (ẩn biểu tượng, vô hiệu hóa hoặc hiển thị thông báo)"
+TC07.5.12,,Để trống Tên tài liệu khi chỉnh sửa,Đăng nhập với tài khoản Quản trị viên; Cửa sổ “Chỉnh sửa tài liệu” đang mở,"1. Xóa toàn bộ nội dung ô Tên tài liệu
+2. Click button “Lưu thay đổi”",- Tên tài liệu = “”,"- Giữ nguyên cửa sổ
+- Hiển thị thông báo lỗi “Vui lòng nhập tên tài liệu.”
+- Hệ thống không lưu thay đổi",,
+TC07.5.13,,Tên tài liệu chỉ chứa khoảng trắng khi chỉnh sửa,Đăng nhập với tài khoản Quản trị viên; Cửa sổ “Chỉnh sửa tài liệu” đang mở,"1. Nhập chuỗi khoảng trắng vào ô Tên tài liệu
+2. Click button “Lưu thay đổi”",- Tên tài liệu = “     ” (chỉ khoảng trắng),"- Giữ nguyên cửa sổ
+- Hiển thị thông báo lỗi “Vui lòng nhập tên tài liệu.”
+- Hệ thống không lưu thay đổi",,
+TC07.5.14,,Gỡ hết tệp đính kèm khi chỉnh sửa,Đăng nhập với tài khoản Quản trị viên; Tài liệu có 1 tệp đính kèm; Cửa sổ “Chỉnh sửa tài liệu” đang mở,"1. Click button gỡ tệp tại tệp duy nhất
+2. Click button “Lưu thay đổi”",,"- Giữ nguyên cửa sổ
+- Hiển thị thông báo lỗi “Tài liệu phải có ít nhất một tệp đính kèm.”
+- Hệ thống không lưu thay đổi",,
+TC07.5.15,,Thêm tệp sai định dạng hoặc vượt dung lượng khi chỉnh sửa,Đăng nhập với tài khoản Quản trị viên; Cửa sổ “Chỉnh sửa tài liệu” đang mở,"1. Chọn thêm một tệp có định dạng không được hỗ trợ
+2. Click button “Lưu thay đổi”",- Tệp thêm = “phan_mem.exe”,"- Giữ nguyên cửa sổ
+- Hiển thị thông báo lỗi “Tệp không đúng định dạng hoặc vượt quá dung lượng cho phép.”
+- Hệ thống không lưu thay đổi",,Danh sách định dạng hợp lệ và dung lượng tối đa theo cấu hình của Hệ thống; SRS chưa nêu giá trị cụ thể
+TC07.5.16,,Giáo viên chuyển tài liệu sang lớp học ngoài phạm vi phụ trách,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Cửa sổ “Chỉnh sửa tài liệu” đang mở; Chuẩn bị dữ liệu gửi lên có lớp học “Toán 10A” (ngoài phạm vi phụ trách),"1. Chọn lớp học ngoài phạm vi phụ trách
+2. Click button “Lưu thay đổi”",- Lớp học mới = “Toán 10A”,"- Giữ nguyên cửa sổ
+- Hiển thị thông báo lỗi “Bạn không có quyền chuyển tài liệu sang lớp học này.”
+- Hệ thống không lưu thay đổi",,Bộ chọn Lớp học của Giáo viên thông thường không liệt kê lớp ngoài phạm vi; kiểm thử bằng gửi dữ liệu trực tiếp
+TC07.5.17,,Hệ thống không lưu được thay đổi khi chỉnh sửa,"Đăng nhập với tài khoản Quản trị viên; Cửa sổ “Chỉnh sửa tài liệu” đang mở, đã sửa dữ liệu hợp lệ; Giả lập lỗi lưu dữ liệu",1. Click button “Lưu thay đổi”,- Tên tài liệu mới = “Chuyên đề số nguyên (bản 2)”,"- Hiển thị thông báo lỗi “Không thể cập nhật tài liệu. Vui lòng thử lại sau.”
+- Hệ thống không lưu thay đổi",,
+TC07.5.18,,Đóng cửa sổ chỉnh sửa bằng icon “X”,"Đăng nhập với tài khoản Quản trị viên; Cửa sổ “Chỉnh sửa tài liệu” đang mở, đã sửa một số trường","1. Click icon “X”
+2. Quan sát dòng tài liệu",- Tên tài liệu mới = “Tên thử nghiệm”,"- Cửa sổ đóng lại
+- Dữ liệu cũ của tài liệu được giữ nguyên",,
+TC07.5.19,,Hủy chỉnh sửa bằng button “Hủy”,"Đăng nhập với tài khoản Quản trị viên; Cửa sổ “Chỉnh sửa tài liệu” đang mở, đã sửa một số trường","1. Click button “Hủy”
+2. Quan sát dòng tài liệu",- Tên tài liệu mới = “Tên thử nghiệm”,"- Cửa sổ đóng lại
+- Dữ liệu cũ của tài liệu được giữ nguyên",,
+TC07.5.20,,Học viên và Phụ huynh không có chức năng chỉnh sửa,Đăng nhập lần lượt với tài khoản Học viên và Phụ huynh,"1. Click mục “Tài liệu học tập”
+2. Quan sát dòng tài liệu",,- Không hiển thị biểu tượng “Chỉnh sửa” tại các dòng tài liệu,,
+TC07.6,7.6. Xóa tài liệu học tập,,,,,,,
+TC07.6.1,,Hiển thị hộp thoại cảnh báo khi click biểu tượng “Xóa”,Đăng nhập với tài khoản Quản trị viên; Tài liệu “Chuyên đề số nguyên” có trên Hệ thống,1. Click biểu tượng “Xóa” tại dòng tài liệu “Chuyên đề số nguyên”,,"- Hiển thị hộp thoại cảnh báo với nội dung “Bạn có chắc chắn muốn xóa tài liệu Chuyên đề số nguyên? Hành động này không thể hoàn tác.”
+- Hộp thoại có button “Xác nhận” và “Hủy”",,
+TC07.6.2,,Quản trị viên xóa tài liệu thành công,Đăng nhập với tài khoản Quản trị viên; Hộp thoại xác nhận xóa tài liệu “Chuyên đề số nguyên” đang hiển thị,1. Click button “Xác nhận”,,"- Đóng hộp thoại và hiển thị thông báo nổi “Đã xóa tài liệu thành công!”
+- Dòng tài liệu bị loại khỏi danh sách
+- Tài liệu và các tệp đính kèm bị xóa khỏi kho tài liệu
+- Hệ thống ghi nhận người xóa và thời gian xóa trong nhật ký hoạt động",,
+TC07.6.3,,Giáo viên xóa tài liệu do mình đăng,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Hộp thoại xác nhận xóa tài liệu do Giáo viên đăng đang hiển thị,1. Click button “Xác nhận”,,"- Hiển thị thông báo nổi “Đã xóa tài liệu thành công!”
+- Dòng tài liệu bị loại khỏi danh sách
+- Hệ thống ghi nhận người xóa và thời gian xóa trong nhật ký hoạt động",,
+TC07.6.4,,Hủy thao tác xóa tài liệu,Đăng nhập với tài khoản Quản trị viên; Hộp thoại xác nhận xóa tài liệu đang hiển thị,"1. Click button “Hủy”
+2. Quan sát danh sách tài liệu",,"- Đóng hộp thoại
+- Tài liệu và các tệp đính kèm được giữ nguyên",,
+TC07.6.5,,Giáo viên xóa tài liệu không do mình đăng,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Tài liệu “Đề cương ôn tập” thuộc “Toán 9A” do Quản trị viên đăng,"1. Click biểu tượng “Xóa” tại dòng tài liệu “Đề cương ôn tập”
+2. Click button “Xác nhận”",,"- Hiển thị thông báo lỗi “Bạn không có quyền xóa tài liệu này.”
+- Hệ thống giữ nguyên tài liệu",,
+TC07.6.6,,Xóa tài liệu đã bị xóa trước đó,Hai Quản trị viên cùng hiển thị tài liệu “Chuyên đề số nguyên”; Quản trị viên thứ nhất đã xóa tài liệu,"1. Quản trị viên thứ hai click biểu tượng “Xóa” tại dòng tài liệu
+2. Click button “Xác nhận”",,"- Hiển thị thông báo lỗi “Tài liệu không còn tồn tại.”
+- Hệ thống làm mới danh sách
+- Hệ thống không thay đổi dữ liệu",,
+TC07.6.7,,Hệ thống không xóa được tài liệu,Đăng nhập với tài khoản Quản trị viên; Hộp thoại xác nhận xóa đang hiển thị; Giả lập lỗi xóa dữ liệu,1. Click button “Xác nhận”,,"- Hiển thị thông báo lỗi “Không thể xóa tài liệu. Vui lòng thử lại sau.”
+- Hệ thống giữ nguyên tài liệu",,
+TC07.6.8,,Học viên không còn thấy tài liệu sau khi bị xóa,Tài liệu “Chuyên đề số nguyên” của “Toán 9A” đã được xóa,"1. Đăng nhập với tài khoản Học viên “Phạm Minh Anh”
+2. Click mục “Tài liệu học tập”",,- Danh sách không hiển thị tài liệu “Chuyên đề số nguyên”,,
+TC07.6.9,,Học viên và Phụ huynh không có chức năng xóa,Đăng nhập lần lượt với tài khoản Học viên và Phụ huynh,"1. Click mục “Tài liệu học tập”
+2. Quan sát dòng tài liệu",,- Không hiển thị biểu tượng “Xóa” tại các dòng tài liệu,,
+TC07.7,7.7. Tải về tài liệu gốc,,,,,,,
+TC07.7.1,,Quản trị viên tải tệp của tài liệu thuộc lớp bất kỳ,Đăng nhập với tài khoản Quản trị viên; Tài liệu “Chuyên đề số nguyên” thuộc “Toán 9A” có tệp “chuyen_de.pdf”,"1. Tại dòng tài liệu, click button “Tải về” cạnh tệp “chuyen_de.pdf”",,"- Hệ thống bắt đầu tải tệp “chuyen_de.pdf” về thiết bị
+- Hệ thống không thay đổi dữ liệu",,
+TC07.7.2,,Giáo viên tải tài liệu của lớp mình phụ trách,Đăng nhập với tài khoản Giáo viên “Nguyễn Thị Lan” (được phân công phụ trách “Toán 9A” và “Toán 9B”); Tài liệu “Chuyên đề số nguyên” thuộc “Toán 9A” có tệp “chuyen_de.pdf”,1. Click button “Tải về” cạnh tệp “chuyen_de.pdf”,,- Hệ thống bắt đầu tải tệp về thiết bị,,
+TC07.7.3,,Học viên tải tài liệu “Đã duyệt” và “Hiện” thuộc lớp mình tham gia,Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Tài liệu “Chuyên đề số nguyên” thuộc “Toán 9A” ở trạng thái “Đã duyệt” và “Hiện”,1. Click button “Tải về” cạnh tệp “chuyen_de.pdf”,,- Hệ thống bắt đầu tải tệp về thiết bị,,
+TC07.7.4,,Phụ huynh tải tài liệu “Đã duyệt” và “Hiện” thuộc lớp học viên liên kết tham gia,"Đăng nhập với tài khoản Phụ huynh “Trần Thị Hoa” (đã liên kết với học viên “Phạm Minh Anh”, lớp “Toán 9A”); Tài liệu “Chuyên đề số nguyên” thuộc “Toán 9A” ở trạng thái “Đã duyệt” và “Hiện”",1. Click button “Tải về” cạnh tệp “chuyen_de.pdf”,,- Hệ thống bắt đầu tải tệp về thiết bị,,
+TC07.7.5,,Tải tệp từ màn hình chi tiết tài liệu,Đăng nhập với tài khoản Quản trị viên; Tài liệu “Chờ duyệt” có tệp “chuyen_de.pdf”,"1. Click button “Tài liệu chờ duyệt”
+2. Mở chi tiết tài liệu
+3. Click button “Tải về” cạnh tệp “chuyen_de.pdf”",,- Hệ thống bắt đầu tải tệp về thiết bị,,
+TC07.7.6,,Tải về tệp gốc nguyên vẹn,Đăng nhập với tài khoản Quản trị viên; Tệp “chuyen_de.pdf” đã tải lên có giá trị băm (SHA-256) được ghi lại trước khi tải lên,"1. Click button “Tải về” cạnh tệp “chuyen_de.pdf”
+2. Mở tệp đã tải về và tính giá trị băm SHA-256",,"- Tệp tải về có cùng tên, định dạng và giá trị băm với tệp đã tải lên
+- Mở được tệp và nội dung không thay đổi",,
+TC07.7.7,,Tải về từng tệp của tài liệu có nhiều tệp đính kèm,Đăng nhập với tài khoản Quản trị viên; Tài liệu “Bộ đề kiểm tra 15 phút” có 2 tệp “de_1.pdf” và “de_2.docx”,"1. Click button “Tải về” cạnh tệp “de_1.pdf”
+2. Click button “Tải về” cạnh tệp “de_2.docx”",,"- Hệ thống tải từng tệp một cách riêng biệt
+- Thu được 2 tệp riêng “de_1.pdf” và “de_2.docx”",,
+TC07.7.8,,Tải tệp khi tài liệu đã bị ẩn sau khi Học viên mở trang,Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Học viên đang mở trang “Tài liệu học tập” có tài liệu “Chuyên đề số nguyên”; Quản trị viên vừa ẩn tài liệu này,1. Click button “Tải về” cạnh tệp của tài liệu,,"- Hiển thị thông báo lỗi “Bạn không có quyền tải tài liệu này.”
+- Hệ thống không tải tệp và không thay đổi dữ liệu",,
+TC07.7.9,,Học viên tải tài liệu của lớp mình không tham gia,Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Tài liệu thuộc “Toán 10A” ở trạng thái “Đã duyệt” và “Hiện”; Có đường dẫn tải trực tiếp của tệp,1. Truy cập đường dẫn tải trực tiếp của tệp thuộc “Toán 10A”,,"- Hiển thị thông báo lỗi “Bạn không có quyền tải tài liệu này.”
+- Hệ thống không tải tệp và không thay đổi dữ liệu",,Kiểm thử bằng đường dẫn tải trực tiếp vì Học viên không nhìn thấy tài liệu của lớp mình không tham gia
+TC07.7.10,,Học viên tải tài liệu chưa được duyệt,Đăng nhập với tài khoản Học viên “Phạm Minh Anh” (đang tham gia lớp “Toán 9A”); Tài liệu thuộc “Toán 9A” ở trạng thái “Chờ duyệt”; Có đường dẫn tải trực tiếp của tệp,1. Truy cập đường dẫn tải trực tiếp của tệp thuộc tài liệu “Chờ duyệt”,,"- Hiển thị thông báo lỗi “Bạn không có quyền tải tài liệu này.”
+- Hệ thống không tải tệp và không thay đổi dữ liệu",,Kiểm thử bằng đường dẫn tải trực tiếp vì Học viên không nhìn thấy tài liệu chưa duyệt
+TC07.7.11,,Tệp gốc không còn tồn tại hoặc không đọc được,Đăng nhập với tài khoản Quản trị viên; Tài liệu có tệp “chuyen_de.pdf” nhưng tệp gốc đã bị xóa khỏi kho lưu trữ,1. Click button “Tải về” cạnh tệp “chuyen_de.pdf”,,"- Hiển thị thông báo lỗi “Không tìm thấy tệp gốc.”
+- Hệ thống không tải tệp và không thay đổi dữ liệu",,
